@@ -10,9 +10,9 @@
       ./hardware-configuration.nix
       ../../modules/nixos
     ];
-
+  
   # Uses latest CachyOS kernel and enables "scx_bpfland" scheduler.
-  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   services.scx = {
     enable = true;
     scheduler = "scx_bpfland";
@@ -76,14 +76,15 @@
     neovim.enable = true;
   };
 
-  environment.systemPackages = with pkgs; [
-      wget
-      networkmanagerapplet
-      gparted
-      e2fsprogs
-      qemu_full
-      duperemove
-   ];
+  environment.systemPackages = with pkgs; 
+       [
+        wget
+        networkmanagerapplet
+        gparted
+        e2fsprogs
+        qemu_full
+        duperemove
+       ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
@@ -94,7 +95,7 @@
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 
 }
 

@@ -1,10 +1,10 @@
-{ lib, config, pkgs, inputs, ... }:
+{ lib, config, pkgs, unstable, inputs, ... }:
 
 {
   home = {
     username = "valentinus";
     homeDirectory = "/home/valentinus";
-    stateVersion = "25.11";
+    stateVersion = "25.05";
   };
   
   home.packages = with pkgs; [
@@ -102,6 +102,7 @@
     chessx
     rustdesk
     prismlauncher
+    libreoffice
   ];
 
   imports = [
