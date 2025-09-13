@@ -74,6 +74,7 @@
   programs = {
     fish.enable = true;
     neovim.enable = true;
+    wireshark.enable = true;
   };
 
   environment.systemPackages = with pkgs; 

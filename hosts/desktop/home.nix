@@ -75,6 +75,8 @@
     bind
     tcpdump
     mtr
+    tshark
+    termshark
     
     ## VPN
     wireguard-tools
