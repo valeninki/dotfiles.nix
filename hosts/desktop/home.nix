@@ -1,4 +1,4 @@
-{ lib, config, pkgs, unstable, inputs, ... }:
+{ lib, config, pkgs, inputs, ... }:
 
 {
   home = {
@@ -71,12 +71,14 @@
     ## Network Things
     ethtool
     nmap
+    whois
     traceroute
     bind
     tcpdump
     mtr
     tshark
     termshark
+    geoipWithDatabase
     
     ## VPN
     wireguard-tools
@@ -87,7 +89,6 @@
     k9s
     k3s
     kubernetes-helm
-
 
     ## User packages
     ungoogled-chromium
@@ -148,6 +149,7 @@
       };
     };
   };
+
 
 #  home.file = {
 #  };

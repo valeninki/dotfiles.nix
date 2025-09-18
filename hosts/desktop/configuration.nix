@@ -63,7 +63,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.valentinus = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "libvirtd" "wireshark" ]; # Enable user groups.
+    extraGroups = [ "wheel" "networkmanager" "libvirtd" "kvm" "qemu" "wireshark" ]; # Enable user groups.
     shell = pkgs.fish;
     home = "/home/valentinus";
     packages = with pkgs; [
@@ -83,8 +83,8 @@
         networkmanagerapplet
         gparted
         e2fsprogs
-        qemu_full
         duperemove
+	dmidecode
        ];
 
   # Enable the OpenSSH daemon.
