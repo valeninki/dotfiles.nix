@@ -15,9 +15,10 @@
 
   };
 
-  outputs = { nixpkgs, unixpkgs, chaotic, home-manager, ... }:
+  outputs = { nixpkgs, unixpkgs, valenpkgs, chaotic, home-manager, ... }:
     let
     system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
     overlay-unstable = final: prev: {
       unstable = unixpkgs.legacyPackages.${prev.system};
     };
@@ -27,8 +28,15 @@
       inherit system;
 	  
 	modules = [
-	  ({  config, pkgs, ...}: {nixpkgs.overlays = [ overlay-unstable ]; })
-          ./hosts/desktop/configuration.nix
+	  ({  config, pkgs, ...}: {
+	    environment.systemPackages = [
+              valenpkgs.packages.${system}.topmem
+              valenpkgs.packages.${system}.zmem
+            ];
+	    nixpkgs.overlays = [ overlay-unstable ];
+	  })
+	  
+	  ./hosts/desktop/configuration.nix
 	 # ./modules/external
 	  chaotic.nixosModules.nyx-cache
 	  chaotic.nixosModules.nyx-overlay
