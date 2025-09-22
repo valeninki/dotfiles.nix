@@ -2,6 +2,7 @@
   imports = [
     ./hyprland
     ./fish
+    ./eza
     ./nextcloud
     ./waybar
     ./swaylock

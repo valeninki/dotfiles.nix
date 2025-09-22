@@ -127,6 +127,13 @@
   fonts.fontconfig.enable = true;
   wayland.windowManager.hyprland.enable = true;
 
+  dconf.settings = {
+    "org/virt-manager/virt-manager/connections" = {
+      autoconnect = ["qemu:///system"];
+      uris = ["qemu:///system"];
+    };
+  };
+
   xdg = {
     portal = {
       enable = true;
