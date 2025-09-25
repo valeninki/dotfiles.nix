@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     unixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    disko.url = "github:nix-community/disko/latest";
 
     valenpkgs.url = "git+https://git.valentinus.dev/valeninki/nixpkgs.git";
 
@@ -15,7 +16,7 @@
 
   };
 
-  outputs = { nixpkgs, unixpkgs, valenpkgs, chaotic, home-manager, ... }:
+  outputs = { nixpkgs, unixpkgs, chaotic, disko, valenpkgs, home-manager, ... }:
     let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
@@ -48,6 +49,32 @@
 	     home-manager.users.valentinus = ./hosts/desktop/home.nix;
 	   }
 	 ];
+      };
+      
+      thinkpad = nixpkgs.lib.nixosSystem {
+        inherit system;
+
+	modules = [
+          ({config, pkgs, ...}: {
+	    environment.systemPackages = [
+	      valenpkgs.packages.${system}.topmem
+	      valenpkgs.packages.${system}.zmem
+	    ];
+	    nixpkgs.overlays = [ overlay-unstable ];
+	    })
+
+	    ./hosts/thinkpad/configuration.nix
+	    disko.nixosModules.disko
+	    chaotic.nixosModules.nyx-cache
+	    chaotic.nixosModules.nyx-overlay
+	    chaotic.nixosModules.nyx-registry
+
+	    home-manager.nixosModules.home-manager {
+              home-manager.useGlobalPkgs = true;
+	      home-manager.UserPackages = true;
+	      home-manager.users.valentinus = ./hosts/thinkpad/home.nix;
+	    }
+	];
       };
     };
   };
