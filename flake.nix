@@ -71,7 +71,7 @@
 
 	    home-manager.nixosModules.home-manager {
               home-manager.useGlobalPkgs = true;
-	      home-manager.UserPackages = true;
+	      home-manager.useUserPackages = true;
 	      home-manager.users.valentinus = ./hosts/thinkpad/home.nix;
 	    }
 	];
