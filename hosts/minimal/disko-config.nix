@@ -3,7 +3,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1";
+        device = "/dev/vda";
         content = {
           type = "gpt";
           partitions = {
@@ -22,7 +22,7 @@
             };
             root = {
 	      name = "root";
-	      device = "/dev/nvme0n1p2"
+	      device = "/dev/vda2";
               size = "100%";
               content = {
                 type = "btrfs";
@@ -35,22 +35,22 @@
                     mountOptions = [ "compress=zstd" "noatime" ];
                     mountpoint = "/home";
                   };
-                  "/nix/store" = {
+                  "/nix" = {
                     mountOptions = [
                       "compress=zstd"
                       "noatime"
                     ];
-                    mountpoint = "/nix/store";
+                    mountpoint = "/nix";
                   };
                 };
               };
             };
 	    plainSwap = {
-              name = "swap";
-	      device = "/dev/nvme0n1p3";
-	      size = "32G";
+	      name = "swap";
+	      device = "/dev/vda3";
+	      size = "4G";
 	      content = {
-	        type = "swap";
+                type = "swap";
 	      };
 	    };
           };

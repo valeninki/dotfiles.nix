@@ -9,7 +9,6 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./disko-config.nix
-      ../../modules/nixos
     ];
   
   # Uses latest CachyOS kernel and enables "scx_bpfland" scheduler.
@@ -21,7 +20,6 @@
 
   # Enables flake and nd.
   nix.settings.experimental-features = [ "nix-command" "flakes" ]; 
-  nixpkgs.config.allowUnfree = true;
   programs.nix-ld.enable = true;
 
   # Use the systemd-boot EFI boot loader.
@@ -59,17 +57,6 @@
     enable32Bit = true;
     extraPackages = with pkgs; [amdvlk];
     extraPackages32 = with pkgs; [driversi686Linux.amdvlk];
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.valentinus = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "libvirtd" "kvm" "qemu" "wireshark" ]; # Enable user groups.
-    shell = pkgs.fish;
-    home = "/home/valentinus";
-    packages = with pkgs; [
-      tree
-    ];
   };
 
   programs = {
