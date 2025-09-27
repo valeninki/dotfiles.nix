@@ -24,31 +24,27 @@
 	      label = "luks";
 	      device = "/dev/vda2";
               size = "100%";
-	      content {
+	      content = {
                 type = "luks";
-		name = "cryptroot";
-		extraOpenArgs = [
-                  "--allow-discards"
-		  "--perf-no_read_workqueue"
-		  "--perf-no-write_workqueue"
-		];
-	        settings = {crypttabExtraOpts = ["fido2-device=auto" "token-timeout=10"];};
+		name = "crypt";
+	        settings = {
+                  allowDiscards = true;
+		};
                 content = {
                   type = "btrfs";
                   extraArgs = [ "-f" ];
                   subvolumes = {
                     "/root" = {
                       mountpoint = "/";
+		      mountOptions = [ "subvol=root" ];
                     };
                     "/home" = {
 		      mountpoint = "/home"; 
-                      mountOptions = [ "compress=zstd" "noatime" ];
+                      mountOptions = [ "subvol=home" "compress=zstd" "noatime" ];
                     };
                     "/nix" = {
 		      mountpoint = "/nix";
-                      mountOptions = [
-                        "compress=zstd" "noatime"
-                      ];
+                      mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ];
                     };
                   };
                 };

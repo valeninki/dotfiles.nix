@@ -20,7 +20,7 @@
     };
     
     home-manager-unstable = {
-      url = "github:nix-community/home-manager"
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unixpkgs";
     };
 
@@ -43,19 +43,19 @@
         system,
 	inputs',
 	...
-      };
+      }:
       {
-        pre-commit.settings.hooks = {
-          nixfmt-rfc-style.enable = true;
-	  nil.enable = true;
-	  deadnix.enable = true;
-	  statix.enable = true;
-	};
+#        pre-commit.settings.hooks = {
+#          nixfmt-rfc-style.enable = true;
+#	  nil.enable = true;
+#	  deadnix.enable = true;
+#	  statix.enable = true;
+#	};
       };
 
       flake = {
-        nixosModules.valentinus = import ./modules/nixos
-	homeManagerModules.valentinus = import ./modules/home-manager
+        nixosModules.valentinus = import ./modules/nixos;
+	homeManagerModules.valentinus = import ./modules/home-manager;
       };
   };
 }

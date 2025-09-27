@@ -3,6 +3,7 @@
 {
   imports = [ inputs.home-manager.nixosModules.default ];
   users = {
+    mutableUsers = true;
     users.valentinus = {
       isNormalUser = true;
       extraGroups = [
@@ -14,6 +15,7 @@
       ];
       shell = pkgs.fish;
     };
+  };
     home-manager = {
       useGlobalPkgs = true;
       extraSpecialArgs = {
@@ -21,5 +23,4 @@
       };
       users.valentinus = import ./home;
     };
-  };
 }

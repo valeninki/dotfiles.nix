@@ -11,10 +11,15 @@
       enable = true;
 
       qemu = {
-        ovmf.enable = true;
+        ovmf = {
+	  enable = true;
+	  packages = [(pkgs.OVMF.override {
+	  secureBoot = true;
+	}).fd];
       };
     };
-  spiceUSBRedirection.enable = true;
+   };
+   spiceUSBRedirection.enable = true;
   };
 
   systemd.services.libvirtd.path = [ pkgs.nftables ];

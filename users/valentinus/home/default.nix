@@ -106,10 +106,6 @@
     libreoffice
   ];
 
-  imports = [
-    ./../../modules/home-manager
-  ];
-  
   services = {
     hyprpolkitagent.enable = true;
     hyprpaper.enable = true;
@@ -164,4 +160,8 @@
     QT_QPA_PLATFORM = "wayland;xcb";
   };
 
+  home.activation = { };
+  imports =
+    lib.map (p: ./. + "/${p}") (lib.remove "default.nix" (lib.attrNames (builtins.readDir ./.)))
+    ++ [ inputs.self.homeManagerModules.valentinus ];
 }

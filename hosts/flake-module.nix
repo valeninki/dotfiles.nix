@@ -7,9 +7,10 @@ let
       system = arch;
       config.allowUnfree = true;
     });
+in
 {
   flake.nixosConfigurations = {
-    desktop = inputs.nixpkgs.lib.nixosSystem {
+    desktop = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       pkgs = repo "nixpkgs" system;
       specialArgs = {
@@ -19,13 +20,14 @@ let
       modules = [
         ./desktop
 	(inputs.self + "/users/valentinus")
-	disko.nixosModules.disko
-	chaotic.nixosModules.nyx-cache
-	chaotic.nixosModules.nyx-overlay
-	chaotic.nixosModules.nyx-registry
+	inputs.home-manager.nixosModules.home-manager
+	(inputs.disko.nixosModules.disko)
+	(inputs.chaotic.nixosModules.nyx-cache)
+	(inputs.chaotic.nixosModules.nyx-overlay)
+	(inputs.chaotic.nixosModules.nyx-registry)
       ];
     };
-    thinkpad = inputs.nixpkgs.lib.nixosSystem {
+    thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       pkgs = repo "nixpkgs" system;
       specialArgs = {
@@ -35,13 +37,14 @@ let
       modules = [
         ./thinkpad
 	(inputs.self + "/users/valentinus")
-	disko.nixosModules.disko
-	chaotic.nixosModules.nyx-cache
-	chaotic.nixosModules.nyx-overlay
-	chaotic.nixosModules.nyx-registry
+	inputs.home-manager.nixosModules.home-manager
+	(inputs.disko.nixosModules.disko)
+	(inputs.chaotic.nixosModules.nyx-cache)
+	(inputs.chaotic.nixosModules.nyx-overlay)
+	(inputs.chaotic.nixosModules.nyx-registry)
       ];
     };
-    minimal = inputs.nixpkgs.lib.nixosSystem {
+    minimal = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       pkgs = repo "nixpkgs" system;
       specialArgs = {
@@ -59,7 +62,7 @@ let
       pkgs = repo "nixpkgs" "x86_64-linux";
       extraSpecialArgs = {
         inherit inputs;
-	unixpkgs = repo "unixpkgs" "x86_64-linux"
+	unixpkgs = repo "unixpkgs" "x86_64-linux";
       };
       modules = [
         ./thinkpad/home
