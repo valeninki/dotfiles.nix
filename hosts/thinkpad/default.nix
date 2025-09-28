@@ -2,7 +2,7 @@
 
 {
   imports = [
-    inputs.self.nixosModules.thinkpad
+    inputs.self.nixosModules.valentinus
     ./host
     ./home
   ];
