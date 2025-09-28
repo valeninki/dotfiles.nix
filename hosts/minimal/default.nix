@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./luks.nix
   ];
   moduleopts.nixos = {
     lanzaboote.enable = true;

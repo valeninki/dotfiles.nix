@@ -1,4 +1,10 @@
+{ inputs, ...}:
+
 {
+  imports = [
+    inputs.disko.nixosModules.disko
+  ];
+
   disko.devices = {
     disk = {
       main = {
@@ -21,7 +27,6 @@
               };
             };
             luks = {
-	      label = "luks";
 	      device = "/dev/vda2";
               size = "100%";
 	      content = {
@@ -36,7 +41,7 @@
                   subvolumes = {
                     "/root" = {
                       mountpoint = "/";
-		      mountOptions = [ "subvol=root" ];
+		      mountOptions = [ "subvol=root" "compress=zstd" ];
                     };
                     "/home" = {
 		      mountpoint = "/home"; 

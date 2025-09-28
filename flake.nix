@@ -13,6 +13,11 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs.follows = "unixpkgs";
     };
+    
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "unixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
@@ -36,6 +41,7 @@
     
     imports = [
       ./hosts/flake-module.nix
+      inputs.pre-commit-hooks.flakeModule
     ];
 
     perSystem = 
@@ -45,12 +51,12 @@
 	...
       }:
       {
-#        pre-commit.settings.hooks = {
-#          nixfmt-rfc-style.enable = true;
-#	  nil.enable = true;
-#	  deadnix.enable = true;
-#	  statix.enable = true;
-#	};
+        pre-commit.settings.hooks = {
+          nixfmt-rfc-style.enable = true;
+	  nil.enable = true;
+	  deadnix.enable = true;
+	  statix.enable = true;
+	};
       };
 
       flake = {
