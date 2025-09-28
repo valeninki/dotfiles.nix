@@ -5,12 +5,6 @@
 { config, lib, pkgs, valenpkgs, inputs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./disko-config.nix
-    ];
-  
   # Uses latest CachyOS kernel and enables "scx_bpfland" scheduler.
   boot.kernelPackages = pkgs.linuxPackages_latest;
   services.scx = {

@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
     inputs.self.nixosModules.thinkpad
     ./host
     ./home
