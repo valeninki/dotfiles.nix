@@ -1,4 +1,4 @@
-{ lib, config, pkgs, inputs, ... }:
+{ lib, config, pkgs, unixpkgs, inputs, ... }:
 
 {
   home = {
@@ -84,7 +84,6 @@
 
     ## Kubernetes Packages
     k0sctl
-    k9s
     k3s
     kubernetes-helm
 
@@ -114,7 +113,6 @@
   };
 
   programs = {
-    kitty.enable = false;
     home-manager.enable=true;
   };
 

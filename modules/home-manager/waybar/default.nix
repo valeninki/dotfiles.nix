@@ -5,9 +5,6 @@
     mainBar = {
     position = "top";
     height = 30;
-    output = [
-      "HDMI-A-1"
-    ];
     modules-left = [ "custom/space" "hyprland/workspaces" ];
     modules-center = [ "hyprland/window" ];
     modules-right = [ "mpd" "network" "clock" "memory" "pulseaudio" "tray"];

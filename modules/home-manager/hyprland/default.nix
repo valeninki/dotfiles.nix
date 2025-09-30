@@ -113,8 +113,5 @@ wayland.windowManager.hyprland.settings = {
       
       preload = ["/home/valentinus/Nextcloud/Photos/Wallpapers/Nature/flowers.jpg"];
 
-      wallpaper = [
-        "HDMI-A-1,/home/valentinus/Nextcloud/Photos/Wallpapers/Nature/flowers.jpg"
-      ];
     };
 }

@@ -55,19 +55,8 @@
 
   programs = {
     fish.enable = true;
-    neovim.enable = true;
     wireshark.enable = true;
   };
-
-  environment.systemPackages = with pkgs; 
-       [
-        wget
-        networkmanagerapplet
-        gparted
-        e2fsprogs
-        duperemove
-	dmidecode
-       ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;

@@ -60,7 +60,6 @@
 
   programs = {
     fish.enable = true;
-    neovim.enable = true;
     wireshark.enable = true;
   };
 
