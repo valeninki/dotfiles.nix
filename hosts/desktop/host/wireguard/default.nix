@@ -5,9 +5,9 @@
     wireguard = {
       interfaces = {
         wg0 = {
-          ips = [ "10.0.0.3/32" ];
+          ips = [ "10.0.0.2/32" ];
 	 listenPort = 51820;
-	 privateKeyFile = "/home/valentinus/.dots/hosts/thinkpad/host/wireguard/wireguard-keys/private";
+	 privateKeyFile = "/home/valentinus/.dots/hosts/desktop/host/wireguard/wireguard-keys/private";
 
 	 peers = [
             {
