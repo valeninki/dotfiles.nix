@@ -7,7 +7,7 @@
         wg0 = {
           ips = [ "10.0.0.2/32" ];
 	 listenPort = 51820;
-	 privateKeyFile = "/home/valentinus/.dots/hosts/desktop/host/wireguard/wireguard-keys/private";
+	 privateKeyFile = "/home/valentinus/Nextcloud/Wireguard/desktop/private";
 
 	 peers = [
             {

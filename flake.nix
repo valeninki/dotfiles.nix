@@ -34,7 +34,7 @@
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs.follows = "unixpkgs";
+      inputs.nixpkgs-lib.follows = "unixpkgs";
     };
     
     pre-commit-hooks = {
@@ -49,6 +49,11 @@
 
     disko = {
       url = "github:nix-community/disko/latest";
+    };
+
+    catppuccin = {
+      url = "github:catppuccin/nix/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   
   };

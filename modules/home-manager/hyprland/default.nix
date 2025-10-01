@@ -2,6 +2,7 @@
 
 imports = [
   ./custom.nix
+  ./cursor.nix
 ];
 wayland.windowManager.hyprland.settings = {
       input = {
