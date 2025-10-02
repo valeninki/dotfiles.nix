@@ -15,6 +15,6 @@
       PLATFORM_PROFILE_ON_BAT = "balanced";
       START_CHARGE_THRESH_BAT0 = 70;
       STOP_CHARGE_THRESH_BAT0 = 80;
-      };
+    };
   };
 }

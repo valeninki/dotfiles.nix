@@ -17,12 +17,15 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "fmask=0022" "dmask=0022" ];
+                mountOptions = [
+                  "fmask=0022"
+                  "dmask=0022"
+                ];
               };
             };
             root = {
-	      name = "root";
-	      device = "/dev/nvme0n1p2"
+              name = "root";
+              device = "/dev/nvme0n1p2";
               size = "100%";
               content = {
                 type = "btrfs";
@@ -32,7 +35,10 @@
                     mountpoint = "/";
                   };
                   "/home" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                     mountpoint = "/home";
                   };
                   "/nix/store" = {
@@ -45,14 +51,14 @@
                 };
               };
             };
-	    plainSwap = {
+            plainSwap = {
               name = "swap";
-	      device = "/dev/nvme0n1p3";
-	      size = "32G";
-	      content = {
-	        type = "swap";
-	      };
-	    };
+              device = "/dev/nvme0n1p3";
+              size = "32G";
+              content = {
+                type = "swap";
+              };
+            };
           };
         };
       };

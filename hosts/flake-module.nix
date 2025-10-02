@@ -1,7 +1,7 @@
 { inputs, ... }:
 
 let
-  repo = 
+  repo =
     name: arch:
     (import inputs.${name} {
       system = arch;
@@ -15,16 +15,16 @@ in
       pkgs = repo "nixpkgs" system;
       specialArgs = {
         unixpkgs = repo "unixpkgs" system;
-	inherit inputs;
+        inherit inputs;
       };
       modules = [
         ./desktop
-	(inputs.self + "/users/valentinus")
-	inputs.home-manager.nixosModules.home-manager
-	(inputs.disko.nixosModules.disko)
-	(inputs.chaotic.nixosModules.nyx-cache)
-	(inputs.chaotic.nixosModules.nyx-overlay)
-	(inputs.chaotic.nixosModules.nyx-registry)
+        (inputs.self + "/users/valentinus")
+        inputs.home-manager.nixosModules.home-manager
+        (inputs.disko.nixosModules.disko)
+        (inputs.chaotic.nixosModules.nyx-cache)
+        (inputs.chaotic.nixosModules.nyx-overlay)
+        (inputs.chaotic.nixosModules.nyx-registry)
       ];
     };
     thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
@@ -36,25 +36,25 @@ in
       };
       modules = [
         ./thinkpad
-	(inputs.self + "/users/valentinus")
-	inputs.home-manager.nixosModules.home-manager
-	(inputs.disko.nixosModules.disko)
-	(inputs.chaotic.nixosModules.nyx-cache)
-	(inputs.chaotic.nixosModules.nyx-overlay)
-	(inputs.chaotic.nixosModules.nyx-registry)
+        (inputs.self + "/users/valentinus")
+        inputs.home-manager.nixosModules.home-manager
+        (inputs.disko.nixosModules.disko)
+        (inputs.chaotic.nixosModules.nyx-cache)
+        (inputs.chaotic.nixosModules.nyx-overlay)
+        (inputs.chaotic.nixosModules.nyx-registry)
       ];
     };
-    minimal = inputs.nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      pkgs = repo "nixpkgs" system;
-      specialArgs = {
-        unixpkgs = repo "unixpkgs" system;
-	inherit inputs;
-      };
-      modules = [
-        ./minimal
-      ];
-    };
+    #    minimal = inputs.nixpkgs.lib.nixosSystem rec {
+    #      system = "x86_64-linux";
+    #      pkgs = repo "nixpkgs" system;
+    #      specialArgs = {
+    #        unixpkgs = repo "unixpkgs" system;
+    #	inherit inputs;
+    #      };
+    #      modules = [
+    #        ./minimal
+    #      ];
+    #    };
   };
 
   flake.homeConfigurations = {
@@ -62,33 +62,33 @@ in
       pkgs = repo "nixpkgs" "x86_64-linux";
       extraSpecialArgs = {
         inherit inputs;
-	unixpkgs = repo "unixpkgs" "x86_64-linux";
+        unixpkgs = repo "unixpkgs" "x86_64-linux";
       };
       modules = [
         ./desktop/home
-	(inputs.self + "/users/valentinus/home")
+        (inputs.self + "/users/valentinus/home")
       ];
     };
     thinkpad = inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = repo "nixpkgs" "x86_64-linux";
       extraSpecialArgs = {
         inherit inputs;
-	unixpkgs = repo "unixpkgs" "x86_64-linux";
+        unixpkgs = repo "unixpkgs" "x86_64-linux";
       };
       modules = [
         ./thinkpad/home
-	(inputs.self + "/users/valentinus/home")
+        (inputs.self + "/users/valentinus/home")
       ];
     };
     minimal = inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = repo "nixpkgs" "x86_64-linux";
       extraSpecialArgs = {
         inherit inputs;
-	unixpkgs = repo "unixpkgs" "x86_64-linux";
+        unixpkgs = repo "unixpkgs" "x86_64-linux";
       };
       modules = [
         ./minimal/home
-	("/users/test/home")
+        ("/users/test/home")
       ];
     };
   };

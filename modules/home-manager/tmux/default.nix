@@ -5,6 +5,6 @@
     mouse = true;
     keyMode = "vi";
 
-};
+  };
 
 }

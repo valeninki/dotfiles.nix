@@ -1,18 +1,17 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; 
-       [
-        wget
-        networkmanagerapplet
-        gparted
-        e2fsprogs
-        duperemove
-	dmidecode
-	libva-utils
-	lm_sensors
-	v4l-utils
-       ];
+  environment.systemPackages = with pkgs; [
+    wget
+    networkmanagerapplet
+    gparted
+    e2fsprogs
+    duperemove
+    dmidecode
+    libva-utils
+    lm_sensors
+    v4l-utils
+  ];
 
   xdg = {
     autostart.enable = true;

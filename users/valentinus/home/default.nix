@@ -1,18 +1,25 @@
-{ lib, config, pkgs, unixpkgs, inputs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  unixpkgs,
+  inputs,
+  ...
+}:
 
 {
   home = {
     stateVersion = "25.05";
   };
-  
+
   home.packages = with pkgs; [
 
-  ## Fonts
+    ## Fonts
     nerd-fonts.fira-code
     nerd-fonts.iosevka
     nerd-fonts.droid-sans-mono
 
-  ## Must have packages 
+    ## Must have packages
     xdg-user-dirs
     sl
     usbutils
@@ -77,10 +84,10 @@
     tshark
     termshark
     geoipWithDatabase
-    
+
     ## VPN
     wireguard-tools
-#   openvpn3
+    #   openvpn3
 
     ## Kubernetes Packages
     k0sctl
@@ -113,7 +120,7 @@
   };
 
   programs = {
-    home-manager.enable=true;
+    home-manager.enable = true;
   };
 
   fonts.fontconfig.enable = true;
@@ -121,8 +128,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 
@@ -131,27 +138,28 @@
       enable = true;
       extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
       configPackages = [ pkgs.xdg-desktop-portal-hyprland ];
-      };
+    };
     mimeApps = {
       enable = true;
       defaultApplications = {
         "inode/directory" = [ "pcmanfm.desktop" ];
-	"x-scheme-handler/https" = [ "google-chrome.desktop" ];
-	"x-scheme-handler/discord" = [ "vesktop.desktop" ];
-	"x-scheme-handler/ror2mm" = [ "r2modman.desktop" ];
-	"x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
-	"x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ]; 
+        "x-scheme-handler/https" = [ "google-chrome.desktop" ];
+        "x-scheme-handler/discord" = [ "vesktop.desktop" ];
+        "x-scheme-handler/ror2mm" = [ "r2modman.desktop" ];
+        "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
+        "x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ];
       };
       associations.added = {
         "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
-	"x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ];
+        "x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ];
       };
     };
   };
 
+  home.file = {
 
-#  home.file = {
-#  };
+  };
+
   home.sessionVariables = {
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_TYPE = "wayland";

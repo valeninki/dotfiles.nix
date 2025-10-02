@@ -1,4 +1,9 @@
-{ config, lib, unixpkgs, ... }:
+{
+  config,
+  lib,
+  unixpkgs,
+  ...
+}:
 
 {
   programs.k9s = {

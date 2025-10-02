@@ -1,4 +1,4 @@
-{ inputs, ...}:
+{ inputs, ... }:
 
 {
   imports = [
@@ -23,46 +23,60 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "fmask=0022" "dmask=0022" ];
+                mountOptions = [
+                  "fmask=0022"
+                  "dmask=0022"
+                ];
               };
             };
             luks = {
-	      device = "/dev/nvme0n1p2";
+              device = "/dev/nvme0n1p2";
               size = "444G";
-	      content = {
+              content = {
                 type = "luks";
-		name = "crypt";
-	        settings = {
+                name = "crypt";
+                settings = {
                   allowDiscards = true;
-		};
+                };
                 content = {
                   type = "btrfs";
                   extraArgs = [ "-f" ];
                   subvolumes = {
                     "/root" = {
                       mountpoint = "/";
-		      mountOptions = [ "subvol=root" "compress=zstd" ];
+                      mountOptions = [
+                        "subvol=root"
+                        "compress=zstd"
+                      ];
                     };
                     "/home" = {
-		      mountpoint = "/home"; 
-                      mountOptions = [ "subvol=home" "compress=zstd" "noatime" ];
+                      mountpoint = "/home";
+                      mountOptions = [
+                        "subvol=home"
+                        "compress=zstd"
+                        "noatime"
+                      ];
                     };
                     "/nix/store" = {
-		      mountpoint = "/nix/store";
-                      mountOptions = [ "subvol=nix/store" "compress=zstd" "noatime" ];
+                      mountpoint = "/nix/store";
+                      mountOptions = [
+                        "subvol=nix/store"
+                        "compress=zstd"
+                        "noatime"
+                      ];
                     };
                   };
                 };
               };
-	    };
-	    plainSwap = {
-	      name = "swap";
-	      device = "/dev/nvme0n1p3";
-	      size = "100%";
-	      content = {
+            };
+            plainSwap = {
+              name = "swap";
+              device = "/dev/nvme0n1p3";
+              size = "100%";
+              content = {
                 type = "swap";
-	      };
-	    };
+              };
+            };
           };
         };
       };

@@ -5,7 +5,7 @@
     username = "valentinus";
     homeDirectory = "/home/valentinus";
   };
-  
+
   home.packages = [ ];
   imports =
     lib.map (p: ./. + "/${p}") (
@@ -15,5 +15,5 @@
     )
     ++ [
       inputs.self.homeManagerModules.valentinus
-    ];  
+    ];
 }
