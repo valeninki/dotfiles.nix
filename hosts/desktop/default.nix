@@ -2,9 +2,9 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
-    ./configuration.nix
     inputs.self.nixosModules.valentinus
+    ./host/hardware-configuration.nix
+    ./host/configuration.nix
     ./host
     ./home
   ];

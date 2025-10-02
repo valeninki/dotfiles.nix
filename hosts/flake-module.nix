@@ -65,7 +65,7 @@ in
 	unixpkgs = repo "unixpkgs" "x86_64-linux";
       };
       modules = [
-        ./thinkpad/home
+        ./desktop/home
 	(inputs.self + "/users/valentinus/home")
       ];
     };

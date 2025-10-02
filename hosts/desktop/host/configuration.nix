@@ -5,11 +5,6 @@
 { config, lib, pkgs, valenpkgs, inputs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
-  
   # Uses latest CachyOS kernel and enables "scx_bpfland" scheduler.
   boot.kernelPackages = pkgs.linuxPackages_latest;
   services.scx = {
@@ -62,16 +57,6 @@
     fish.enable = true;
     wireshark.enable = true;
   };
-
-  environment.systemPackages = with pkgs; 
-       [
-        wget
-        networkmanagerapplet
-        gparted
-        e2fsprogs
-        duperemove
-	dmidecode
-       ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
