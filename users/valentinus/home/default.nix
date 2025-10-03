@@ -96,7 +96,7 @@
 
     ## User packages
     ungoogled-chromium
-    vesktop
+    equibop
     telegram-desktop
     gcr
     playerctl
@@ -104,7 +104,6 @@
     gnome-keyring
     r2modman
     protonup-qt
-    jellyfin-rpc
     amberol
     chessx
     rustdesk
@@ -144,7 +143,7 @@
       defaultApplications = {
         "inode/directory" = [ "pcmanfm.desktop" ];
         "x-scheme-handler/https" = [ "google-chrome.desktop" ];
-        "x-scheme-handler/discord" = [ "vesktop.desktop" ];
+        "x-scheme-handler/discord" = [ "equibop.desktop" ];
         "x-scheme-handler/ror2mm" = [ "r2modman.desktop" ];
         "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
         "x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ];
