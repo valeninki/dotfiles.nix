@@ -16,6 +16,7 @@
           "clock"
           "memory"
           "pulseaudio"
+	  "battery"
           "tray"
         ];
 
