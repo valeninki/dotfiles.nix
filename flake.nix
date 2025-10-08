@@ -68,7 +68,6 @@
 
       imports = [
         ./hosts/flake-module.nix
-	./modules/external
         inputs.pre-commit-hooks.flakeModule
       ];
 
