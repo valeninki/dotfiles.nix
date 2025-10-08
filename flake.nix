@@ -18,7 +18,7 @@
     };
 
     valenpkgs = {
-      url = "git+https://git.valentinus.dev/valeninki/nixpkgs.git";
+      url = "git+https://git.valentinus.dev/valeninki/nixpkgs.git?ref=unstable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -68,6 +68,7 @@
 
       imports = [
         ./hosts/flake-module.nix
+	./modules/external
         inputs.pre-commit-hooks.flakeModule
       ];
 

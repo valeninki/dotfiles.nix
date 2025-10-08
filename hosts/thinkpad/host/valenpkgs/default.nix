@@ -1,10 +1,8 @@
-#{ valenpkgs, inputs, ... }:
+{ pkgs }:
 
 {
-  #  imports = [ inputs.valenpkgs.flakeModule ];
-  #
-  #  environment.systemPackages = with valenpkgs; [
-  #    topmem
-  #    zmem
-  #  ];
+   environment.systemPackages = with pkgs; [
+     zmem
+     topmem
+   ];
 }
