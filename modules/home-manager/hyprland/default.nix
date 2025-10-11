@@ -1,9 +1,5 @@
 {
 
-  imports = [
-    ./custom.nix
-    ./cursor.nix
-  ];
   wayland.windowManager.hyprland.settings = {
     input = {
       kb_layout = "tr";
@@ -12,9 +8,6 @@
     "$mod" = "SUPER";
     "$menu" = "wofi --show drun ";
     "$fileman" = "pcmanfm";
-    "$active" = "rgb(7E5030)";
-    "$secondary" = "rgb(00312C)";
-    "$inactive" = "rgb(67131E)";
 
     env = [
       "XDG_CURRENT_DESKTOP, Hyprland"
@@ -32,8 +25,6 @@
 
     general = {
       border_size = 2;
-      "col.active_border" = "$active $secondary";
-      "col.inactive_border" = "$inactive";
       gaps_in = 5;
       gaps_out = 5;
     };

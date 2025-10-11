@@ -37,6 +37,7 @@
     nvtopPackages.amd
     inxi
     gping
+    gdu
 
     ## Window Manager and rice needded packages
     kitty

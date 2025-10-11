@@ -90,26 +90,5 @@
         };
       };
     };
-
-    style = ''
-          window#waybar {
-            background-color: rgba(38, 47, 40, 0.8);
-            color: rgba(126, 80, 48, 1.0);
-            border-radius: 50px;
-            margin: 10px;
-          }
-         #workspaces button {
-            color: rgba(126, 80, 48, 1.0);
-         }
-         #workspaces button.active {
-            color: rgba(103, 19, 30, 1.0);
-         }
-         #network, #clock, #memory, #pulseaudio, #tray {
-            padding: 0 10px;
-            margin: 10px;
-            border-radius: 50px;
-      /*      background-color: rgba(0, 49, 44, 0.6); */
-         }
-    '';
   };
 }
