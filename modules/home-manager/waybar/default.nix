@@ -23,6 +23,9 @@
           "battery"
 	  "custom/space"
           "tray"
+	  "custom/space"
+	  "custom/power"
+	  "custom/space"
         ];
 
         "hyprland/workspaces" = {
@@ -44,7 +47,7 @@
         };
 
         "clock" = {
-          format = " {:%H:%M}";
+          format = "  {:%H:%M}";
           format-alt = "{:%A, %B %d, %Y (%R)} 󰸘 ";
           tooltip-format = "<tt><small>{calendar}</small></tt>";
           calendar = {
@@ -106,6 +109,11 @@
 	"custom/space" = {
 	  format = "  ";
 	  tooltip = false;
+	};
+
+	"custom/power" = {
+	  format = "⏻ ";
+	  on-click = "poweroff";
 	};
       };
     };
