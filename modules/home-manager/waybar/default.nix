@@ -11,12 +11,17 @@
         ];
         modules-center = [ "hyprland/window" ];
         modules-right = [
-          "mpd"
+	  "custom/space"
           "network"
-          "clock"
+	  "custom/space"
           "memory"
+	  "custom/space"
           "pulseaudio"
+	  "custom/space"
+	  "clock"
+	  "custom/space"
           "battery"
+	  "custom/space"
           "tray"
         ];
 
@@ -31,18 +36,16 @@
         "network" = {
           interface = [
             "enp34s0"
-            "tun0"
           ];
-          format-ethernet = "{ipaddr}/{cidr}";
-          format-disconnected = " ";
-          tooltip-format = "{ifname} via {gwaddr}";
-          tooltip-format-ethernet = "{ifname}";
-          tooltip-format-disconnected = "Disconnected";
+	  format-wifi = "󰖩 ";
+          format-ethernet = " ";
+          format-disconnected = " ";
+	  tooltip-format = "{essid} {ipaddr}/{cidr}";
         };
 
         "clock" = {
-          format = "{:%H:%M}  ";
-          format-alt = "{:%A, %B %d, %Y (%R)}  ";
+          format = " {:%H:%M}";
+          format-alt = "{:%A, %B %d, %Y (%R)} 󰸘 ";
           tooltip-format = "<tt><small>{calendar}</small></tt>";
           calendar = {
             mode = "year";
@@ -73,21 +76,37 @@
 
         "memory" = {
           interval = 30;
-          format = "{used:0.1f}G/{total:0.1f}G";
+          format = "  {used:0.1f}G/{total:0.1f}G";
 
         };
 
         "pulseaudio" = {
-          format = "{volume}% {icon}";
-          format-muted = "Muted";
+          format = "{icon} {volume}%";
+          format-muted = " ";
+	  format-source = " {volume}% ";
+	  format-source-muted = "󰍭 ";
           scroll-step = 1;
           on-click = "pavucontrol";
+	  format-icons = {
+	    headphone = "󰋋 ";
+	    headset = " ";
+	    default = [
+              " "
+              " "
+              " "
+            ];
+	  };
         };
 
         "tray" = {
           icon-size = 21;
           spacing = 10;
         };
+	
+	"custom/space" = {
+	  format = "  ";
+	  tooltip = false;
+	};
       };
     };
   };
