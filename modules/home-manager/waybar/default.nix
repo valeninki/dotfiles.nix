@@ -11,21 +11,21 @@
         ];
         modules-center = [ "hyprland/window" ];
         modules-right = [
-	  "custom/space"
+          "custom/space"
           "network"
-	  "custom/space"
+          "custom/space"
           "memory"
-	  "custom/space"
+          "custom/space"
           "pulseaudio"
-	  "custom/space"
-	  "clock"
-	  "custom/space"
+          "custom/space"
+          "clock"
+          "custom/space"
           "battery"
-	  "custom/space"
+          "custom/space"
           "tray"
-	  "custom/space"
-	  "custom/power"
-	  "custom/space"
+          "custom/space"
+          "custom/power"
+          "custom/space"
         ];
 
         "hyprland/workspaces" = {
@@ -40,10 +40,10 @@
           interface = [
             "enp34s0"
           ];
-	  format-wifi = "󰖩 ";
+          format-wifi = "󰖩 ";
           format-ethernet = " ";
           format-disconnected = " ";
-	  tooltip-format = "{essid} {ipaddr}/{cidr}";
+          tooltip-format = "{essid} {ipaddr}/{cidr}";
         };
 
         "clock" = {
@@ -86,35 +86,35 @@
         "pulseaudio" = {
           format = "{icon} {volume}%";
           format-muted = " ";
-	  format-source = " {volume}% ";
-	  format-source-muted = "󰍭 ";
+          format-source = " {volume}% ";
+          format-source-muted = "󰍭 ";
           scroll-step = 1;
           on-click = "pavucontrol";
-	  format-icons = {
-	    headphone = "󰋋 ";
-	    headset = " ";
-	    default = [
+          format-icons = {
+            headphone = "󰋋 ";
+            headset = " ";
+            default = [
               " "
               " "
               " "
             ];
-	  };
+          };
         };
 
         "tray" = {
           icon-size = 21;
           spacing = 10;
         };
-	
-	"custom/space" = {
-	  format = "  ";
-	  tooltip = false;
-	};
 
-	"custom/power" = {
-	  format = "⏻ ";
-	  on-click = "poweroff";
-	};
+        "custom/space" = {
+          format = "  ";
+          tooltip = false;
+        };
+
+        "custom/power" = {
+          format = "⏻ ";
+          on-click = "poweroff";
+        };
       };
     };
   };
