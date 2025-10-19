@@ -44,17 +44,21 @@ in
         (inputs.chaotic.nixosModules.nyx-registry)
       ];
     };
-    #    minimal = inputs.nixpkgs.lib.nixosSystem rec {
-    #      system = "x86_64-linux";
-    #      pkgs = repo "nixpkgs" system;
-    #      specialArgs = {
-    #        unixpkgs = repo "unixpkgs" system;
-    #	inherit inputs;
-    #      };
-    #      modules = [
-    #        ./minimal
-    #      ];
-    #    };
+    minimal = inputs.nixpkgs.lib.nixosSystem rec {
+      system = "x86_64-linux";
+      pkgs = repo "nixpkgs" system;
+      specialArgs = {
+        unixpkgs = repo "unixpkgs" system;
+     	inherit inputs;
+    };
+        modules = [
+          ./minimal
+	  (inputs.self + "/users/test")
+	  inputs.home-manager.nixosModules.home-manager
+	  (inputs.disko.nixosModules.disko)
+      ];
+    };
+
   };
 
   flake.homeConfigurations = {
@@ -88,7 +92,7 @@ in
       };
       modules = [
         ./minimal/home
-        ("/users/test/home")
+        (inputs.self + "/users/test/home")
       ];
     };
   };

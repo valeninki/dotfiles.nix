@@ -87,8 +87,15 @@
         };
 
       flake = {
-        nixosModules.valentinus = import ./modules/nixos;
-        homeManagerModules.valentinus = import ./modules/home-manager;
+        
+      ## For x86_64-linux Hosts and Users
+        nixosModules.valentinus = import ./modules/nixos/x86_64-linux/personal;
+        homeManagerModules.valentinus = import ./modules/home-manager/x86_64-linux/personal;
+
+	nixosModules.test = import ./modules/nixos/x86_64-linux/minimal;
+	homeManagerModules.test = import ./modules/home-manager/x86_64-linux/minimal;
+      
+      ## For aarch64-linux Hosts and Users
       };
     };
 }

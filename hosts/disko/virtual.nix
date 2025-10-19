@@ -23,6 +23,14 @@
                 ];
               };
             };
+            plainSwap = {
+              name = "swap";
+              device = "/dev/vda3";
+              size = "4G";
+              content = {
+                type = "swap";
+              };
+            };
             root = {
               name = "root";
               device = "/dev/vda2";
@@ -49,14 +57,6 @@
                     mountpoint = "/nix";
                   };
                 };
-              };
-            };
-            plainSwap = {
-              name = "swap";
-              device = "/dev/vda3";
-              size = "4G";
-              content = {
-                type = "swap";
               };
             };
           };

@@ -5,7 +5,7 @@
     inputs.self.nixosModules.valentinus
     ./host/configuration.nix
     ./host/hardware-configuration.nix
-    ./host/luks.nix
+    ./../disko/luks.nix
     ./host
     ./home
   ];
