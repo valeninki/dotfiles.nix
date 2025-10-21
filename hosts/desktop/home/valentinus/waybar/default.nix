@@ -1,5 +1,3 @@
-{ inputs, lib, ... }:
-
 {
   programs.waybar = {
     settings = {

@@ -49,13 +49,26 @@ in
       pkgs = repo "nixpkgs" system;
       specialArgs = {
         unixpkgs = repo "unixpkgs" system;
-     	inherit inputs;
+        inherit inputs;
+      };
+      modules = [
+        ./minimal
+        (inputs.self + "/users/test")
+        inputs.home-manager.nixosModules.home-manager
+        (inputs.disko.nixosModules.disko)
+      ];
     };
-        modules = [
-          ./minimal
-	  (inputs.self + "/users/test")
-	  inputs.home-manager.nixosModules.home-manager
-	  (inputs.disko.nixosModules.disko)
+    pi = inputs.nixpkgs.lib.nixosSystem rec {
+      system = "aarch64-linux";
+      pkgs = repo "nixpkgs" system;
+      specialArgs = {
+        unixpkgs = repo "unixpkgs" system;
+        inherit inputs;
+      };
+      modules = [
+        ./pi
+        (inputs.self + "/users/berry")
+        inputs.home-manager.nixosModules.home-manager
       ];
     };
 
@@ -93,6 +106,17 @@ in
       modules = [
         ./minimal/home
         (inputs.self + "/users/test/home")
+      ];
+    };
+    pi = inputs.homeManagerConfiguration {
+      pkgs = repo "nixpkgs" "aarch64-linux";
+      extraSpecialArgs = {
+        inherit inputs;
+        unixpkgs = repo "unixpkgs" "aarch64-linux";
+      };
+      modules = [
+        ./pi/home
+        (inputs.self + "/users/berry/home")
       ];
     };
   };

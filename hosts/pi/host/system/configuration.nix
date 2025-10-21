@@ -4,16 +4,14 @@
 
 {
   lib,
-  pkgs,
   ...
 }:
 
 {
-  # Uses latest CachyOS kernel and enables "scx_bpfland" scheduler.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  services.scx = {
-    enable = true;
-    scheduler = "scx_bpfland";
+  # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
+  boot.loader = {
+    grub.enable = false;
+    generic-extlinux-compatible.enable = true;
   };
 
   # Enables flake and nd.
@@ -23,17 +21,10 @@
   ];
   programs.nix-ld.enable = true;
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-    efi.efiSysMountPoint = "/boot";
-  };
-
   # Network settings.
   networking = {
-    hostName = "thinkpad"; # Define your hostname.
-    networkmanager.enable = true; # Easiest to use and most distros use this by default.
+    hostName = "pi";
+    networkmanager.enable = true;
   };
 
   # Set your time zone.
@@ -47,22 +38,8 @@
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-  # Enable the X11 windowing system.
-  programs = {
-    hyprland.enable = true;
-  };
-
-  # Enable AMD Graphics and enable 32Bit.
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [ amdvlk ];
-    extraPackages32 = with pkgs; [ driversi686Linux.amdvlk ];
-  };
-
   programs = {
     fish.enable = true;
-    wireshark.enable = true;
   };
 
   # Enable the OpenSSH daemon.
