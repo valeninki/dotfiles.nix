@@ -22,6 +22,8 @@
           "custom/space"
           "battery"
           "custom/space"
+	  "backlight"
+	  "custom/space"
           "tray"
           "custom/space"
           "custom/power"

@@ -47,9 +47,10 @@
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-  # Enable the X11 windowing system.
+  # Enable Hyprland and Brightness control.
   programs = {
     hyprland.enable = true;
+    light.enable = true;
   };
 
   # Enable AMD Graphics and enable 32Bit.
