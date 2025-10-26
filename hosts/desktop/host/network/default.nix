@@ -7,5 +7,8 @@
         wakeOnLan.enable = true;
       };
     };
+    firewall = {
+      allowedUDPPorts = [ 9 ];
+    };
   };
 }
