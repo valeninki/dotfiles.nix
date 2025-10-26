@@ -13,6 +13,7 @@
     v4l-utils
     xdg-user-dirs
     xdg-utils
+    wakeonlan
   ];
   services = {
     fprintd = {
