@@ -6,5 +6,6 @@
     duperemove
     ethtool
     networkd-dispatcher
+    wakeonlan
   ];
 }

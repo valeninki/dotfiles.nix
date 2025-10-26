@@ -20,16 +20,16 @@
             "󰁹"
           ];
         };
-	"backlight" = {
-	  "device" = "amdgpu_bl1";
-	  "format" = "{icon} {percent}%";
-	  "format-icons" = [
-	    "󰃠 "
-	    "󰃟 "
-	    "󰃝 "
-	    "󰃞 "
-	  ];
-	};
+        "backlight" = {
+          "device" = "amdgpu_bl1";
+          "format" = "{icon} {percent}%";
+          "format-icons" = [
+            "󰃠 "
+            "󰃟 "
+            "󰃝 "
+            "󰃞 "
+          ];
+        };
       };
     };
   };
