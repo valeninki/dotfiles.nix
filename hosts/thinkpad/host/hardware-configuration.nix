@@ -36,7 +36,11 @@
       "kvm-amd"
       "v4l2loopback"
     ];
-    extraModprobeConfig = ''options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"'';
+    extraModprobeConfig = ''
+      options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
+      options iwlwifi power_save=0
+      options iwlwifi bt_coex_active=0
+    '';
     extraModulePackages = [ ];
     kernelParams = [
       "zswap.enabled=1"
