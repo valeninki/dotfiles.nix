@@ -21,7 +21,6 @@
     "nix-command"
     "flakes"
   ];
-  programs.nix-ld.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
@@ -49,6 +48,7 @@
 
   # Enable Hyprland and Brightness control.
   programs = {
+    nix-ld.enable = true;
     hyprland.enable = true;
     light.enable = true;
   };

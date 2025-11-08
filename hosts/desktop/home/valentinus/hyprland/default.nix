@@ -1,4 +1,6 @@
-{ ... }:
+{
+  ...
+}:
 
 {
   services.hyprpaper.settings = {

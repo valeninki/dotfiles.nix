@@ -19,7 +19,6 @@
     "nix-command"
     "flakes"
   ];
-  programs.nix-ld.enable = true;
 
   # Network settings.
   networking = {
@@ -39,6 +38,7 @@
   };
 
   programs = {
+    nix-ld.enable = true;
     fish.enable = true;
   };
 

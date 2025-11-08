@@ -21,10 +21,10 @@ in
         ./desktop
         (inputs.self + "/users/valentinus")
         inputs.home-manager.nixosModules.home-manager
-        (inputs.disko.nixosModules.disko)
-        (inputs.chaotic.nixosModules.nyx-cache)
-        (inputs.chaotic.nixosModules.nyx-overlay)
-        (inputs.chaotic.nixosModules.nyx-registry)
+        inputs.disko.nixosModules.disko
+        inputs.chaotic.nixosModules.nyx-cache
+        inputs.chaotic.nixosModules.nyx-overlay
+        inputs.chaotic.nixosModules.nyx-registry
       ];
     };
     thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
@@ -38,10 +38,10 @@ in
         ./thinkpad
         (inputs.self + "/users/valentinus")
         inputs.home-manager.nixosModules.home-manager
-        (inputs.disko.nixosModules.disko)
-        (inputs.chaotic.nixosModules.nyx-cache)
-        (inputs.chaotic.nixosModules.nyx-overlay)
-        (inputs.chaotic.nixosModules.nyx-registry)
+        inputs.disko.nixosModules.disko
+        inputs.chaotic.nixosModules.nyx-cache
+        inputs.chaotic.nixosModules.nyx-overlay
+        inputs.chaotic.nixosModules.nyx-registry
       ];
     };
     minimal = inputs.nixpkgs.lib.nixosSystem rec {
@@ -55,7 +55,7 @@ in
         ./minimal
         (inputs.self + "/users/test")
         inputs.home-manager.nixosModules.home-manager
-        (inputs.disko.nixosModules.disko)
+        inputs.disko.nixosModules.disko
       ];
     };
     pi = inputs.nixpkgs.lib.nixosSystem rec {

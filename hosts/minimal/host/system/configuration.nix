@@ -21,7 +21,6 @@
     "nix-command"
     "flakes"
   ];
-  programs.nix-ld.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
@@ -48,6 +47,7 @@
   };
 
   programs = {
+    nix-ld.enable = true;
     fish.enable = true;
   };
 

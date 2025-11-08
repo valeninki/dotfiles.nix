@@ -21,7 +21,6 @@
     "nix-command"
     "flakes"
   ];
-  programs.nix-ld.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
@@ -41,9 +40,12 @@
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-  # Enable the X11 windowing system.
+  # Enable the Hyprland and other things.
   programs = {
     hyprland.enable = true;
+    nix-ld.enable = true;
+    fish.enable = true;
+    wireshark.enable = true;
   };
 
   # Enable AMD Graphics and enable 32Bit.
@@ -52,11 +54,6 @@
     enable32Bit = true;
     extraPackages = with pkgs; [ amdvlk ];
     extraPackages32 = with pkgs; [ driversi686Linux.amdvlk ];
-  };
-
-  programs = {
-    fish.enable = true;
-    wireshark.enable = true;
   };
 
   # Enable the OpenSSH daemon.

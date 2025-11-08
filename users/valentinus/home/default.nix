@@ -24,7 +24,6 @@
     tmate
     dmidecode
     libva-utils
-    rpi-imager
     scrcpy
     openssl
 
