@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  inputs,
   ...
 }:
 
@@ -45,9 +44,14 @@
     slurp
     qt6ct
 
+    ## Optional
+    tesseract4
+
     ## Editing Things
     obsidian
     gimp
+    inkscape
+    upscayl
     obs-studio
     pavucontrol
     pulsemixer
@@ -107,6 +111,7 @@
     rustdesk
     prismlauncher
     libreoffice
+    zathura
   ];
 
   services = {
@@ -166,5 +171,5 @@
   home.activation = { };
   imports =
     lib.map (p: ./. + "/${p}") (lib.remove "default.nix" (lib.attrNames (builtins.readDir ./.)))
-    ++ [ inputs.self.homeManagerModules.valentinus ];
+    ++ [ ../../../modules/home-manager/x86_64-linux/personal ];
 }

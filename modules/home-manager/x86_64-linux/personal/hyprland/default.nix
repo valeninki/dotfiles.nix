@@ -67,6 +67,10 @@
       "$mod SHIFT, 3, movetoworkspace, 3"
       "$mod SHIFT, 4, movetoworkspace, 4"
       "$mod SHIFT, 5, movetoworkspace, 5"
+      "$mod SHIFT, 6, movetoworkspace, 6"
+      "$mod SHIFT, 7, movetoworkspace, 7"
+      "$mod SHIFT, 8, movetoworkspace, 8"
+      "$mod SHIFT, 9, movetoworkspace, 9"
 
       ## Scroll Through Existing Workspaces
       "$mod, mouse_down, workspace, e-1"
@@ -85,6 +89,7 @@
 
       ## Screenshot Binds
       "$mod SHIFT, S, exec, grim -g \"$(slurp -d)\" - | wl-copy"
+      "$mod SHIFT, A, exec, grim -g \"$(slurp)\" - | tesseract stdin stdout -l tur | wl-copy"
     ]
     ++ (builtins.concatLists (
       builtins.genList (
@@ -102,7 +107,7 @@
 
   services.hyprpaper.settings = {
 
-    preload = [ "/home/valentinus/Nextcloud/Photos/Wallpapers/Nature/flowers.jpg" ];
+    preload = [ "/home/valentinus/Nextcloud/Photos/Wallpapers/Nature/landscape-1920x1200.png" ];
 
   };
 }

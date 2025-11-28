@@ -14,6 +14,7 @@
     xdg-user-dirs
     xdg-utils
     wakeonlan
+    iperf3
   ];
   services = {
     fprintd = {

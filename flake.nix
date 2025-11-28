@@ -18,7 +18,7 @@
     };
 
     valenpkgs = {
-      url = "git+https://git.valentinus.dev/valeninki/nixpkgs.git?ref=unstable";
+      url = "github:valeninki/nixpkgs/unstable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -71,18 +71,14 @@
         inputs.pre-commit-hooks.flakeModule
       ];
 
-      perSystem =
-        {
-          ...
-        }:
-        {
-          pre-commit.settings.hooks = {
-            nixfmt-rfc-style.enable = true;
-            nil.enable = true;
-            deadnix.enable = true;
-            statix.enable = true;
-          };
+      perSystem = {
+        pre-commit.settings.hooks = {
+          nixfmt-rfc-style.enable = true;
+          nil.enable = true;
+          deadnix.enable = true;
+          statix.enable = true;
         };
+      };
 
       flake = {
 
@@ -94,16 +90,6 @@
 
           ## For aarch64-linux Hosts and Users
           berry = import ./modules/nixos/aarch64-linux;
-        };
-
-        homeManagerModules = {
-
-          # For x86_64-linux Hosts and Users
-          valentinus = import ./modules/home-manager/x86_64-linux/personal;
-          test = import ./modules/home-manager/x86_64-linux/minimal;
-
-          ## For aarch64-linux Hosts and Users
-          berry = import ./modules/home-manager/aarch64-linux;
         };
       };
     };

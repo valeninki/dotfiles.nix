@@ -3,8 +3,8 @@
 {
   imports = [
     inputs.self.nixosModules.valentinus
-    ./host/configuration.nix
-    ./host/hardware-configuration.nix
+    ./host/system/configuration.nix
+    ./host/system/hardware.nix
     ./../disko/luks.nix
     ./host
     ./home

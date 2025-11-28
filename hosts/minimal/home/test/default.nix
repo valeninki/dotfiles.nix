@@ -1,4 +1,4 @@
-{ inputs, lib, ... }:
+{ lib, ... }:
 
 {
   home = {
@@ -14,6 +14,6 @@
       )
     )
     ++ [
-      inputs.self.homeManagerModules.test
+      ./../../../../modules/home-manager/x86_64-linux/minimal/default.nix
     ];
 }

@@ -1,4 +1,4 @@
-{ inputs, lib, ... }:
+{ lib, ... }:
 
 {
   home = {
@@ -14,6 +14,6 @@
       )
     )
     ++ [
-      inputs.self.homeManagerModules.berry
+      ./../../../../modules/home-manager/aarch64-linux/default.nix
     ];
 }

@@ -7,7 +7,7 @@
 
   stylix = {
     enable = true;
-    image = ./../../../../../assets/Wallpapers/flowers.jpg;
+    image = ./../../../../../assets/Wallpapers/landscape-1920x1200.png;
     icons = {
       enable = true;
       package = pkgs.flat-remix-icon-theme;

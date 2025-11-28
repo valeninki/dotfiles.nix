@@ -1,4 +1,4 @@
-{ inputs, lib, ... }:
+{ lib, ... }:
 
 {
   home = {
@@ -14,6 +14,6 @@
       )
     )
     ++ [
-      inputs.self.homeManagerModules.valentinus
+      ./../../../../modules/home-manager/x86_64-linux/personal/default.nix
     ];
 }
