@@ -104,10 +104,4 @@
       ) 9
     ));
   };
-
-  services.hyprpaper.settings = {
-
-    preload = [ "/home/valentinus/Nextcloud/Photos/Wallpapers/Nature/landscape-1920x1200.png" ];
-
-  };
 }

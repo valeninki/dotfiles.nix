@@ -9,17 +9,6 @@
   virtualisation = {
     libvirtd = {
       enable = true;
-
-      qemu = {
-        ovmf = {
-          enable = true;
-          packages = [
-            (pkgs.OVMF.override {
-              secureBoot = true;
-            }).fd
-          ];
-        };
-      };
     };
     spiceUSBRedirection.enable = true;
   };

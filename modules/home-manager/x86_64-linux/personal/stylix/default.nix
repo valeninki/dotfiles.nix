@@ -7,16 +7,16 @@
 
   stylix = {
     enable = true;
-    image = ./../../../../../assets/Wallpapers/landscape-1920x1200.png;
+    image = ./../../../../../assets/Wallpapers/yellow_rose-1920x1200.png;
     icons = {
       enable = true;
       package = pkgs.flat-remix-icon-theme;
-      light = "Flat-Remix-Orange-Light";
-      dark = "Flat-Remix-Orange-Dark";
+      light = "Flat-Remix-Yellow-Light";
+      dark = "Flat-Remix-Yellow-Dark";
     };
     cursor = {
-      package = pkgs.catppuccin-cursors.mochaPeach;
-      name = "catppuccin-mocha-peach-cursors";
+      package = pkgs.catppuccin-cursors.mochaYellow;
+      name = "catppuccin-mocha-yellow-cursors";
       size = 24;
     };
     opacity = {

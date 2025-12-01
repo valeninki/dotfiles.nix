@@ -42,7 +42,7 @@
     cliphist
     grim
     slurp
-    qt6ct
+    qt6Packages.qt6ct
 
     ## Optional
     tesseract4
