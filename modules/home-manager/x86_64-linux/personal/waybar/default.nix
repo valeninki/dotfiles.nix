@@ -58,11 +58,11 @@
             weeks-pos = "right";
             on-scroll = 1;
             format = {
-              months = "<span color='#6F3518'><b>{}</b></span>";
-              days = "<span color='#7E5030'><b>{}</b></span>";
-              weeks = "<span color='#f8e9e9'><b>W{}</b></span>";
-              weekdays = "<span color='#524837'><b>{}</b></span>";
-              today = "<span color='#67131E'><b><u>{}</u></b></span>";
+              months = "<span color='#553e67'><b>{}</b></span>";
+              days = "<span color='#af92cb'><b>{}</b></span>";
+              weeks = "<span color='#b18471'><b>W{}</b></span>";
+              weekdays = "<span color='#a58d4c'><b>{}</b></span>";
+              today = "<span color='#a88e28'><b><u>{}</u></b></span>";
             };
           };
           actions = {

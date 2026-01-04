@@ -34,6 +34,7 @@
     inxi
     gping
     gdu
+	dua
 
     ## Window Manager and rice needded packages
     kitty
@@ -61,7 +62,6 @@
     unzip
     picard
     easytag
-    yt-dlp
     ffmpeg
     binutils
     handbrake
@@ -106,6 +106,7 @@
     gnome-keyring
     r2modman
     protonup-qt
+	moonlight-qt
     amberol
     chessx
     rustdesk
@@ -138,8 +139,14 @@
   xdg = {
     portal = {
       enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
-      configPackages = [ pkgs.xdg-desktop-portal-hyprland ];
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
+      ];
+      configPackages = with pkgs; [
+        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
+      ];
     };
     mimeApps = {
       enable = true;
