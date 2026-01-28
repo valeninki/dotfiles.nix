@@ -7,7 +7,6 @@
     useRoutingFeatures = "server";
     extraUpFlags = [
       "--accept-dns"
-      "--accept-router"
       "--ssh"
     ];
   };

@@ -30,6 +30,20 @@
 
     kernel.sysctl = {
       "vm.swappiness" = 10;
+      "net.ipv4.tcp_fin_timeout" = 30;
+      "net.ipv4.tcp_max_syn_backlog" = 5000;
+      "net.ipv4.tcp_rmem" = "4096 131072 12582912";
+      "net.ipv4.tcp_wmem" = "4096 87380 4194304";
+      "net.ipv4.tcp_congestion_control" = "bbr";
+      "net.core.netdev_max_backlog" = 2000;
+      "net.core.default_qdisc" = "fq";
+      "net.core.rmem_max" = 2097152;
+      "net.core.wmem_max" = 2097152;
+      "net.ipv4.tcp_syncookies" = 1;
+      "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+      "net.ipv6.conf.*.disable_ipv6" = 1;
+      "fs.protected_hardlinks/symlinks" = 1;
+      "fs.protected_fifos/regular" = 2;
     };
 
     kernelModules = [
@@ -46,6 +60,7 @@
       "zswap.enabled=1"
       "zswap.compressor=lz4"
       "zswap.max_pool_percent=20"
+      "ipv6.disable=1"
     ];
   };
 

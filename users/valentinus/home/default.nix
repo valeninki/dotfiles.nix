@@ -34,7 +34,7 @@
     inxi
     gping
     gdu
-	dua
+    dua
 
     ## Window Manager and rice needded packages
     kitty
@@ -98,6 +98,7 @@
 
     ## User packages
     ungoogled-chromium
+    jellyfin-tui
     equibop
     telegram-desktop
     gcr
@@ -106,7 +107,9 @@
     gnome-keyring
     r2modman
     protonup-qt
-	moonlight-qt
+    moonlight-qt
+    gtkhash
+    remmina
     amberol
     chessx
     rustdesk

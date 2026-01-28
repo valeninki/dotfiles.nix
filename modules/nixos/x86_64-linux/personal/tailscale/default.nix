@@ -8,6 +8,7 @@
     extraUpFlags = [
       "--accept-dns"
       "--accept-router"
+      "--accept-routes"
       "--ssh"
     ];
   };

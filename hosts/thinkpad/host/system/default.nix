@@ -24,6 +24,9 @@
         driver = pkgs.libfprint-2-tod1-goodix-550a;
       };
     };
+    fwupd = {
+      enable = true;
+    };
   };
   systemd.services = {
     fprintd = {
