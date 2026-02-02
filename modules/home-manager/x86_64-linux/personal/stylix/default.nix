@@ -7,16 +7,16 @@
 
   stylix = {
     enable = true;
-    image = ./../../../../../assets/Wallpapers/purple_flowers.png;
+    image = ./../../../../../assets/Wallpapers/prunus.png;
     icons = {
       enable = true;
       package = pkgs.flat-remix-icon-theme;
-      light = "Flat-Remix-Magenta-Light";
-      dark = "Flat-Remix-Magenta-Dark";
+      light = "Flat-Remix-Red-Light";
+      dark = "Flat-Remix-Red-Dark";
     };
     cursor = {
-      package = pkgs.catppuccin-cursors.mochaLavender;
-      name = "catppuccin-mocha-lavender-cursors";
+      package = pkgs.catppuccin-cursors.mochaRed;
+      name = "catppuccin-mocha-red-cursors";
       size = 24;
     };
     opacity = {
