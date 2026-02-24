@@ -1,8 +1,16 @@
 {
   lib,
+  inputs,
   pkgs,
   ...
 }:
+
+let
+  unstable = import inputs.unixpkgs {
+    inherit (pkgs.stdenv.hostPlatform) system;
+    config.allowUnfree = true;
+  };
+in
 
 {
   home = {
@@ -25,6 +33,10 @@
     libva-utils
     scrcpy
     openssl
+
+    ## ADB
+    android-tools
+    heimdall
 
     ## Monitoring Packages
     fastfetch
@@ -69,7 +81,6 @@
     vlc
 
     ## Coding Things
-    git
     android-tools
     distrobox
     vscode
@@ -99,7 +110,7 @@
     ## User packages
     ungoogled-chromium
     jellyfin-tui
-    equibop
+    unstable.equibop
     telegram-desktop
     gcr
     playerctl

@@ -5,6 +5,7 @@
         wg0 = {
           ips = [ "10.0.0.3/32" ];
           listenPort = 51820;
+          mtu = 1280;
           privateKeyFile = "/home/valentinus/Nextcloud/Wireguard/thinkpad/private";
 
           peers = [

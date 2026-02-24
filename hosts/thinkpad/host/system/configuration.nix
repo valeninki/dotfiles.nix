@@ -13,7 +13,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   services.scx = {
     enable = true;
-    scheduler = "scx_bpfland";
+    scheduler = "scx_rusty";
   };
 
   # Enables flake and nd.
@@ -49,10 +49,33 @@
   # Enable Hyprland and Brightness control and other things.
   programs = {
     nix-ld.enable = true;
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      xwayland.enable = true;
+    };
     light.enable = true;
     fish.enable = true;
     wireshark.enable = true;
+  };
+
+  services = {
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = ''
+            		    ${pkgs.tuigreet}/bin/tuigreet \
+            			--time \
+            			--asterisks \
+            			--user-menu \
+            			--cmd Hyprland \
+            			--greeting "Welcome back, Kerem" \
+            			--theme "container=#25181c;text=#e8e1df;border=#75676b;prompt=#a38a90;time=#9c8c97;action=#f06161;button=#e8e1df;input=#e8e1df"
+            		  '';
+          user = "greeter";
+        };
+      };
+    };
   };
 
   # Enable AMD Graphics and enable 32Bit.

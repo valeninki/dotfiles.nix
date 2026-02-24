@@ -1,8 +1,13 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   valenpkgs = inputs.valenpkgs.packages.${pkgs.stdenv.hostPlatform.system};
 in
+
 {
   imports = [
     inputs.valenpkgs.nixosModules.valenpkgs
@@ -11,5 +16,6 @@ in
   environment.systemPackages = with valenpkgs; [
     zmem
     topmem
+    agopengps
   ];
 }

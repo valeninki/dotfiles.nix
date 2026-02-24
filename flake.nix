@@ -18,7 +18,7 @@
     };
 
     valenpkgs = {
-      url = "github:valeninki/nixpkgs/unstable";
+      url = "git+https://git.valentinus.dev/valeninki/nixpkgs?ref=unstable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
