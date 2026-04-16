@@ -1,7 +1,9 @@
 {
-  programs.fish = {
-    shellAliases = {
-      rebuild = "doas nixos-rebuild switch --flake ~/.dots#w1";
+  programs = {
+    fish = {
+      shellAliases = {
+        rebuild = "doas nixos-rebuild switch --flake ~/.dots#w1";
+      };
     };
   };
 }

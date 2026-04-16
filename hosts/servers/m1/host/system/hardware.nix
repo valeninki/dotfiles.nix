@@ -22,17 +22,21 @@
         "sd_mod"
         "sr_mod"
       ];
+      systemd = {
+        enable = true;
+      };
       kernelModules = [ "btrfs" ];
-      systemd.enable = true;
     };
 
-    kernel.sysctl = {
-      "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
-      "net.ipv6.conf.*.disable_ipv6" = 1;
-      "fs.protected_hardlinks/symlinks" = 1;
-      "fs.protected_fifos/regular" = 2;
-      "net.core.default_qdisc" = "fq";
-      "net.ipv4.tcp_cognestion_control" = "bbr";
+    kernel = {
+      sysctl = {
+        "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+        "net.ipv6.conf.*.disable_ipv6" = 1;
+        "fs.protected_hardlinks/symlinks" = 1;
+        "fs.protected_fifos/regular" = 2;
+        "net.core.default_qdisc" = "fq";
+        "net.ipv4.tcp_cognestion_control" = "bbr";
+      };
     };
 
     kernelModules = [
@@ -44,8 +48,17 @@
     ];
   };
 
-  networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp34s0.useDHCP = lib.mkDefault true;
+  powerManagement = {
+    cpuFreqGovernor = "performance";
+  };
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  networking = {
+    useDHCP = lib.mkDefault true;
+    # networking.interfaces.enp34s0.useDHCP = lib.mkDefault true;
+  };
+
+  nixpkgs = {
+    hostPlatform = lib.mkDefault "x86_64-linux";
+  };
+
 }

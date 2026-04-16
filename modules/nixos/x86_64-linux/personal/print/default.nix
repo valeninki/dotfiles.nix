@@ -12,10 +12,10 @@
 
     printing = {
       enable = true;
-      listenAddresses = [ "*:631" ];
+      listenAddresses = [ "127.0.0.1:631" ];
       allowFrom = [ "all" ];
-      browsing = true;
-      defaultShared = true;
+      browsing = false;
+      defaultShared = false;
       openFirewall = true;
       drivers = [ pkgs.samsung-unified-linux-driver ];
     };
@@ -25,7 +25,7 @@
     {
       name = "SCX-4521F";
       location = "Home";
-      deviceUri = "usb://Samsung/SCX-4x21%20Series?serial=8P89BAAS601808F.&interface=1";
+      deviceUri = "usb://Samsung/SCX-4x21%20Series?serial=8P89BAAS601808F";
       model = "samsung/SCX-4500.ppd";
     }
   ];

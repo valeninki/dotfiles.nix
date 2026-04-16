@@ -23,7 +23,7 @@
   };
 
   networking = {
-    hostName = "thinkpad";
+    hostName = "nixos";
     networkmanager = {
       enable = true;
     };
@@ -39,10 +39,9 @@
 
   console = {
     packages = [ pkgs.terminus_font ];
-    font = "ter-v16b";
+    font = "terv16b";
     keyMap = lib.mkForce "trq";
     useXkbConfig = true; # use xkb.options in tty.
-    earlySetup = true;
   };
 
   hardware = {
@@ -82,7 +81,7 @@
     };
     scx = {
       enable = true;
-      scheduler = "scx_rusty";
+      scheduler = "scx_bpfland";
     };
 
     greetd = {

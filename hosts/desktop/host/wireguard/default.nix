@@ -1,11 +1,33 @@
 {
+  pkgs,
+  lib,
+  ...
+}:
+
+{
   networking = {
-    wireguard = {
+    wg-quick = {
       interfaces = {
-        wg0 = {
-          ips = [ "10.0.0.2/32" ];
+        awg0 = {
+          type = "amneziawg";
+          ips = [
+            "10.0.0.2/32"
+          ];
           listenPort = 51820;
+          mtu = 1200;
           privateKeyFile = "/home/valentinus/Nextcloud/Wireguard/desktop/private";
+
+          extraOptions = {
+            Jc = 9;
+            Jmin = 90;
+            Jmax = 685;
+            S1 = 109;
+            S2 = 123;
+            H1 = 930942820;
+            H2 = 932360443;
+            H3 = 1845528299;
+            H4 = 1220663050;
+          };
 
           peers = [
             {

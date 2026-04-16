@@ -14,139 +14,172 @@ in
 
 {
   home = {
-    stateVersion = "25.05";
+    stateVersion = "25.11";
+
+    sessionVariables = {
+      XDG_CURRENT_DESKTOP = "Hyprland";
+      XDG_SESSION_TYPE = "wayland";
+      QT_QPA_PLATFORM = "wayland;xcb";
+    };
+
+    file = { };
+
+    activation = { };
+
+    packages = with pkgs; [
+
+      ## Fonts
+      nerd-fonts.fira-code
+      nerd-fonts.iosevka
+      nerd-fonts.droid-sans-mono
+
+      ## Must have packages
+      xdg-user-dirs
+      sl
+      usbutils
+      tmate
+      dmidecode
+      libva-utils
+      scrcpy
+      openssl
+
+      ## ADB
+      android-tools
+      heimdall
+
+      ## Monitoring Packages
+      fastfetch
+      htop
+      btop
+      nvtopPackages.amd
+      inxi
+      gping
+      gdu
+      dua
+
+      ## Window Manager and rice needded packages
+      kitty
+      wofi
+      wl-clipboard
+      cliphist
+      grim
+      slurp
+      qt6Packages.qt6ct
+
+      ## Optional
+      tesseract4
+
+      ## Editing Things
+      obsidian
+      gimp
+      inkscape
+      upscayl
+      obs-studio
+      pavucontrol
+      pulsemixer
+      alsa-utils
+      easyeffects
+      pcmanfm
+      unzip
+      picard
+      easytag
+      ffmpeg
+      binutils
+      handbrake
+      mpv
+      vlc
+
+      ## Coding Things
+      android-tools
+      distrobox
+      vscode
+      bun
+
+      ## Network Things
+      ethtool
+      nmap
+      whois
+      traceroute
+      bind
+      tcpdump
+      mtr
+      tshark
+      termshark
+      geoipWithDatabase
+
+      ## VPN
+      amneziawg-tools
+      #openvpn3
+
+      ## Kubernetes Packages
+      k0sctl
+      k3s
+      kubernetes-helm
+
+      ## User packages
+      ungoogled-chromium
+      jellyfin-tui
+      unstable.equibop
+      unstable.telegram-desktop
+      gcr
+      playerctl
+      nextcloud-client
+      gnome-keyring
+      r2modman
+      protonup-qt
+      moonlight-qt
+      gtkhash
+      remmina
+      amberol
+      chessx
+      rustdesk
+      prismlauncher
+      libreoffice
+      zathura
+    ];
   };
 
-  home.packages = with pkgs; [
+  fonts = {
+    fontconfig = {
+      enable = true;
+    };
+  };
 
-    ## Fonts
-    nerd-fonts.fira-code
-    nerd-fonts.iosevka
-    nerd-fonts.droid-sans-mono
-
-    ## Must have packages
-    xdg-user-dirs
-    sl
-    usbutils
-    tmate
-    dmidecode
-    libva-utils
-    scrcpy
-    openssl
-
-    ## ADB
-    android-tools
-    heimdall
-
-    ## Monitoring Packages
-    fastfetch
-    htop
-    btop
-    nvtopPackages.amd
-    inxi
-    gping
-    gdu
-    dua
-
-    ## Window Manager and rice needded packages
-    kitty
-    wofi
-    wl-clipboard
-    cliphist
-    grim
-    slurp
-    qt6Packages.qt6ct
-
-    ## Optional
-    tesseract4
-
-    ## Editing Things
-    obsidian
-    gimp
-    inkscape
-    upscayl
-    obs-studio
-    pavucontrol
-    pulsemixer
-    alsa-utils
-    easyeffects
-    pcmanfm
-    unzip
-    picard
-    easytag
-    ffmpeg
-    binutils
-    handbrake
-    mpv
-    vlc
-
-    ## Coding Things
-    android-tools
-    distrobox
-    vscode
-    bun
-
-    ## Network Things
-    ethtool
-    nmap
-    whois
-    traceroute
-    bind
-    tcpdump
-    mtr
-    tshark
-    termshark
-    geoipWithDatabase
-
-    ## VPN
-    wireguard-tools
-    #   openvpn3
-
-    ## Kubernetes Packages
-    k0sctl
-    k3s
-    kubernetes-helm
-
-    ## User packages
-    ungoogled-chromium
-    jellyfin-tui
-    unstable.equibop
-    telegram-desktop
-    gcr
-    playerctl
-    nextcloud-client
-    gnome-keyring
-    r2modman
-    protonup-qt
-    moonlight-qt
-    gtkhash
-    remmina
-    amberol
-    chessx
-    rustdesk
-    prismlauncher
-    libreoffice
-    zathura
-  ];
-
-  services = {
-    hyprpolkitagent.enable = true;
-    hyprpaper.enable = true;
-    gnome-keyring.enable = true;
-    cliphist.enable = true;
+  wayland = {
+    windowManager = {
+      hyprland = {
+        enable = true;
+      };
+    };
   };
 
   programs = {
-    home-manager.enable = true;
+    home-manager = {
+      enable = true;
+    };
   };
 
-  fonts.fontconfig.enable = true;
-  wayland.windowManager.hyprland.enable = true;
+  services = {
+    hyprpolkitagent = {
+      enable = true;
+    };
+    hyprpaper = {
+      enable = true;
+    };
+    gnome-keyring = {
+      enable = true;
+    };
+    cliphist = {
+      enable = true;
+    };
+  };
 
-  dconf.settings = {
-    "org/virt-manager/virt-manager/connections" = {
-      autoconnect = [ "qemu:///system" ];
-      uris = [ "qemu:///system" ];
+  dconf = {
+    settings = {
+      "org/virt-manager/virt-manager/connections" = {
+        autoconnect = [ "qemu:///system" ];
+        uris = [ "qemu:///system" ];
+      };
     };
   };
 
@@ -172,25 +205,17 @@ in
         "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
         "x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ];
       };
-      associations.added = {
-        "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
-        "x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ];
+      associations = {
+        added = {
+          "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];
+          "x-scheme-handler/tonsite" = [ "org.telegram.desktop.desktop" ];
+        };
       };
     };
   };
 
-  home.file = {
-
-  };
-
-  home.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "Hyprland";
-    XDG_SESSION_TYPE = "wayland";
-    QT_QPA_PLATFORM = "wayland;xcb";
-  };
-
-  home.activation = { };
   imports =
     lib.map (p: ./. + "/${p}") (lib.remove "default.nix" (lib.attrNames (builtins.readDir ./.)))
     ++ [ ../../../modules/home-manager/x86_64-linux/personal ];
+
 }

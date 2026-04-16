@@ -3,10 +3,10 @@
 {
   imports = [
     inputs.self.nixosModules.valentinus
-    ./host/hardware-configuration.nix
-    ./host/configuration.nix
+    ./host/system/hardware.nix
+    ./host/system/configuration.nix
     ./host
     ./home
   ];
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }

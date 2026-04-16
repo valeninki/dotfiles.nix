@@ -55,10 +55,7 @@
       "amneziawg"
     ];
     extraModprobeConfig = ''
-            options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
-            options iwlwifi power_save=0
-            options iwlwifi bt_coex_active=0
-      	    options cfg80211 ieee80211_regdom="TR"
+      options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
     '';
     extraModulePackages = [ ];
     kernelParams = [
@@ -66,8 +63,6 @@
       "zswap.compressor=lz4"
       "zswap.max_pool_percent=20"
       "ipv6.disable=1"
-      "nvme.max_host_mem_size_mb=0"
-      "nvme_core.default_ps_max_latency_us=0"
     ];
   };
 
@@ -77,7 +72,6 @@
         updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
       };
     };
-    wirelessRegulatoryDatabase = true;
   };
 
   powerManagement = {
@@ -98,5 +92,4 @@
   nixpkgs = {
     hostPlatform = lib.mkDefault "x86_64-linux";
   };
-
 }

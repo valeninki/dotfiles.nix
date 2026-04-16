@@ -11,16 +11,36 @@
 
   stylix = {
     enable = true;
-    image = ./../../../../../assets/Wallpapers/prunus.png;
+    image = ./../../../../../assets/Wallpapers/purple_flowers.png;
+    fonts = {
+      sansSerif = {
+        package = pkgs.fira;
+        name = "Fira Sans";
+      };
+
+      serif = {
+        package = pkgs.noto-fonts;
+        name = "Noto Serif";
+      };
+
+      monospace = {
+        name = "FiraCode Nerd Font";
+      };
+
+      emoji = {
+        package = pkgs.noto-fonts-color-emoji;
+        name = "Noto Color Emoji";
+      };
+    };
     icons = {
       enable = true;
       package = pkgs.flat-remix-icon-theme;
-      light = "Flat-Remix-Red-Light";
-      dark = "Flat-Remix-Red-Dark";
+      light = "Flat-Remix-Magenta-Light";
+      dark = "Flat-Remix-Magenta-Dark";
     };
     cursor = {
-      package = pkgs.catppuccin-cursors.mochaRed;
-      name = "catppuccin-mocha-red-cursors";
+      package = pkgs.catppuccin-cursors.mochaLavender;
+      name = "catppuccin-mocha-lavender-cursors";
       size = 24;
     };
     opacity = {

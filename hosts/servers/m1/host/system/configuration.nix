@@ -9,59 +9,81 @@
 }:
 
 {
-  # Uses latest CachyOS kernel and enables "scx_bpfland" scheduler.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  services.scx = {
-    enable = true;
-    scheduler = "scx_bpfland";
+  boot = {
+    kernelPackages = pkgs.linuxPackages_6_12;
+    loader = {
+      systemd-boot = {
+        enable = true;
+      };
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
+      };
+    };
   };
 
-  # Enables flake and nd.
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
-  # Use the systemd-boot EFI boot loader.
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-    efi.efiSysMountPoint = "/boot";
-  };
-
-  # Network settings.
   networking = {
-    hostName = "m1"; # Define your hostname.
-    networkmanager.enable = true; # Easiest to use and most distros use this by default.
+    hostName = "m1";
+    networkmanager = {
+      enable = true;
+    };
   };
 
-  # Set your time zone.
-  time.timeZone = "Europe/Istanbul";
+  time = {
+    timeZone = "Europe/Istanbul";
+  };
 
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+  };
+
   console = {
     font = "Lat2-Terminus16";
     keyMap = lib.mkForce "trq";
-    useXkbConfig = true; # use xkb.options in tty.
+    useXkbConfig = true;
   };
 
-  # Enable Fish, nix-ld and Wireshark.
   programs = {
-    nix-ld.enable = true;
-    fish.enable = true;
-    wireshark.enable = true;
+    ssh = {
+      startAgent = true;
+    };
+    nix-ld = {
+      enable = true;
+    };
+    fish = {
+      enable = true;
+    };
+    wireshark = {
+      enable = true;
+    };
   };
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-  programs.ssh.startAgent = true;
+  services = {
+    openssh = {
+      enable = true;
+    };
+    scx = {
+      enable = true;
+      scheduler = "scx_bpfland";
+    };
+  };
+
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
+  };
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
-  system.stateVersion = "25.11";
+  system = {
+    stateVersion = "25.11";
+  };
 
 }
