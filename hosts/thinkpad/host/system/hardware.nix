@@ -29,7 +29,7 @@
         "amdgpu"
       ];
       systemd = {
-	    enable = true;
+        enable = true;
       };
     };
 
@@ -94,19 +94,19 @@
   # Automounts usb drives.
   services = {
     gvfs = {
-	  enable = true;
+      enable = true;
     };
     udisks2 = {
-	  enable = true;
+      enable = true;
     };
   };
 
   services = {
     udev = {
-	  extraRules = ''
-	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
-	  '';
-	};
+      extraRules = ''
+        	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
+        	  '';
+    };
   };
 
   nixpkgs = {

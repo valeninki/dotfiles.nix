@@ -136,7 +136,7 @@ in
       prismlauncher
       libreoffice
       zathura
-	  freecad
+      freecad
     ];
   };
 

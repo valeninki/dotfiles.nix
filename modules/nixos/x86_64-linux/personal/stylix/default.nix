@@ -47,9 +47,9 @@
       terminal = 0.7;
     };
     polarity = "dark";
-	
-	targets = {
-	  chromium.enable = false;
-	};
+
+    targets = {
+      chromium.enable = false;
+    };
   };
 }

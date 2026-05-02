@@ -4,7 +4,7 @@
       enable = true;
 
       netdevs = {
-	    "10-awg0" = {
+        "10-awg0" = {
           netdevConfig = {
             Kind = "amneziawg";
             Name = "awg0";
