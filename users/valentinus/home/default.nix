@@ -56,6 +56,7 @@ in
       gping
       gdu
       dua
+      iotop
 
       ## Window Manager and rice needded packages
       kitty
@@ -124,7 +125,6 @@ in
       gcr
       playerctl
       nextcloud-client
-      gnome-keyring
       r2modman
       protonup-qt
       moonlight-qt
@@ -136,6 +136,7 @@ in
       prismlauncher
       libreoffice
       zathura
+	  freecad
     ];
   };
 

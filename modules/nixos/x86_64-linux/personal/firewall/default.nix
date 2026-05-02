@@ -24,7 +24,7 @@
       trustedInterfaces = [
         "virbr0"
         "tailscale0"
-        "wg0"
+        "awg0"
       ];
     };
   };

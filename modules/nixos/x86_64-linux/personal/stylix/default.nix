@@ -11,7 +11,7 @@
 
   stylix = {
     enable = true;
-    image = ./../../../../../assets/Wallpapers/purple_flowers.png;
+    image = ./../../../../../assets/Wallpapers/blue_flowers.png;
     fonts = {
       sansSerif = {
         package = pkgs.fira;
@@ -35,17 +35,21 @@
     icons = {
       enable = true;
       package = pkgs.flat-remix-icon-theme;
-      light = "Flat-Remix-Magenta-Light";
-      dark = "Flat-Remix-Magenta-Dark";
+      light = "Flat-Remix-Blue-Light";
+      dark = "Flat-Remix-Blue-Dark";
     };
     cursor = {
-      package = pkgs.catppuccin-cursors.mochaLavender;
-      name = "catppuccin-mocha-lavender-cursors";
+      package = pkgs.catppuccin-cursors.mochaBlue;
+      name = "catppuccin-mocha-blue-cursors";
       size = 24;
     };
     opacity = {
       terminal = 0.7;
     };
     polarity = "dark";
+	
+	targets = {
+	  chromium.enable = false;
+	};
   };
 }

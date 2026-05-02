@@ -21,11 +21,13 @@
         "virtio_scsi"
         "sd_mod"
         "sr_mod"
+		"btrfs"
       ];
       systemd = {
         enable = true;
       };
-      kernelModules = [ "btrfs" ];
+      kernelModules = [ 
+	  ];
     };
 
     kernel = {
@@ -40,6 +42,7 @@
     };
 
     kernelModules = [
+	  "amneziawg"
     ];
     extraModprobeConfig = "";
     extraModulePackages = [ ];

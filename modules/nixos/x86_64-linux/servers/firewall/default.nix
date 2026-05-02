@@ -7,6 +7,7 @@
       enable = true;
       trustedInterfaces = [
         "tailscale0"
+        "awg0"
       ];
     };
   };

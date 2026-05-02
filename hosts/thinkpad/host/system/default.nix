@@ -18,6 +18,11 @@
     iperf3
   ];
   services = {
+    gnome = {
+	  gnome-keyring = {
+	    enable = true;
+	  };
+	};
     fprintd = {
       enable = true;
       tod = {

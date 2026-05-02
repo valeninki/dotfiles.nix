@@ -28,7 +28,9 @@
         "lz4"
         "amdgpu"
       ];
-      systemd.enable = true;
+      systemd = {
+	    enable = true;
+      };
     };
 
     kernel.sysctl = {
@@ -55,10 +57,10 @@
       "amneziawg"
     ];
     extraModprobeConfig = ''
-            options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
-            options iwlwifi power_save=0
-            options iwlwifi bt_coex_active=0
-      	    options cfg80211 ieee80211_regdom="TR"
+                  options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
+                  options iwlwifi power_save=0
+      			  options iwlmvm power_scheme=1
+            	  options cfg80211 ieee80211_regdom="TR"
     '';
     extraModulePackages = [ ];
     kernelParams = [
@@ -91,8 +93,20 @@
 
   # Automounts usb drives.
   services = {
-    gvfs.enable = true;
-    udisks2.enable = true;
+    gvfs = {
+	  enable = true;
+    };
+    udisks2 = {
+	  enable = true;
+    };
+  };
+
+  services = {
+    udev = {
+	  extraRules = ''
+	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
+	  '';
+	};
   };
 
   nixpkgs = {

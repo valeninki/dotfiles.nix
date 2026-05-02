@@ -14,7 +14,7 @@
       "XDG_SESSION_TYPE, wayland"
       "XDG_SESSION_DESKTOP, Hyprland"
       "QT_QPA_PLATFORM, wayland;xcb"
-      "HYPRCURSOR_THEME, catppuccin-mocha-lavender-cursors"
+      "HYPRCURSOR_THEME, catppuccin-mocha-blue-cursors"
       "HYPRCURSOR_SIZE, 24"
     ];
 
