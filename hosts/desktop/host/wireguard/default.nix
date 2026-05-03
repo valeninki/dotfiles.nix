@@ -10,7 +10,7 @@
       interfaces = {
         awg0 = {
           type = "amneziawg";
-          ips = [
+          address = [
             "10.0.0.2/32"
           ];
           listenPort = 51820;

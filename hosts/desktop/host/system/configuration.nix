@@ -24,6 +24,7 @@
 
   networking = {
     hostName = "nixos";
+	hostId = "8460159f";
     networkmanager = {
       enable = true;
     };

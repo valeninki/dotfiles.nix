@@ -1,7 +1,7 @@
 {
   programs.fish = {
     shellAliases = {
-      rebuild = "sudo nixos-rebuild switch --flake ~/.dots#desktop";
+      rebuild = "doas nixos-rebuild switch --flake ~/.dots#desktop";
     };
   };
 }

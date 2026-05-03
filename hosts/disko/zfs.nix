@@ -1,13 +1,21 @@
 {
+  inputs,
+  ...
+}:
+
+{
+  imports = [
+    inputs.disko.nixosModules.disko
+  ];
+
   disko.devices = {
     disk = {
       nvme = {
         type = "disk";
-        device = "/dev/nvme0n1"; # Senin diskinin tam yolu
+        device = "/dev/nvme0n1";
         content = {
           type = "gpt";
           partitions = {
-            # 1. Boot (EFI) Bölümü
             ESP = {
               size = "1G";
               type = "EF00";
@@ -27,7 +35,6 @@
               };
             };
 
-            # 3. ZFS Ana Havuzu
             zpool = {
               size = "100%";
               content = {
