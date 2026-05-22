@@ -1,13 +1,17 @@
-{ inputs, ... }:
+{ 
+  inputs, 
+  ... 
+}:
 
 {
+
   imports = [
-    inputs.self.nixosModules.valentinus
-	./../disko/zfs.nix
-    ./host/system/hardware.nix
-    ./host/system/configuration.nix
-    ./host
-    ./home
+    ./configuration.nix
+	./hardware.nix
+	./awg.nix
+    ../../modules/nixos/disko/zfs.nix
   ];
+
   system.stateVersion = "25.11";
+
 }

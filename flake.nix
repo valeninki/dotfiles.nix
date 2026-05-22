@@ -37,8 +37,8 @@
       inputs.nixpkgs-lib.follows = "unixpkgs";
     };
 
-    agenix = {
-      url = "github:ryantm/agenix";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -73,6 +73,7 @@
 
       imports = [
         ./hosts/flake-module.nix
+        ./modules/home-manager/flake-module.nix
         inputs.pre-commit-hooks.flakeModule
       ];
 
@@ -82,19 +83,6 @@
           nil.enable = true;
           deadnix.enable = true;
           statix.enable = true;
-        };
-      };
-
-      flake = {
-
-        nixosModules = {
-
-          ## For x86_64-linux Hosts and Users
-          valentinus = import ./modules/nixos/x86_64-linux/personal;
-          test = import ./modules/nixos/x86_64-linux/minimal;
-
-          ## For aarch64-linux Hosts and Users
-          berry = import ./modules/nixos/aarch64-linux;
         };
       };
     };

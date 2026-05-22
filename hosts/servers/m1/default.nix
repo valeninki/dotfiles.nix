@@ -5,11 +5,9 @@
 
 {
   imports = [
-    inputs.self.nixosModules.valen
-    ./host/system
-    ./host/system/hardware.nix
-    ./host
-    ./home
+    ./configuration.nix
+	./hardware.nix
+	./tuned.nix
   ];
   system.stateVersion = "25.11";
 }

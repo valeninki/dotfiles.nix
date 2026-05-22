@@ -1,0 +1,13 @@
+keys:
+  - &desktop age1g8yt3lz3jerclql3arkd04mfftvphmcwe4f80709dk45qdly85zsxfedl3
+  - &thinkpad age12mx9nuche7yg89c3lsy7auyl8ek498sjd0xp0sq3tgcp06yrkdcqkh5cyq
+  - &w2 age1evuz4pagw9l8xgl55ttja5llh6g02aukpc33m5gc6ykrhsaus9es4tn4ss
+
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+        - *thinkpad
+        - *desktop
+        - *w2
+

@@ -1,12 +1,15 @@
-{ inputs, ... }:
+{
+  ...
+}:
 
 {
+
   imports = [
-    inputs.self.nixosModules.berry
-    ./host/system/configuration.nix
-    ./host/system/hardware.nix
-    ./host
-    ./home
+    ./configuration.nix
+    ./hardware.nix
+    ./tailscale.nix
   ];
-  system.stateVersion = "25.05";
+
+  system.stateVersion = "25.11";
+
 }

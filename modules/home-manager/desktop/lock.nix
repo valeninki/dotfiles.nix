@@ -1,0 +1,9 @@
+{
+
+  programs = {
+    swaylock = {
+      enable = true;
+    };
+  };
+
+}

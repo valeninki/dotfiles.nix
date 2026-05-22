@@ -15,6 +15,8 @@ in
 {
   home = {
     stateVersion = "25.11";
+    username = "valentinus";
+    homeDirectory = "/home/valentinus";
 
     sessionVariables = {
       XDG_CURRENT_DESKTOP = "Hyprland";
@@ -34,14 +36,16 @@ in
       nerd-fonts.droid-sans-mono
 
       ## Must have packages
+	  sops
+	  ssh-to-age
       xdg-user-dirs
-      sl
       usbutils
       tmate
       dmidecode
       libva-utils
       scrcpy
       openssl
+	  sl
 
       ## ADB
       android-tools
@@ -217,6 +221,9 @@ in
 
   imports =
     lib.map (p: ./. + "/${p}") (lib.remove "default.nix" (lib.attrNames (builtins.readDir ./.)))
-    ++ [ ../../../modules/home-manager/x86_64-linux/personal ];
-
+    ++ [
+      inputs.self.homeModules.cli
+      inputs.self.homeModules.apps
+      inputs.self.homeModules.desktop
+    ];
 }
