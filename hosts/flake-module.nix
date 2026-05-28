@@ -15,17 +15,24 @@ in
 
   flake = {
     nixosConfigurations = {
-      
-	  desktop = inputs.nixpkgs.lib.nixosSystem rec {
+
+      desktop = inputs.nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {
           unixpkgs = repo "unixpkgs" system;
           inherit inputs;
         };
         modules = [
-          { nixpkgs.pkgs = repo "nixpkgs" "x86_64-linux"; }
+          {
+            nixpkgs.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          }
           ./desktop
-		  ../modules/nixos/base-desktop.nix
+          ../modules/nixos/base-desktop.nix
+          ../modules/nixos/valenpkgs.nix
+          ../modules/nixos/gaming
           (inputs.self + "/users/valentinus")
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
@@ -34,17 +41,23 @@ in
           inputs.chaotic.nixosModules.nyx-registry
         ];
       };
-      
-	  thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
+
+      thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {
           unixpkgs = repo "unixpkgs" system;
           inherit inputs;
         };
         modules = [
-          { nixpkgs.pkgs = repo "nixpkgs" "x86_64-linux"; }
+          {
+            nixpkgs.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          }
           ./thinkpad
-		  ../modules/nixos/base-desktop.nix
+          ../modules/nixos/base-desktop.nix
+          ../modules/nixos/valenpkgs.nix
           (inputs.self + "/users/valentinus")
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
@@ -54,46 +67,46 @@ in
         ];
       };
 
-	  m1 = inputs.nixpkgs.lib.nixosSystem rec {
-	    system = "x86_64-linux";
-		specialArgs = {
-		  unixpkgs = repo "unixpkgs" system;
-		  inherit inputs;
-		};
-		modules = [
-		  { nixpkgs.pkgs = repo "nixpkgs" "x86_64-linux"; }
-		  ../users/zen
-		  ./servers/m1
-		];
-	  };
+      m1 = inputs.nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          unixpkgs = repo "unixpkgs" system;
+          inherit inputs;
+        };
+        modules = [
+          { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux"; }
+          ../users/zen
+          ./servers/m1
+        ];
+      };
 
-	  w1 = inputs.nixpkgs.lib.nixosSystem rec {
-	    system = "x86_64-linux";
-		specialArgs = {
-		  unixpkgs = repo "unixpkgs" system;
-		  inherit inputs;
-		};
-		modules = [
-		  { nixpkgs.pkgs = repo "nixpkgs" "x86_64-linux"; }
-		  ../users/zen
-		  ./servers/w1
-		];
-	  };
+      w1 = inputs.nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          unixpkgs = repo "unixpkgs" system;
+          inherit inputs;
+        };
+        modules = [
+          { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux"; }
+          ../users/zen
+          ./servers/w1
+        ];
+      };
 
-	  w2 = inputs.nixpkgs.lib.nixosSystem rec {
-	    system = "x86_64-linux";
-		specialArgs = {
-		  unixpkgs = repo "unixpkgs" system;
-		  inherit inputs;
-		};
-		modules = [
-		  { nixpkgs.pkgs = repo "nixpkgs" "x86_64-linux"; }
-		  ../users/zen
-		  ./servers/w2
-		];
-	  };
-      
-	  pi = inputs.nixpkgs.lib.nixosSystem rec {
+      w2 = inputs.nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          unixpkgs = repo "unixpkgs" system;
+          inherit inputs;
+        };
+        modules = [
+          { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux"; }
+          ../users/zen
+          ./servers/w2
+        ];
+      };
+
+      pi = inputs.nixpkgs.lib.nixosSystem rec {
         system = "aarch64-linux";
         specialArgs = {
           unixpkgs = repo "unixpkgs" system;
@@ -102,7 +115,7 @@ in
         modules = [
           { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."aarch64-linux"; }
           ./pi
-		  inputs.self.nixosModules.berry
+          inputs.self.nixosModules.berry
         ];
       };
     };

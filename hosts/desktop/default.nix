@@ -1,14 +1,14 @@
-{ 
-  inputs, 
-  ... 
+{
+  inputs,
+  ...
 }:
 
 {
 
   imports = [
     ./configuration.nix
-	./hardware.nix
-	./awg.nix
+    ./hardware.nix
+    ./awg.nix
     ../../modules/nixos/disko/zfs.nix
   ];
 

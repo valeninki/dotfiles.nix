@@ -2,15 +2,9 @@
   lib,
   inputs,
   pkgs,
+  unixpkgs,
   ...
 }:
-
-let
-  unstable = import inputs.unixpkgs {
-    inherit (pkgs.stdenv.hostPlatform) system;
-    config.allowUnfree = true;
-  };
-in
 
 {
   home = {
@@ -36,8 +30,8 @@ in
       nerd-fonts.droid-sans-mono
 
       ## Must have packages
-	  sops
-	  ssh-to-age
+      sops
+      ssh-to-age
       xdg-user-dirs
       usbutils
       tmate
@@ -45,7 +39,7 @@ in
       libva-utils
       scrcpy
       openssl
-	  sl
+      sl
 
       ## ADB
       android-tools
@@ -75,7 +69,7 @@ in
       tesseract4
 
       ## Editing Things
-      obsidian
+      unixpkgs.obsidian
       gimp
       inkscape
       upscayl
@@ -97,7 +91,8 @@ in
       ## Coding Things
       android-tools
       distrobox
-      vscode
+      opencode
+      unixpkgs.vscode
       bun
 
       ## Network Things
@@ -124,12 +119,11 @@ in
       ## User packages
       ungoogled-chromium
       jellyfin-tui
-      unstable.equibop
-      unstable.telegram-desktop
+      unixpkgs.equibop
+      unixpkgs.telegram-desktop
       gcr
       playerctl
       nextcloud-client
-      r2modman
       protonup-qt
       moonlight-qt
       gtkhash
@@ -226,4 +220,5 @@ in
       inputs.self.homeModules.apps
       inputs.self.homeModules.desktop
     ];
+
 }

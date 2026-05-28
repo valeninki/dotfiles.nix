@@ -48,16 +48,16 @@
 
   users = {
     users = {
-	  berry = {
-	    isNormalUser = true;
-	    home = "/home/berry";
-		shell = pkgs.fish;
-		extraGroups = [
-		  "wheel"
-		  "networkmanager"
-		];
-	  };
-	};
+      berry = {
+        isNormalUser = true;
+        home = "/home/berry";
+        shell = pkgs.fish;
+        extraGroups = [
+          "wheel"
+          "networkmanager"
+        ];
+      };
+    };
   };
 
   environment = {
@@ -67,7 +67,7 @@
       ethtool
       networkd-dispatcher
       wakeonlan
-	  fastfetch
+      fastfetch
     ];
   };
 
@@ -84,9 +84,9 @@
     openssh = {
       enable = true;
     };
-	s3 = {
-	  enable = true;
-	};
+    s3 = {
+      enable = true;
+    };
   };
 
   nix = {

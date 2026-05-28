@@ -5,6 +5,7 @@
 {
   lib,
   pkgs,
+  unixpkgs,
   ...
 }:
 
@@ -28,7 +29,21 @@
   networking = {
     hostName = "thinkpad";
     networkmanager = {
-      enable = true;
+      enable = false;
+    };
+    useNetworkd = true;
+    wireless = {
+      iwd = {
+        enable = true;
+        settings = {
+          IPv4 = {
+            RoutePriorityOffset = 300;
+          };
+          General = {
+            EnableNetworkConfiguration = true;
+          };
+        };
+      };
     };
   };
 
@@ -105,27 +120,27 @@
 
   security = {
     polkit = {
-	  enable = true;
-	};
-	pam = {
-	  services = {
-	    "login".fprintAuth = false;
-		"swaylock".enable = true;
-	  };
-	};
+      enable = true;
+    };
+    pam = {
+      services = {
+        "login".fprintAuth = false;
+        "swaylock".enable = true;
+      };
+    };
   };
 
   home-manager = {
     users = {
-	  valentinus = {
-	    imports = [
-		  ../../modules/home-manager/cli
-		  ../../modules/home-manager/apps
-		  ../../modules/home-manager/desktop
-		  ./home.nix
-		];
-	  };
-	};
+      valentinus = {
+        imports = [
+          ../../modules/home-manager/cli
+          ../../modules/home-manager/apps
+          ../../modules/home-manager/desktop
+          ./home.nix
+        ];
+      };
+    };
   };
 
   nix = {

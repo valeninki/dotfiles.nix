@@ -2,13 +2,13 @@
   inputs,
   pkgs,
   unixpkgs,
+  valenpkgs,
   ...
 }:
 
 {
   imports = [
     ./services/stylix.nix
-	./overlays.nix
   ];
 
   networking = {
@@ -76,19 +76,19 @@
 
   environment = {
     systemPackages = with pkgs; [
-	  git
-	  wget
-	  networkmanagerapplet
-	  gparted
-	  e2fsprogs
-	  duperemove
-	  dmidecode
-	  libva-utils
-	  lm_sensors
-	  v4l-utils
-	  valenpkgs.topmem
-	  valenpkgs.zmem
-	];
+      git
+      wget
+      networkmanagerapplet
+      gparted
+      e2fsprogs
+      duperemove
+      dmidecode
+      libva-utils
+      lm_sensors
+      v4l-utils
+      valenpkgs.topmem
+      valenpkgs.zmem
+    ];
   };
 
   services = {
@@ -102,11 +102,11 @@
         "149.112.112.112#dns.quad9.net"
       ];
     };
-	gnome = {
-	  gnome-keyring = {
-	    enable = true;
-	  };
-	};
+    gnome = {
+      gnome-keyring = {
+        enable = true;
+      };
+    };
     tailscale = {
       enable = true;
       package = unixpkgs.tailscale;
@@ -139,15 +139,6 @@
     virt-manager = {
       enable = true;
     };
-    steam = {
-      enable = true;
-      dedicatedServer = {
-        openFirewall = true;
-      };
-      remotePlay = {
-        openFirewall = true;
-      };
-    };
   };
 
   virtualisation = {
@@ -161,26 +152,26 @@
 
   xdg = {
     autostart = {
-	  enable = true;
-	};
-	portal = {
-	  enable = true;
-	  extraPortals = with pkgs; [
-	    xdg-desktop-portal-hyprland
-		xdg-desktop-portal-gtk
-	  ];
-	  config = {
-	    common = {
-		  default = "*";
-		};
-	  };
-	};
+      enable = true;
+    };
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
+      ];
+      config = {
+        common = {
+          default = "*";
+        };
+      };
+    };
   };
 
   nix = {
     settings = {
-	  download-buffer-size = 134217728;
-	};
+      download-buffer-size = 134217728;
+    };
   };
 
 }

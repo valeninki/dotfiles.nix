@@ -10,11 +10,11 @@ let
 in
 
 {
-  
+
   options = {
     services = {
-	  enable = lib.mkEnableOption "Garage S3 Object Storage Node";
-	};
+      enable = lib.mkEnableOption "Garage S3 Object Storage Node";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -75,10 +75,13 @@ in
       services = {
         garage-webui = {
           description = "Garage Web UI";
-          after = [ "network.target" "garage.service" ];
+          after = [
+            "network.target"
+            "garage.service"
+          ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-		    DynamicUser = true;
+            DynamicUser = true;
             Environment = "PORT=3909";
             ExecStart = "${pkgs.garage-webui}/bin/garage-webui";
             Restart = "always";

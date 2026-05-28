@@ -5,6 +5,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 
@@ -50,6 +51,7 @@
     };
 
     kernelModules = [
+      "r8169"
       "kvm-amd"
       "v4l2loopback"
     ];
@@ -62,6 +64,8 @@
       "zswap.compressor=lz4"
       "zswap.max_pool_percent=20"
       "ipv6.disable=1"
+      "r8169.disable_aspm=1"
+      "r8169.disable_autosuspend=1"
     ];
   };
 
@@ -82,8 +86,14 @@
     #interfaces.enp34s0.useDHCP = lib.mkDefault true;
   };
 
-  # Automounts usb drives.
   services = {
+    udev = {
+      extraRules = ''
+        	    ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="enp34s0", RUN+="${pkgs.ethtool}/bin/ethtool -s $name wol g"
+        	    ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="enp34s0", RUN+="${pkgs.ethtool}/bin/ethtool --set-eee $name eee off"
+        	    ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="enp34s0", RUN+="${pkgs.bash}/bin/bash -c 'echo 1 > /sys/class/net/$name/device/power/wakeup'"
+        	  '';
+    };
     gvfs.enable = true;
     udisks2.enable = true;
   };

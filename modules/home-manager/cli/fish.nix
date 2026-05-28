@@ -13,10 +13,10 @@
         clean = "doas nix-collect-garbage -d && doas /run/current-system/bin/switch-to-configuration boot";
       };
       shellAliases = {
-	    rebuild = "doas nixos-rebuild switch --flake ~/.dots#{$hostname}";
+        rebuild = "doas nixos-rebuild switch --flake ~/.dots#(hostname)";
         k = "kubectl";
         dua = "dua -i";
-		tree = "eza --tree";
+        tree = "eza --tree";
         "..." = "cd ../..";
       };
     };

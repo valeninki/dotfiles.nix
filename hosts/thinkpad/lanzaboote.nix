@@ -9,21 +9,21 @@
 
   imports = [ inputs.lanzaboote.nixosModules.lanzaboote ];
 
-    boot = {
-      loader = {
-        systemd-boot = {
-          enable = lib.mkForce false;
-        };
-      };
-      lanzaboote = {
-        enable = true;
-        pkiBundle = "/var/lib/sbctl";
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = lib.mkForce false;
       };
     };
-    environment = {
-      systemPackages = with pkgs; [
-        sbctl
-      ];
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
     };
+  };
+  environment = {
+    systemPackages = with pkgs; [
+      sbctl
+    ];
+  };
 
 }

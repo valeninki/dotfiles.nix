@@ -43,12 +43,12 @@
                 AllowedIps = [ "10.20.51.4/32" ];
               };
             }
-			{
-			  wireguardPeerConfig = {
-			    PublicKey = "IRgC2KD2fs43ZgNpUQuO6E0GFixzcftfcPWwS/gh5kY=";
-				AllowedIPs = [ "10.20.51.5/32" ];
-			  };
-			}
+            {
+              wireguardPeerConfig = {
+                PublicKey = "IRgC2KD2fs43ZgNpUQuO6E0GFixzcftfcPWwS/gh5kY=";
+                AllowedIPs = [ "10.20.51.5/32" ];
+              };
+            }
           ];
         };
       };

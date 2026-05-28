@@ -42,10 +42,10 @@
 
           "network" = {
             interface = [
-			  "enp2s0"
+              "enp2s0"
               "enp3s0"
-			  "tailscale0"
-			  "awg0"
+              "tailscale0"
+              "awg0"
             ];
             format-wifi = "󰖩 ";
             format-ethernet = " ";
@@ -67,7 +67,7 @@
                 days = "<span color='#e8e1df'><b>{}</b></span>";
                 weeks = "<span color='#75676b'><b>W{}</b></span>";
                 weekdays = "<span color='#ac8791'><b>{}</b></span>";
-				today = "<span color='#e8e1df' bgcolor='#484649'><b><u>{}</u></b></span>";
+                today = "<span color='#e8e1df' bgcolor='#484649'><b><u>{}</u></b></span>";
               };
             };
             actions = {

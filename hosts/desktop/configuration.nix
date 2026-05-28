@@ -28,16 +28,16 @@
     networkmanager = {
       enable = true;
     };
-	interfaces = {
-	  enp34s0 = {
-	    wakeOnLan = {
-		  enable = true;
-		};
-	  };
-	};
-	firewall = {
-	  allowedUDPPorts = [ 9 ];
-	};
+    interfaces = {
+      enp34s0 = {
+        wakeOnLan = {
+          enable = true;
+        };
+      };
+    };
+    firewall = {
+      allowedUDPPorts = [ 9 ];
+    };
   };
 
   time = {
@@ -53,7 +53,7 @@
     font = "ter-v16b";
     keyMap = lib.mkForce "trq";
     useXkbConfig = true; # use xkb.options in tty.
-	earlySetup = true;
+    earlySetup = true;
   };
 
   hardware = {
@@ -113,29 +113,61 @@
 
   stylix = {
     image = ../../assets/Wallpapers/blue_flowers.png;
-	icons = {
-	  light = "Flat-Remix-Blue-Light";
-	  dark = "Flat-Remix-Blue-Dark";
-	};
-	cursor = {
-	  package = pkgs.catppuccin-cursors.mochaBlue;
-	  name = "catppuccin-mocha-blue-cursors";
-	};
+    icons = {
+      light = "Flat-Remix-Blue-Light";
+      dark = "Flat-Remix-Blue-Dark";
+    };
+    cursor = {
+      package = pkgs.catppuccin-cursors.mochaBlue;
+      name = "catppuccin-mocha-blue-cursors";
+    };
   };
 
   home-manager = {
     users = {
       valentinus = {
-	    imports = [
-		  ../../modules/home-manager/cli
-		  ../../modules/home-manager/apps
-		  ../../modules/home-manager/desktop
-		  ./home.nix
-		];
-	  };
+        imports = [
+          ../../modules/home-manager/cli
+          ../../modules/home-manager/apps
+          ../../modules/home-manager/desktop
+          ./home.nix
+        ];
+      };
     };
   };
 
+  profiles = {
+    gaming = {
+      steam = {
+        enable = true;
+      };
+    };
+  };
+
+  systemd = {
+    services = {
+      s5-wol-trap = {
+        description = "S5 WoL Trap After AC Power Loss";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
+
+        script = ''
+          		  sleep 600
+
+          		  if loginctl list-users --no-legend | grep -q -v -E "greeter|sddm|gdm|root"; then
+          		    echo "User active. Poweroff not triggered."
+          		  else
+          		    echo "No active user, going to S5 power state."
+          			systemctl poweroff
+          		  fi
+          		'';
+        serviceConfig = {
+          Type = "simple";
+        };
+      };
+    };
+  };
 
   nix = {
     settings = {

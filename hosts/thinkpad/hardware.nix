@@ -98,30 +98,30 @@
     udisks2 = {
       enable = true;
     };
-	fprintd = {
-	  enable = true;
-	  tod = {
-	    enable = true;
-		driver = pkgs.libfprint-2-tod1-goodix-550a;
-	  };
-	};
-	fwupd = {
-	  enable = true;
-	};
+    fprintd = {
+      enable = true;
+      tod = {
+        enable = true;
+        driver = pkgs.libfprint-2-tod1-goodix-550a;
+      };
+    };
+    fwupd = {
+      enable = true;
+    };
     udev = {
       extraRules = ''
-	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
+        	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
       '';
     };
   };
 
   systemd = {
     services = {
-	  fprintd = {
-	    wantedBy = [ "multi-user.target" ];
-		serviceConfig.Type = "simple";
-	  };
-	};
+      fprintd = {
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig.Type = "simple";
+      };
+    };
   };
 
   nixpkgs = {

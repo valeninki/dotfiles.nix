@@ -7,18 +7,18 @@
 
   boot = {
     extraModulePackages = [
-	  config.boot.kernelPackages.amneziawg
-	];
-	kernelModules = [
-	  "amneziawg"
-	];
+      config.boot.kernelPackages.amneziawg
+    ];
+    kernelModules = [
+      "amneziawg"
+    ];
   };
 
   networking = {
     wg-quick = {
-	  interfaces = {
-	    awg0 = {
-		  type = "amneziawg";
+      interfaces = {
+        awg0 = {
+          type = "amneziawg";
 
           extraOptions = {
             Jc = 9;
@@ -31,8 +31,8 @@
             H3 = 1845528299;
             H4 = 1220663050;
           };
-          
-		  peers = [
+
+          peers = [
             {
               publicKey = "0Js1Z2BB8GhikRes0vSk8Kr9CUYcFs6f46EymR5iyVE=";
               allowedIPs = [
@@ -47,9 +47,9 @@
             }
           ];
 
-		};
-	  };
-	};
+        };
+      };
+    };
   };
 
 }

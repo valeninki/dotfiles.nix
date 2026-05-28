@@ -25,8 +25,8 @@
       systemd = {
         enable = true;
       };
-      kernelModules = [ 
-	    "btrfs" 
+      kernelModules = [
+        "btrfs"
       ];
     };
 

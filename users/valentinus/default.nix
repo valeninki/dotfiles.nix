@@ -14,6 +14,7 @@
       extraGroups = [
         "wheel"
         "video"
+        "network"
         "networkmanager"
         "libvirtd"
         "kvm"
@@ -24,6 +25,7 @@
   };
   home-manager = {
     useGlobalPkgs = true;
+    useUserPackages = true;
     backupFileExtension = "backup";
     extraSpecialArgs = {
       inherit inputs unixpkgs;
