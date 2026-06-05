@@ -98,16 +98,8 @@
   };
 
   services = {
-    xserver = {
-      videoDrivers = lib.mkForce [ ];
-    };
     openssh = {
       enable = true;
-      settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "no";
-        KbdInteractiveAuthentication = false;
-      };
     };
     s3 = {
       enable = true;

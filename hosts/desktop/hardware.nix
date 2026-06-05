@@ -16,8 +16,8 @@
 
   boot = {
     zfs = {
-	  forceImportRoot = false;
-	};
+      forceImportRoot = false;
+    };
     initrd = {
       availableKernelModules = [
         "nvme"
