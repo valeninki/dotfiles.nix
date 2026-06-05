@@ -1,4 +1,10 @@
 {
+  config,
+  pkgs,
+  ...
+}:
+
+{
   systemd = {
     network = {
       enable = true;
@@ -22,25 +28,25 @@
             TransportPacketMagicHeader = 1220663050;
 
             ListenPort = 51820;
-            PrivateKeyFile = "/home/valen/keys/amneziawg/private";
+            PrivateKeyFile = config.sops.secrets."amneziawg/w2_private_key".path;
           };
           wireguardPeers = [
             {
               wireguardPeerConfig = {
                 PublicKey = "j5vprUeeYy/v6b8jS1+ruGA+5cCUhXDzkFh9O1BW91w=";
-                AllowedIps = [ "10.20.51.2/32" ];
+                AllowedIPs = [ "10.20.51.2/32" ];
               };
             }
             {
               wireguardPeerConfig = {
                 PublicKey = "PScE2fipEKe4GHmjWYt8Rha6IhXiPXY8+dZHzjQrKEw=";
-                AllowedIps = [ "10.20.51.3/32" ];
+                AllowedIPs = [ "10.20.51.3/32" ];
               };
             }
             {
               wireguardPeerConfig = {
                 PublicKey = "+5ZjBfZuGBM9rkhU79tdlv5jG25VEk0gq1UA9Jdc42U=";
-                AllowedIps = [ "10.20.51.4/32" ];
+                AllowedIPs = [ "10.20.51.4/32" ];
               };
             }
             {

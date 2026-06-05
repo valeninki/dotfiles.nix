@@ -1,15 +1,12 @@
 {
   ...
 }:
-
 {
-
   imports = [
     ./configuration.nix
     ./hardware.nix
-    ./tailscale.nix
+    ../../secrets
   ];
 
   system.stateVersion = "25.11";
-
 }

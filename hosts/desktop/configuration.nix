@@ -23,7 +23,7 @@
   };
 
   networking = {
-    hostName = "nixos";
+    hostName = "desktop";
     hostId = "8460159f";
     networkmanager = {
       enable = true;
@@ -52,11 +52,14 @@
     packages = [ pkgs.terminus_font ];
     font = "ter-v16b";
     keyMap = lib.mkForce "trq";
-    useXkbConfig = true; # use xkb.options in tty.
+    useXkbConfig = true;
     earlySetup = true;
   };
 
   hardware = {
+    acpilight = {
+      enable = true;
+    };
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -73,13 +76,16 @@
     nix-ld = {
       enable = true;
     };
-    light = {
-      enable = true;
-    };
     fish = {
       enable = true;
     };
     wireshark = {
+      enable = true;
+    };
+  };
+
+  security = {
+    polkit = {
       enable = true;
     };
   };
@@ -98,13 +104,13 @@
       settings = {
         default_session = {
           command = ''
-            		    ${pkgs.tuigreet}/bin/tuigreet \
-            			--time \
-            			--asterisks
-            			--user-menu
-            			--greeting "Welcome back, Kerem" \
-            			--theme "container=#25181c;text=#e8e1df;border=#75676b;prompt=#a38a90;time=#9c8c97;action=#f06161;button=#e8e1df;input=#e8e1df"
-            		  '';
+            ${pkgs.tuigreet}/bin/tuigreet \
+              --time \
+              --asterisks \
+              --user-menu \
+              --greeting "Welcome back, Kerem" \
+              --theme "container=#25181c;text=#e8e1df;border=#75676b;prompt=#a38a90;time=#9c8c97;action=#f06161;button=#e8e1df;input=#e8e1df"
+          '';
           user = "greeter";
         };
       };
@@ -153,15 +159,15 @@
         wants = [ "network-online.target" ];
 
         script = ''
-          		  sleep 600
+          sleep 600
 
-          		  if loginctl list-users --no-legend | grep -q -v -E "greeter|sddm|gdm|root"; then
-          		    echo "User active. Poweroff not triggered."
-          		  else
-          		    echo "No active user, going to S5 power state."
-          			systemctl poweroff
-          		  fi
-          		'';
+          if loginctl list-users --no-legend | grep -q -v -E "greeter|sddm|gdm|root"; then
+            echo "User active. Poweroff not triggered."
+          else
+            echo "No active user, going to S5 power state."
+            systemctl poweroff
+          fi
+        '';
         serviceConfig = {
           Type = "simple";
         };
@@ -177,11 +183,6 @@
       ];
     };
   };
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
 
   system = {
     stateVersion = "25.11";

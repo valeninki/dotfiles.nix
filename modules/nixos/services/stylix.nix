@@ -51,6 +51,8 @@
 
     targets = {
       chromium.enable = false;
+      gnome.enable = true;
+      qt.enable = false;
     };
   };
 }

@@ -11,6 +11,7 @@
 {
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_6_18;
     loader = {
       timeout = 1;
       grub = {
@@ -20,7 +21,6 @@
         enable = true;
       };
     };
-    kernelPackages = pkgs.linuxPackages_rpi4;
   };
 
   networking = {
@@ -60,6 +60,12 @@
     };
   };
 
+  security = {
+    doas = {
+      enable = true;
+    };
+  };
+
   environment = {
     systemPackages = with pkgs; [
       git
@@ -67,7 +73,18 @@
       ethtool
       networkd-dispatcher
       wakeonlan
-      fastfetch
+      (fastfetch.override {
+        openglSupport = false;
+        vulkanSupport = false;
+        waylandSupport = false;
+        x11Support = false;
+        xfceSupport = false;
+        gnomeSupport = false;
+        enlightenmentSupport = false;
+        openclSupport = false;
+        imageSupport = false;
+        dbusSupport = false;
+      })
     ];
   };
 
@@ -81,8 +98,16 @@
   };
 
   services = {
+    xserver = {
+      videoDrivers = lib.mkForce [ ];
+    };
     openssh = {
       enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+        KbdInteractiveAuthentication = false;
+      };
     };
     s3 = {
       enable = true;

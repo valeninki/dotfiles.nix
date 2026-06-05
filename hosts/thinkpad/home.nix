@@ -34,8 +34,8 @@ in
           ];
 
           bind = [
-            ",XF86MonBrightnessDown, exec, light -U 10"
-            ",XF86MonBrightnessUp, exec, light -A 10"
+            ",XF86MonBrightnessDown, exec, xbacklight -dec 10"
+            ",XF86MonBrightnessUp, exec, xbacklight -inc 10"
             ",XF86AudioMicMute, exec, amixer -c 1 sset Capture toggle"
             ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
           ];

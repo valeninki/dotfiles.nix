@@ -32,10 +32,12 @@
       sysctl = {
         "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
         "net.ipv6.conf.*.disable_ipv6" = 1;
-        "fs.protected_hardlinks/symlinks" = 1;
-        "fs.protected_fifos/regular" = 2;
+        "fs.protected_hardlinks" = 1;
+        "fs.protected_symlinks" = 1;
+        "fs.protected_fifos" = 2;
+        "fs.protected_regular" = 2;
         "net.core.default_qdisc" = "fq";
-        "net.ipv4.tcp_cognestion_control" = "bbr";
+        "net.ipv4.tcp_congestion_control" = "bbr";
       };
     };
 

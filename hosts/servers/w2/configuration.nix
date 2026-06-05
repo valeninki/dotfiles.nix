@@ -38,14 +38,16 @@
   };
 
   console = {
-    font = "Lat2-Terminus16";
+    packages = [ pkgs.terminus_font ];
+    font = "ter-v16b";
     keyMap = lib.mkForce "trq";
     useXkbConfig = true;
+    earlySetup = true;
   };
 
   programs = {
     ssh = {
-      startAgent = true;
+      startAgent = false;
     };
     nix-ld = {
       enable = true;

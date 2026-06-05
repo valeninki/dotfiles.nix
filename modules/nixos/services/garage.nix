@@ -11,11 +11,7 @@ in
 
 {
 
-  options = {
-    services = {
-      enable = lib.mkEnableOption "Garage S3 Object Storage Node";
-    };
-  };
+  options.services.s3.enable = lib.mkEnableOption "Garage S3 Object Storage Node";
 
   config = lib.mkIf cfg.enable {
 
@@ -44,7 +40,7 @@ in
 
           rpc_bind_addr = "[::]:3901";
           rpc_public_addr = "127.0.0.1:3901";
-          rpc_secret = "4425f5c26c5e11581d3223904324dcb5b5d5dfb14e5e7f35e38c595424f5f1e6";
+          rpc_secret = ""; # placeholder, overridden by environment file
 
           s3_api = {
             s3_region = "garage";
@@ -64,10 +60,13 @@ in
 
           admin = {
             api_bind_addr = "[::]:3903";
-            admin_token = "FioWngHJfr92QL+wDfGVDqQVHkRsx5CPNwqBwj/nflw=";
-            metrics_token = "0k7gDmliMqXxD8IQuwXnGTwfZqYn5S+7b70cjJSXuI0=";
+            admin_token = ""; # placeholder, overridden by environment file
+            metrics_token = ""; # placeholder, overridden by environment file
           };
         };
+        environmentFile = lib.mkIf (
+          config ? sops.templates && config.sops.templates ? "garage.env"
+        ) config.sops.templates."garage.env".path;
       };
     };
 

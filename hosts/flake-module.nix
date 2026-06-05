@@ -74,9 +74,15 @@ in
           inherit inputs;
         };
         modules = [
-          { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux"; }
+          {
+            nixpkgs.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          }
           ../users/zen
           ./servers/m1
+          ../modules/nixos/base-server.nix
         ];
       };
 
@@ -87,9 +93,15 @@ in
           inherit inputs;
         };
         modules = [
-          { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux"; }
+          {
+            nixpkgs.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          }
           ../users/zen
           ./servers/w1
+          ../modules/nixos/base-server.nix
         ];
       };
 
@@ -100,9 +112,15 @@ in
           inherit inputs;
         };
         modules = [
-          { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux"; }
+          {
+            nixpkgs.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          }
           ../users/zen
           ./servers/w2
+          ../modules/nixos/base-server.nix
         ];
       };
 
@@ -113,9 +131,15 @@ in
           inherit inputs;
         };
         modules = [
-          { nixpkgs.pkgs = inputs.nixpkgs.legacyPackages."aarch64-linux"; }
+          {
+            nixpkgs.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          }
           ./pi
-          inputs.self.nixosModules.berry
+          ../modules/nixos/base-server.nix
+          ../modules/nixos/services/garage.nix
         ];
       };
     };

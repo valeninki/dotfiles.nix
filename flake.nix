@@ -4,7 +4,7 @@
   inputs = {
 
     nixpkgs = {
-      url = "github:NixOS/nixpkgs/nixos-25.11";
+      url = "github:NixOS/nixpkgs/nixos-26.05";
       flake = true;
     };
 
@@ -23,13 +23,8 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager-unstable = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "unixpkgs";
     };
 
     flake-parts = {
@@ -52,12 +47,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     disko = {
       url = "github:nix-community/disko/latest";
     };
 
     stylix = {
-      url = "github:nix-community/stylix/release-25.11";
+      url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -79,7 +79,7 @@
 
       perSystem = {
         pre-commit.settings.hooks = {
-          nixfmt-rfc-style.enable = true;
+          nixfmt.enable = true;
           nil.enable = true;
           deadnix.enable = true;
           statix.enable = true;

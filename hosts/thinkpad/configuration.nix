@@ -64,6 +64,9 @@
   };
 
   hardware = {
+    acpilight = {
+      enable = true;
+    };
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -80,9 +83,6 @@
     nix-ld = {
       enable = true;
     };
-    light = {
-      enable = true;
-    };
     fish = {
       enable = true;
     };
@@ -97,7 +97,7 @@
     };
     scx = {
       enable = true;
-      scheduler = "scx_rusty";
+      scheduler = "scx_lavd";
     };
 
     greetd = {
@@ -105,12 +105,12 @@
       settings = {
         default_session = {
           command = ''
-            		    ${pkgs.tuigreet}/bin/tuigreet \
-            			--time \
-            			--asterisks
-            			--user-menu
-            			--greeting "Welcome back, Kerem" \
-            			--theme "container=#25181c;text=#e8e1df;border=#75676b;prompt=#a38a90;time=#9c8c97;action=#f06161;button=#e8e1df;input=#e8e1df"
+            ${pkgs.tuigreet}/bin/tuigreet \
+              --time \
+              --asterisks \
+              --user-menu \
+              --greeting "Welcome back, Kerem" \
+              --theme "container=#25181c;text=#e8e1df;border=#75676b;prompt=#a38a90;time=#9c8c97;action=#f06161;button=#e8e1df;input=#e8e1df"
             		  '';
           user = "greeter";
         };

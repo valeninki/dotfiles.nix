@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   inputs,
   pkgs,
@@ -16,6 +17,8 @@
       XDG_CURRENT_DESKTOP = "Hyprland";
       XDG_SESSION_TYPE = "wayland";
       QT_QPA_PLATFORM = "wayland;xcb";
+      QT_QPA_PLATFORMTHEME = lib.mkForce "qtct";
+      QT_STYLE_OVERRIDE = lib.mkForce "Adwaita-dark";
     };
 
     file = { };
@@ -64,6 +67,7 @@
       grim
       slurp
       qt6Packages.qt6ct
+      adwaita-qt
 
       ## Optional
       tesseract4
@@ -133,6 +137,7 @@
       rustdesk
       prismlauncher
       libreoffice
+      darktable
       zathura
       freecad
     ];
@@ -148,6 +153,7 @@
     windowManager = {
       hyprland = {
         enable = true;
+        configType = "hyprlang";
       };
     };
   };
@@ -198,7 +204,7 @@
       enable = true;
       defaultApplications = {
         "inode/directory" = [ "pcmanfm.desktop" ];
-        "x-scheme-handler/https" = [ "google-chrome.desktop" ];
+        "x-scheme-handler/https" = [ "chromium-browser.desktop" ];
         "x-scheme-handler/discord" = [ "equibop.desktop" ];
         "x-scheme-handler/ror2mm" = [ "r2modman.desktop" ];
         "x-scheme-handler/tg" = [ "org.telegram.desktop.desktop" ];

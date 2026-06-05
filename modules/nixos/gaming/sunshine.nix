@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  unixpkgs,
   ...
 }:
 
@@ -17,6 +18,7 @@ in
     services = {
       sunshine = {
         enable = true;
+        package = unixpkgs.sunshine;
         autoStart = true;
         capSysAdmin = true;
         openFirewall = true;
