@@ -138,6 +138,7 @@ in
             };
           }
           ./pi
+          inputs.disko.nixosModules.disko
           ../modules/nixos/base-server.nix
           ../modules/nixos/services/garage.nix
         ];
