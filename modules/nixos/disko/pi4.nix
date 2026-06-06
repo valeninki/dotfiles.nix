@@ -6,15 +6,13 @@
         type = "disk";
         device = "/dev/mmcblk0";
         content = {
-          type = "table";
-          format = "msdos";
-          partitions = [
-            {
+          type = "gpt";
+          partitions = {
+            bootfs = {
+              priority = 1;
               name = "bootfs";
-              start = "1M";
-              end = "512M";
-              fs-type = "fat32";
-              bootable = true;
+              size = "512M";
+              type = "C12A7328-F81F-11D2-BA4B-00A0C93EC93B";
               content = {
                 type = "filesystem";
                 format = "vfat";
@@ -29,25 +27,30 @@
                   "dmask=0022"
                 ];
               };
-            }
-            {
+            };
+            rootfs = {
+              priority = 2;
               name = "rootfs";
-              start = "512M";
-              end = "100%";
+              size = "100%";
               content = {
                 type = "filesystem";
                 format = "ext4";
                 extraArgs = [
                   "-L"
                   "rootfs"
+                  "-E"
+                  "lazy_itable_init=1,lazy_journal_init=1"
                 ];
                 mountpoint = "/";
                 mountOptions = [
                   "noatime"
+                  "nodiratime"
+                  "commit=10"
+                  "discard"
                 ];
               };
-            }
-          ];
+            };
+          };
         };
       };
     };

@@ -1,21 +1,18 @@
-{ pkgs, lib, inputs, unixpkgs, nixos-raspberrypi, ... }:
+{ pkgs, lib, inputs, unixpkgs, ... }:
+
 {
-  imports = with nixos-raspberrypi.nixosModules; [
-    raspberry-pi-4.base
-  ];
-
-  boot = {
-    kernelPackages = unixpkgs.linuxPackages_6_18;
-    kernelParams = [ "cma=256M" ];
-    loader = {
-      timeout = 1;
-      grub.enable = false;
-    };
-  };
-
   networking = {
     hostName = "pi";
-    networkmanager.enable = true;
+    useNetworkd = true;
+  };
+
+  systemd.network = {
+    enable = true;
+    networks."10-end0" = {
+      matchConfig.Name = "end0";
+      networkConfig = { DHCP = "yes"; };
+      linkConfig = { RequiredForOnline = "routable"; };
+    };
   };
 
   time.timeZone = "Europe/Istanbul";
@@ -29,27 +26,50 @@
     earlySetup = true;
   };
 
-  users.users.berry = {
-    isNormalUser = true;
-    home = "/home/berry";
-    shell = pkgs.fish;
-    extraGroups = [ "wheel" "networkmanager" ];
+  users = {
+    users = {
+      berry = {
+        isNormalUser = true;
+        home = "/home/berry";
+        shell = pkgs.fish;
+        initialPassword = "berry";
+        extraGroups = [ "wheel" ];
+      };
+    };
   };
 
-  security.doas.enable = true;
-
-  environment.systemPackages = with pkgs; [ git wget ethtool ];
+  environment = {
+    systemPackages = with pkgs; [ git wget ethtool doas-sudo-shim ];
+  };
 
   programs = {
     nix-ld.enable = true;
     fish.enable = true;
   };
 
-  services = {
-    openssh.enable = true;
-    s3.enable = true;
-  };
+  services.s3.enable = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "25.11";
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+      max-jobs = 4;
+      cores = 0;
+      substituters =
+        [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSlF8t1jWN8F1TV3F6z9L9nm7s5m5MGMq8ZSl6Y="
+      ];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    optimise = {
+      automatic = true;
+      dates = [ "04:00" ];
+    };
+  };
 }
