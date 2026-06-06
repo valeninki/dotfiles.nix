@@ -1,10 +1,12 @@
-{ pkgs, lib, inputs, ... }:
+{ pkgs, lib, inputs, unixpkgs, ... }:
 {
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-4
   ];
 
   boot = {
+    kernelPackages = unixpkgs.linuxPackages_6_18;
+    kernelParams = [ "cma=256M" ];
     loader = {
       timeout = 1;
       grub.enable = false;
