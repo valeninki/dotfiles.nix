@@ -6,14 +6,15 @@
         type = "disk";
         device = "/dev/mmcblk0";
         content = {
-          type = "gpt";
-          partitions = {
-            BOOT = {
-              priority = 1;
+          type = "table";
+          format = "msdos";
+          partitions = [
+            {
               name = "bootfs";
               start = "1M";
               end = "512M";
-              type = "EF00";
+              fs-type = "fat32";
+              bootable = true;
               content = {
                 type = "filesystem";
                 format = "vfat";
@@ -28,10 +29,11 @@
                   "dmask=0022"
                 ];
               };
-            };
-            ROOT = {
-              priority = 2;
-              size = "100%";
+            }
+            {
+              name = "rootfs";
+              start = "512M";
+              end = "100%";
               content = {
                 type = "filesystem";
                 format = "ext4";
@@ -44,8 +46,8 @@
                   "noatime"
                 ];
               };
-            };
-          };
+            }
+          ];
         };
       };
     };

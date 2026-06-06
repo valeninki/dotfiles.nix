@@ -124,10 +124,12 @@ in
         ];
       };
 
-      pi = inputs.nixpkgs.lib.nixosSystem rec {
+      pi = inputs.nixos-raspberrypi.lib.nixosSystem rec {
         system = "aarch64-linux";
+        nixpkgs = inputs.nixpkgs;
         specialArgs = {
           unixpkgs = repo "unixpkgs" system;
+          nixos-raspberrypi = inputs.nixos-raspberrypi;
           inherit inputs;
         };
         modules = [

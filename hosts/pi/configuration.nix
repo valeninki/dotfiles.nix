@@ -1,7 +1,7 @@
-{ pkgs, lib, inputs, unixpkgs, ... }:
+{ pkgs, lib, inputs, unixpkgs, nixos-raspberrypi, ... }:
 {
-  imports = [
-    inputs.nixos-hardware.nixosModules.raspberry-pi-4
+  imports = with nixos-raspberrypi.nixosModules; [
+    raspberry-pi-4.base
   ];
 
   boot = {
@@ -10,7 +10,6 @@
     loader = {
       timeout = 1;
       grub.enable = false;
-      generic-extlinux-compatible.enable = true;
     };
   };
 
