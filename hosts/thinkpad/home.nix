@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{ ... }:
 
 let
   laptop = "eDP-1";
@@ -51,6 +47,25 @@ in
         mainBar = {
           output = [ "eDP-1" ];
 
+          modules-right = [
+            "network"
+            "pulseaudio"
+            "clock"
+            "memory"
+            "battery"
+            "backlight"
+            "tray"
+            "custom/power"
+          ];
+
+          "network" = {
+            interface = [
+              "enp34s0"
+              "tailscale0"
+              "awg0"
+            ];
+          };
+
           "battery" = {
             bat = "BAT0";
             interval = 60;
@@ -59,6 +74,8 @@ in
               critical = 20;
             };
             format = "{icon} {capacity}%";
+            format-charging = "󰂄 {capacity}%";
+            format-full = "󰁹 {capacity}%";
             format-icons = [
               "󰁺"
               "󰁻"
@@ -67,14 +84,15 @@ in
               "󰁹"
             ];
           };
+
           "backlight" = {
-            "device" = "amdgpu_bl1";
-            "format" = "{icon} {percent}%";
-            "format-icons" = [
-              "󰃠 "
-              "󰃟 "
-              "󰃝 "
-              "󰃞 "
+            device = "amdgpu_bl1";
+            format = "{icon} {percent}%";
+            format-icons = [
+              "󰃠"
+              "󰃟"
+              "󰃝"
+              "󰃞"
             ];
           };
         };

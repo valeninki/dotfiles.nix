@@ -13,10 +13,6 @@
       flake = true;
     };
 
-    chaotic = {
-      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    };
-
     valenpkgs = {
       url = "git+https://git.valentinus.dev/valeninki/nixpkgs?ref=unstable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -54,6 +50,7 @@
 
     disko = {
       url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {

@@ -3,6 +3,7 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
+  config,
   lib,
   pkgs,
   ...
@@ -19,6 +20,9 @@
         canTouchEfiVariables = true;
         efiSysMountPoint = "/boot";
       };
+    };
+    tmp = {
+      cleanOnBoot = true;
     };
   };
 
@@ -103,14 +107,18 @@
       enable = true;
       settings = {
         default_session = {
-          command = ''
-            ${pkgs.tuigreet}/bin/tuigreet \
-              --time \
-              --asterisks \
-              --user-menu \
-              --greeting "Welcome back, Kerem" \
-              --theme "container=#25181c;text=#e8e1df;border=#75676b;prompt=#a38a90;time=#9c8c97;action=#f06161;button=#e8e1df;input=#e8e1df"
-          '';
+          command =
+            let
+              c = config.lib.stylix.colors;
+            in
+            ''
+              ${pkgs.tuigreet}/bin/tuigreet \
+                --time \
+                --asterisks \
+                --user-menu \
+                --greeting "Welcome back, Kerem" \
+                --theme "container=#${c.base00};text=#${c.base05};border=#${c.base02};prompt=#${c.base0E};time=#${c.base03};action=#${c.base08};button=#${c.base05};input=#${c.base05}"
+            '';
           user = "greeter";
         };
       };
@@ -118,14 +126,14 @@
   };
 
   stylix = {
-    image = ../../assets/Wallpapers/blue_flowers.png;
+    image = ../../assets/Wallpapers/flowers.jpg;
     icons = {
-      light = "Flat-Remix-Blue-Light";
-      dark = "Flat-Remix-Blue-Dark";
+      light = "Flat-Remix-Orange-Light";
+      dark = "Flat-Remix-Orange-Dark";
     };
     cursor = {
-      package = pkgs.catppuccin-cursors.mochaBlue;
-      name = "catppuccin-mocha-blue-cursors";
+      package = pkgs.catppuccin-cursors.frappeYellow;
+      name = "catppuccin-frappe-yellow-cursors";
     };
   };
 

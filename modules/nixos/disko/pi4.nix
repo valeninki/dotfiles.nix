@@ -1,10 +1,13 @@
-{ lib, ... }:
+{
+  disk ? "/dev/mmcblk0",
+  ...
+}:
 {
   disko.devices = {
     disk = {
       SDCARD = {
         type = "disk";
-        device = "/dev/mmcblk0";
+        device = disk;
         content = {
           type = "gpt";
           partitions = {

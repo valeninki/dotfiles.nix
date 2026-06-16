@@ -36,9 +36,6 @@ in
           (inputs.self + "/users/valentinus")
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
-          inputs.chaotic.nixosModules.nyx-cache
-          inputs.chaotic.nixosModules.nyx-overlay
-          inputs.chaotic.nixosModules.nyx-registry
         ];
       };
 
@@ -61,9 +58,6 @@ in
           (inputs.self + "/users/valentinus")
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
-          inputs.chaotic.nixosModules.nyx-cache
-          inputs.chaotic.nixosModules.nyx-overlay
-          inputs.chaotic.nixosModules.nyx-registry
         ];
       };
 

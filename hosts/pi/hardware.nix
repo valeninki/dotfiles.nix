@@ -8,6 +8,8 @@
       grub.enable = false;
     };
 
+    kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+
     initrd.availableKernelModules = [
       "pcie-brcmstb"
       "reset-raspberrypi"
@@ -17,8 +19,11 @@
       "usb_storage"
     ];
 
-    kernelParams =
-      [ "zswap.enabled=0" "cpuidle.off=1" "processor.max_cstate=1" ];
+    kernelParams = [
+      "zswap.enabled=0"
+      "cpuidle.off=1"
+      "processor.max_cstate=1"
+    ];
 
     kernel.sysctl = {
       "vm.dirty_ratio" = 20;
@@ -52,7 +57,9 @@
     tmpfsSize = "25%";
   };
 
-  nixpkgs = { hostPlatform = lib.mkDefault "aarch64-linux"; };
+  nixpkgs = {
+    hostPlatform = lib.mkDefault "aarch64-linux";
+  };
 
   powerManagement = {
     enable = true;
@@ -68,7 +75,6 @@
 
   hardware = {
     enableRedistributableFirmware = true;
-    firmware = [ pkgs.raspberrypifw ];
     bluetooth.powerOnBoot = lib.mkDefault false;
     deviceTree.filter = lib.mkDefault "bcm2711-rpi-*.dtb";
   };
@@ -91,41 +97,43 @@
     enableUserSlices = true;
   };
 
-  system.activationScripts.rpi-boot-firmware = let
-    configTxt = ./config.txt;
-    rpiFw = "${pkgs.raspberrypifw}/share/raspberrypi/boot";
-  in {
-    text = ''
-      FIRMWARE="/boot/firmware"
-      if [ -d "$FIRMWARE" ]; then
-        CURRENT_HASH=$(cat "$FIRMWARE/.nix-firmware-hash" 2>/dev/null || echo "")
-        NEW_HASH=$(echo "${pkgs.raspberrypifw} ${pkgs.ubootRaspberryPi4_64bit} ${pkgs.raspberrypi-armstubs} ${configTxt}" | sha256sum | cut -d' ' -f1)
+  system.activationScripts.rpi-boot-firmware =
+    let
+      configTxt = ./config.txt;
+      rpiFw = "${pkgs.raspberrypifw}/share/raspberrypi/boot";
+    in
+    {
+      text = ''
+        FIRMWARE="/boot/firmware"
+        if [ -d "$FIRMWARE" ]; then
+          CURRENT_HASH=$(cat "$FIRMWARE/.nix-firmware-hash" 2>/dev/null || echo "")
+          NEW_HASH=$(echo "${pkgs.raspberrypifw} ${pkgs.ubootRaspberryPi4_64bit} ${pkgs.raspberrypi-armstubs} ${configTxt}" | sha256sum | cut -d' ' -f1)
 
-        if [ "$CURRENT_HASH" != "$NEW_HASH" ]; then
-          echo "Updating RPi boot firmware..."
-          cp ${rpiFw}/bootcode.bin "$FIRMWARE/"
-          cp ${rpiFw}/fixup4.dat "$FIRMWARE/"
-          cp ${rpiFw}/fixup4db.dat "$FIRMWARE/"
-          cp ${rpiFw}/fixup4x.dat "$FIRMWARE/"
-          cp ${rpiFw}/start4.elf "$FIRMWARE/"
-          cp ${rpiFw}/start4db.elf "$FIRMWARE/"
-          cp ${rpiFw}/start4x.elf "$FIRMWARE/"
-          cp ${pkgs.ubootRaspberryPi4_64bit}/u-boot.bin "$FIRMWARE/u-boot-rpi4.bin"
-          cp ${pkgs.raspberrypi-armstubs}/armstub8-gic.bin "$FIRMWARE/"
-          cp ${rpiFw}/bcm2711-rpi-4-b.dtb "$FIRMWARE/"
-          cp ${rpiFw}/bcm2711-rpi-400.dtb "$FIRMWARE/"
-          cp ${rpiFw}/bcm2711-rpi-cm4.dtb "$FIRMWARE/"
-          cp ${rpiFw}/bcm2711-rpi-cm4s.dtb "$FIRMWARE/" 2>/dev/null || true
-          cp ${configTxt} "$FIRMWARE/config.txt"
-          echo "$NEW_HASH" > "$FIRMWARE/.nix-firmware-hash"
-          echo "RPi boot firmware updated."
-        else
-          echo "RPi boot firmware up to date."
+          if [ "$CURRENT_HASH" != "$NEW_HASH" ]; then
+            echo "Updating RPi boot firmware..."
+            cp ${rpiFw}/bootcode.bin "$FIRMWARE/"
+            cp ${rpiFw}/fixup4.dat "$FIRMWARE/"
+            cp ${rpiFw}/fixup4db.dat "$FIRMWARE/"
+            cp ${rpiFw}/fixup4x.dat "$FIRMWARE/"
+            cp ${rpiFw}/start4.elf "$FIRMWARE/"
+            cp ${rpiFw}/start4db.elf "$FIRMWARE/"
+            cp ${rpiFw}/start4x.elf "$FIRMWARE/"
+            cp ${pkgs.ubootRaspberryPi4_64bit}/u-boot.bin "$FIRMWARE/u-boot-rpi4.bin"
+            cp ${pkgs.raspberrypi-armstubs}/armstub8-gic.bin "$FIRMWARE/"
+            cp ${rpiFw}/bcm2711-rpi-4-b.dtb "$FIRMWARE/"
+            cp ${rpiFw}/bcm2711-rpi-400.dtb "$FIRMWARE/"
+            cp ${rpiFw}/bcm2711-rpi-cm4.dtb "$FIRMWARE/"
+            cp ${rpiFw}/bcm2711-rpi-cm4s.dtb "$FIRMWARE/" 2>/dev/null || true
+            cp ${configTxt} "$FIRMWARE/config.txt"
+            echo "$NEW_HASH" > "$FIRMWARE/.nix-firmware-hash"
+            echo "RPi boot firmware updated."
+          else
+            echo "RPi boot firmware up to date."
+          fi
         fi
-      fi
-    '';
-    deps = [ ];
-  };
+      '';
+      deps = [ ];
+    };
 
   systemd.settings.Manager = {
     WatchdogDevice = "/dev/watchdog0";

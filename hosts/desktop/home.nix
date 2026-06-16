@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{ ... }:
 
 {
 
@@ -23,6 +19,14 @@
       settings = {
         mainBar = {
           output = [ "HDMI-A-1" ];
+          modules-right = [
+            "network"
+            "memory"
+            "pulseaudio"
+            "clock"
+            "tray"
+            "custom/power"
+          ];
         };
       };
     };

@@ -1,4 +1,13 @@
 {
+  config,
+  ...
+}:
+
+let
+  theme = config.stylix;
+in
+
+{
 
   wayland.windowManager.hyprland.settings = {
     input = {
@@ -14,8 +23,8 @@
       "XDG_SESSION_TYPE, wayland"
       "XDG_SESSION_DESKTOP, Hyprland"
       "QT_QPA_PLATFORM, wayland;xcb"
-      "HYPRCURSOR_THEME, catppuccin-mocha-blue-cursors"
-      "HYPRCURSOR_SIZE, 24"
+      "HYPRCURSOR_THEME, ${theme.cursor.name}"
+      "HYPRCURSOR_SIZE, ${toString theme.cursor.size}"
     ];
 
     decoration = {
