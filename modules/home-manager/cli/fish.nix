@@ -15,7 +15,8 @@
       shellAliases = {
         rebuild = "doas nixos-rebuild switch --flake ~/.dots#(hostname)";
         k = "kubectl";
-        dua = "dua -i";
+        f9s = "flux9s";
+        dua = "dua interactive";
         tree = "eza --tree";
         "..." = "cd ../..";
       };

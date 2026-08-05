@@ -1,0 +1,26 @@
+# Sops age private keys
+*.age
+age-*.txt
+
+# SSH and other private keys
+*.pem
+*.key
+id_*
+
+# Local environment files
+.env
+.envrc*
+
+# Nix build outputs
+result
+result-*
+
+# Direnv
+.direnv/
+
+# Nix GC
+.nixos-gc-*
+
+# VM images
+*.qcow2
+*.img

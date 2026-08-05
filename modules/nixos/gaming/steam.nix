@@ -17,6 +17,10 @@ in
     programs = {
       steam = {
         enable = true;
+        package = pkgs.steam.override {
+          extraPkgs = pkgs: [ pkgs.libpulseaudio ];
+          extraBwrapArgs = [ "--bind /data/Games /data/Games" ];
+        };
         dedicatedServer = {
           openFirewall = true;
         };

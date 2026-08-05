@@ -6,8 +6,23 @@
 
 let
   cfg = config.services.awg-client;
+  awgParams = [
+    "junkPacketCount"
+    "junkPacketMinSize"
+    "junkPacketMaxSize"
+    "initPacketJunkSize"
+    "responsePacketJunkSize"
+    "initPacketMagicHeader"
+    "responsePacketMagicHeader"
+    "underloadPacketMagicHeader"
+    "transportPacketMagicHeader"
+  ];
 in
 {
+
+  imports = [
+    ../../../secrets
+  ];
 
   options.services.awg-client = {
     enable = lib.mkEnableOption "AmneziaWG client";
@@ -31,6 +46,22 @@ in
 
   config = lib.mkIf cfg.enable {
 
+    sops.secrets =
+      {
+        ${cfg.privateKeySecret} = {
+          mode = "0400";
+        };
+      }
+      // builtins.listToAttrs (
+        map (name: {
+          name = "amneziawg/${name}";
+          value = {
+            sopsFile = ../../../secrets/host-secrets.yaml;
+            mode = "0400";
+          };
+        }) awgParams
+      );
+
     boot = {
       extraModulePackages = [ config.boot.kernelPackages.amneziawg ];
       kernelModules = [ "amneziawg" ];
@@ -42,20 +73,21 @@ in
           awg0 = {
             type = "amneziawg";
             address = [ cfg.address ];
-            mtu = cfg.mtu;
+            inherit (cfg) mtu;
             privateKeyFile = config.sops.secrets.${cfg.privateKeySecret}.path;
 
-            extraOptions = {
-              Jc = 9;
-              Jmin = 90;
-              Jmax = 685;
-              S1 = 109;
-              S2 = 123;
-              H1 = 930942820;
-              H2 = 932360443;
-              H3 = 1845528299;
-              H4 = 1220663050;
-            };
+            postUp = ''
+              awg set awg0 \
+                Jc "$(cat ${config.sops.secrets."amneziawg/junkPacketCount".path})" \
+                Jmin "$(cat ${config.sops.secrets."amneziawg/junkPacketMinSize".path})" \
+                Jmax "$(cat ${config.sops.secrets."amneziawg/junkPacketMaxSize".path})" \
+                S1 "$(cat ${config.sops.secrets."amneziawg/initPacketJunkSize".path})" \
+                S2 "$(cat ${config.sops.secrets."amneziawg/responsePacketJunkSize".path})" \
+                H1 "$(cat ${config.sops.secrets."amneziawg/initPacketMagicHeader".path})" \
+                H2 "$(cat ${config.sops.secrets."amneziawg/responsePacketMagicHeader".path})" \
+                H3 "$(cat ${config.sops.secrets."amneziawg/underloadPacketMagicHeader".path})" \
+                H4 "$(cat ${config.sops.secrets."amneziawg/transportPacketMagicHeader".path})"
+            '';
 
             peers = [
               {

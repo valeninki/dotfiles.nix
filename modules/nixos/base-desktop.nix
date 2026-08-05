@@ -1,26 +1,47 @@
 {
-  inputs,
+  config,
+  lib,
   pkgs,
-  unixpkgs,
   valenpkgs,
   ...
 }:
 
 {
   imports = [
+    ./base.nix
     ./services/stylix.nix
   ];
 
-  networking = {
-    nftables = {
-      enable = true;
+  boot = {
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_6_18;
+    tmp.cleanOnBoot = true;
+
+    kernel.sysctl = {
+      "vm.swappiness" = 10;
+      "net.ipv4.tcp_fin_timeout" = 30;
+      "net.ipv4.tcp_max_syn_backlog" = 5000;
+      "net.ipv4.tcp_rmem" = "4096 131072 12582912";
+      "net.ipv4.tcp_wmem" = "4096 87380 4194304";
+      "net.ipv4.tcp_congestion_control" = "bbr";
+      "net.core.netdev_max_backlog" = 2000;
+      "net.core.default_qdisc" = "fq";
+      "net.core.rmem_max" = 2097152;
+      "net.core.wmem_max" = 2097152;
+      "net.ipv4.tcp_syncookies" = 1;
+      "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+      "fs.protected_hardlinks" = 1;
+      "fs.protected_symlinks" = 1;
+      "fs.protected_fifos" = 2;
+      "fs.protected_regular" = 2;
     };
-    nameservers = [
-      "9.9.9.9#dns.quad9.net"
-      "149.112.112.112#dns.quad9.net"
-    ];
+  };
+
+  networking = {
+    networkmanager.enable = false;
+    useNetworkd = true;
+    useDHCP = lib.mkDefault true;
+
     firewall = {
-      enable = true;
       allowedUDPPorts = [ 51820 ];
       allowedUDPPortRanges = [
         {
@@ -38,31 +59,23 @@
       ];
       trustedInterfaces = [
         "virbr0"
-        "tailscale0"
         "awg0"
       ];
     };
   };
 
   security = {
-    sudo = {
-      enable = false;
-    };
-    doas = {
-      enable = true;
-    };
+    polkit.enable = true;
     rtkit = {
       enable = true;
     };
   };
 
-  users = {
-    groups = {
-      libvirtd = {
-        members = [
-          "valentinus"
-        ];
-      };
+  hardware = {
+    acpilight.enable = true;
+    graphics = {
+      enable = true;
+      enable32Bit = true;
     };
   };
 
@@ -77,52 +90,49 @@
   environment = {
     systemPackages = with pkgs; [
       git
-      wget
-      networkmanagerapplet
       gparted
       e2fsprogs
-      duperemove
-      dmidecode
       libva-utils
       lm_sensors
       v4l-utils
       valenpkgs.topmem
+      valenpkgs.netui
       valenpkgs.zmem
     ];
   };
 
   services = {
-    resolved = {
+    openssh.enable = true;
+    scx.enable = true;
+    gvfs.enable = true;
+    udisks2.enable = true;
+
+    greetd = {
       enable = true;
-      settings = {
-        Resolve = {
-          DNS = [
-            "9.9.9.9#dns.quad9.net"
-            "149.112.112.112#dns.quad9.net"
-          ];
-          DNSOverTLS = "true";
-          DNSSEC = "true";
-          Domains = [ "~." ];
-          FallbackDNS = [
-            "9.9.9.9#dns.quad9.net"
-            "149.112.112.112#dns.quad9.net"
-          ];
-        };
+      settings.default_session = {
+        command =
+          let
+            c = config.lib.stylix.colors;
+          in
+          ''
+            ${pkgs.tuigreet}/bin/tuigreet \
+              --time \
+              --asterisks \
+              --user-menu \
+              --greeting "Welcome back, Kerem" \
+              --theme "container=#${c.base00};text=#${c.base05};border=#${c.base02};prompt=#${c.base0E};time=#${c.base03};action=#${c.base08};button=#${c.base05};input=#${c.base05}"
+          '';
+        user = "greeter";
       };
     };
+
     gnome = {
       gnome-keyring = {
         enable = true;
       };
     };
     tailscale = {
-      enable = true;
-      package = unixpkgs.tailscale;
       useRoutingFeatures = "client";
-      extraUpFlags = [
-        "--accept-dns"
-        "--ssh"
-      ];
     };
     pipewire = {
       enable = true;
@@ -144,6 +154,11 @@
   };
 
   programs = {
+    sway = {
+      enable = true;
+      xwayland.enable = true;
+    };
+    wireshark.enable = true;
     virt-manager = {
       enable = true;
     };
@@ -164,15 +179,6 @@
     };
     portal = {
       enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-hyprland
-        xdg-desktop-portal-gtk
-      ];
-      config = {
-        common = {
-          default = "*";
-        };
-      };
     };
   };
 

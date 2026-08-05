@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 let
   laptop = "eDP-1";
@@ -7,96 +7,75 @@ in
 
 {
 
-  wayland = {
-    windowManager = {
-      hyprland = {
-        settings = {
-
-          monitor = [
-            "${laptop},1920x1200@60,auto,1"
-            "${external},1920x1080@74.97,auto,1"
-          ];
-
-          workspace = [
-            "1, monitor:${laptop}"
-            "2, monitor:${laptop}"
-            "3, monitor:${laptop}"
-            "4, monitor:${laptop}"
-            "5, monitor:${laptop}"
-            "6, monitor:${external}"
-            "7, monitor:${external}"
-            "8, monitor:${external}"
-            "9, monitor:${external}"
-          ];
-
-          bind = [
-            ",XF86MonBrightnessDown, exec, xbacklight -dec 10"
-            ",XF86MonBrightnessUp, exec, xbacklight -inc 10"
-            ",XF86AudioMicMute, exec, amixer -c 1 sset Capture toggle"
-            ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-          ];
-
-        };
+  valentinus.desktop.quickshell = {
+    enable = true;
+    capabilities = {
+      iwd.enable = true;
+      backlight.enable = true;
+      battery = {
+        enable = true;
+        device = "BAT0";
       };
     };
   };
 
-  programs = {
-    waybar = {
-      settings = {
-        mainBar = {
-          output = [ "eDP-1" ];
-
-          modules-right = [
-            "network"
-            "pulseaudio"
-            "clock"
-            "memory"
-            "battery"
-            "backlight"
-            "tray"
-            "custom/power"
-          ];
-
-          "network" = {
-            interface = [
-              "enp34s0"
-              "tailscale0"
-              "awg0"
-            ];
-          };
-
-          "battery" = {
-            bat = "BAT0";
-            interval = 60;
-            states = {
-              warning = 45;
-              critical = 20;
-            };
-            format = "{icon} {capacity}%";
-            format-charging = "󰂄 {capacity}%";
-            format-full = "󰁹 {capacity}%";
-            format-icons = [
-              "󰁺"
-              "󰁻"
-              "󰁾"
-              "󰂀"
-              "󰁹"
-            ];
-          };
-
-          "backlight" = {
-            device = "amdgpu_bl1";
-            format = "{icon} {percent}%";
-            format-icons = [
-              "󰃠"
-              "󰃟"
-              "󰃝"
-              "󰃞"
-            ];
-          };
-        };
+  wayland.windowManager.sway.config = {
+    output = {
+      "${laptop}" = {
+        mode = "1920x1200@60Hz";
+        position = "0 0";
+        scale = "1";
       };
+      "${external}" = {
+        mode = "1920x1080@74.97Hz";
+        position = "1920 0";
+        scale = "1";
+      };
+    };
+
+    workspaceOutputAssign = [
+      {
+        workspace = "1";
+        output = laptop;
+      }
+      {
+        workspace = "2";
+        output = laptop;
+      }
+      {
+        workspace = "3";
+        output = laptop;
+      }
+      {
+        workspace = "4";
+        output = laptop;
+      }
+      {
+        workspace = "5";
+        output = laptop;
+      }
+      {
+        workspace = "6";
+        output = external;
+      }
+      {
+        workspace = "7";
+        output = external;
+      }
+      {
+        workspace = "8";
+        output = external;
+      }
+      {
+        workspace = "9";
+        output = external;
+      }
+    ];
+
+    keybindings = {
+      "XF86MonBrightnessDown" = "exec brightnessctl set 10%-";
+      "XF86MonBrightnessUp" = "exec brightnessctl set +10%";
+      "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
     };
   };
 

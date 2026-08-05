@@ -1,10 +1,6 @@
-{ inputs, ... }:
+_:
 
 {
-  imports = [
-    inputs.disko.nixosModules.disko
-  ];
-
   disko.devices = {
     disk = {
       main = {
@@ -24,8 +20,8 @@
                 format = "vfat";
                 mountpoint = "/boot";
                 mountOptions = [
-                  "fmask=0022"
-                  "dmask=0022"
+                  "fmask=0077"
+                  "dmask=0077"
                 ];
               };
             };

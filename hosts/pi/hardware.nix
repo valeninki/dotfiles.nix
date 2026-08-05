@@ -4,11 +4,14 @@
   boot = {
     loader = {
       timeout = 1;
-      generic-extlinux-compatible.enable = true;
+      generic-extlinux-compatible = {
+        enable = true;
+        useGenerationDeviceTree = true;
+      };
       grub.enable = false;
     };
 
-    kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    kernelPackages = lib.mkForce pkgs.linuxPackages;
 
     initrd.availableKernelModules = [
       "pcie-brcmstb"
@@ -54,8 +57,10 @@
 
   boot.tmp = {
     useTmpfs = true;
-    tmpfsSize = "25%";
+    tmpfsSize = "10%";
   };
+
+  fileSystems."/boot/firmware".neededForBoot = true;
 
   nixpkgs = {
     hostPlatform = lib.mkDefault "aarch64-linux";
@@ -77,6 +82,10 @@
     enableRedistributableFirmware = true;
     bluetooth.powerOnBoot = lib.mkDefault false;
     deviceTree.filter = lib.mkDefault "bcm2711-rpi-*.dtb";
+    raspberry-pi = {
+      "4".apply-overlays-dtmerge.enable = false;
+      firmware.enable = false;
+    };
   };
 
   services = {
@@ -105,12 +114,11 @@
     {
       text = ''
         FIRMWARE="/boot/firmware"
-        if [ -d "$FIRMWARE" ]; then
+        if mountpoint -q "$FIRMWARE"; then
           CURRENT_HASH=$(cat "$FIRMWARE/.nix-firmware-hash" 2>/dev/null || echo "")
           NEW_HASH=$(echo "${pkgs.raspberrypifw} ${pkgs.ubootRaspberryPi4_64bit} ${pkgs.raspberrypi-armstubs} ${configTxt}" | sha256sum | cut -d' ' -f1)
 
           if [ "$CURRENT_HASH" != "$NEW_HASH" ]; then
-            echo "Updating RPi boot firmware..."
             cp ${rpiFw}/bootcode.bin "$FIRMWARE/"
             cp ${rpiFw}/fixup4.dat "$FIRMWARE/"
             cp ${rpiFw}/fixup4db.dat "$FIRMWARE/"
@@ -120,16 +128,12 @@
             cp ${rpiFw}/start4x.elf "$FIRMWARE/"
             cp ${pkgs.ubootRaspberryPi4_64bit}/u-boot.bin "$FIRMWARE/u-boot-rpi4.bin"
             cp ${pkgs.raspberrypi-armstubs}/armstub8-gic.bin "$FIRMWARE/"
-            cp ${rpiFw}/bcm2711-rpi-4-b.dtb "$FIRMWARE/"
-            cp ${rpiFw}/bcm2711-rpi-400.dtb "$FIRMWARE/"
-            cp ${rpiFw}/bcm2711-rpi-cm4.dtb "$FIRMWARE/"
-            cp ${rpiFw}/bcm2711-rpi-cm4s.dtb "$FIRMWARE/" 2>/dev/null || true
             cp ${configTxt} "$FIRMWARE/config.txt"
             echo "$NEW_HASH" > "$FIRMWARE/.nix-firmware-hash"
-            echo "RPi boot firmware updated."
-          else
-            echo "RPi boot firmware up to date."
           fi
+        else
+          echo "rpi-firmware: /boot/firmware is not mounted" >&2
+          exit 1
         fi
       '';
       deps = [ ];

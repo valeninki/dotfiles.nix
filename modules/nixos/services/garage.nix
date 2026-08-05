@@ -11,9 +11,56 @@ in
 
 {
 
+  imports = [
+    ../../../secrets
+  ];
+
   options.services.s3.enable = lib.mkEnableOption "Garage S3 Object Storage Node";
 
   config = lib.mkIf cfg.enable {
+
+    sops = {
+      secrets = {
+        "garage/rpc_secret" = {
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
+        "garage/admin_token" = {
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
+        "garage/metrics_token" = {
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
+      };
+
+      templates = {
+        "garage.env" = {
+          # systemd reads this before dropping privileges to Garage's DynamicUser.
+          owner = "root";
+          group = "root";
+          mode = "0400";
+          content = ''
+            GARAGE_RPC_SECRET=${config.sops.placeholder."garage/rpc_secret"}
+            GARAGE_ADMIN_TOKEN=${config.sops.placeholder."garage/admin_token"}
+            GARAGE_METRICS_TOKEN=${config.sops.placeholder."garage/metrics_token"}
+          '';
+        };
+        "garage-webui.env" = {
+          # The Web UI uses a different environment variable name for the same token.
+          owner = "root";
+          group = "root";
+          mode = "0400";
+          content = ''
+            API_ADMIN_KEY=${config.sops.placeholder."garage/admin_token"}
+          '';
+        };
+      };
+    };
 
     networking = {
       firewall = {
@@ -22,6 +69,8 @@ in
           3901
           3902
           3903
+          3904
+          3909
         ];
       };
     };
@@ -64,9 +113,7 @@ in
             metrics_token = ""; # placeholder, overridden by environment file
           };
         };
-        environmentFile = lib.mkIf (
-          config ? sops.templates && config.sops.templates ? "garage.env"
-        ) config.sops.templates."garage.env".path;
+        environmentFile = config.sops.templates."garage.env".path;
       };
     };
 
@@ -81,7 +128,13 @@ in
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
             DynamicUser = true;
-            Environment = "PORT=3909";
+            Environment = [
+              "PORT=3909"
+              "API_BASE_URL=http://127.0.0.1:3903"
+              "S3_ENDPOINT_URL=http://127.0.0.1:3900"
+              "S3_REGION=garage"
+            ];
+            EnvironmentFile = config.sops.templates."garage-webui.env".path;
             ExecStart = "${pkgs.garage-webui}/bin/garage-webui";
             Restart = "always";
           };

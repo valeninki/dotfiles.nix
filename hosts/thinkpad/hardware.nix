@@ -35,25 +35,6 @@
       ];
     };
 
-    kernel.sysctl = {
-      "vm.swappiness" = 10;
-      "net.ipv4.tcp_fin_timeout" = 30;
-      "net.ipv4.tcp_max_syn_backlog" = 5000;
-      "net.ipv4.tcp_rmem" = "4096 131072 12582912";
-      "net.ipv4.tcp_wmem" = "4096 87380 4194304";
-      "net.ipv4.tcp_congestion_control" = "bbr";
-      "net.core.netdev_max_backlog" = 2000;
-      "net.core.default_qdisc" = "fq";
-      "net.core.rmem_max" = 2097152;
-      "net.core.wmem_max" = 2097152;
-      "net.ipv4.tcp_syncookies" = 1;
-      "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
-      "fs.protected_hardlinks" = 1;
-      "fs.protected_symlinks" = 1;
-      "fs.protected_fifos" = 2;
-      "fs.protected_regular" = 2;
-    };
-
     kernelModules = [
       "kvm-amd"
       "v4l2loopback"
@@ -64,12 +45,11 @@
       options iwlmvm power_scheme=1
       options cfg80211 ieee80211_regdom="TR"
     '';
-    extraModulePackages = [ ];
+    extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
     kernelParams = [
       "zswap.enabled=1"
       "zswap.compressor=lz4"
       "zswap.max_pool_percent=20"
-      "ipv6.disable=1"
       "rd.luks.options=discard"
       "nvme.max_host_mem_size_mb=0"
       "nvme_core.default_ps_max_latency_us=5500"
@@ -89,18 +69,7 @@
     cpuFreqGovernor = "powersave";
   };
 
-  networking = {
-    useDHCP = lib.mkDefault true;
-    #interfaces.enp34s0.useDHCP = lib.mkDefault true;
-  };
-
   services = {
-    gvfs = {
-      enable = true;
-    };
-    udisks2 = {
-      enable = true;
-    };
     fprintd = {
       enable = true;
       tod = {
@@ -115,15 +84,6 @@
       extraRules = ''
         	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
       '';
-    };
-  };
-
-  systemd = {
-    services = {
-      fprintd = {
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig.Type = "simple";
-      };
     };
   };
 

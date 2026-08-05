@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   inputs,
   pkgs,
   unixpkgs,
@@ -12,18 +10,6 @@
     stateVersion = "25.11";
     username = "valentinus";
     homeDirectory = "/home/valentinus";
-
-    sessionVariables = {
-      XDG_CURRENT_DESKTOP = "Hyprland";
-      XDG_SESSION_TYPE = "wayland";
-      QT_QPA_PLATFORM = "wayland;xcb";
-      QT_QPA_PLATFORMTHEME = lib.mkForce "qtct";
-      QT_STYLE_OVERRIDE = lib.mkForce "Adwaita-dark";
-    };
-
-    file = { };
-
-    activation = { };
 
     packages = with pkgs; [
 
@@ -38,8 +24,6 @@
       xdg-user-dirs
       usbutils
       tmate
-      dmidecode
-      libva-utils
       scrcpy
       openssl
       sl
@@ -59,30 +43,15 @@
       dua
       iotop
 
-      ## Window Manager and rice needded packages
-      kitty
-      wofi
-      wl-clipboard
-      cliphist
-      grim
-      slurp
-      qt6Packages.qt6ct
-      adwaita-qt
-
-      ## Optional
-      tesseract4
-
       ## Editing Things
       unixpkgs.obsidian
       gimp
       inkscape
       upscayl
       obs-studio
-      pavucontrol
       pulsemixer
       alsa-utils
       easyeffects
-      pcmanfm
       unzip
       picard
       easytag
@@ -93,9 +62,7 @@
       vlc
 
       ## Coding Things
-      android-tools
       distrobox
-      opencode
       unixpkgs.vscode
       bun
 
@@ -119,6 +86,7 @@
       k0sctl
       k3s
       kubernetes-helm
+      unixpkgs.flux9s
 
       ## User packages
       ungoogled-chromium
@@ -126,8 +94,6 @@
       unixpkgs.equibop
       unixpkgs.telegram-desktop
       gcr
-      playerctl
-      nextcloud-client
       protonup-qt
       moonlight-qt
       gtkhash
@@ -149,15 +115,6 @@
     };
   };
 
-  wayland = {
-    windowManager = {
-      hyprland = {
-        enable = true;
-        configType = "hyprlang";
-      };
-    };
-  };
-
   programs = {
     home-manager = {
       enable = true;
@@ -165,15 +122,7 @@
   };
 
   services = {
-    hyprpolkitagent = {
-      enable = true;
-    };
-    hyprpaper = {
-      enable = true;
-    };
-    gnome-keyring = {
-      enable = true;
-    };
+    polkit-gnome.enable = true;
     cliphist = {
       enable = true;
     };
@@ -189,17 +138,6 @@
   };
 
   xdg = {
-    portal = {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-hyprland
-        xdg-desktop-portal-gtk
-      ];
-      configPackages = with pkgs; [
-        xdg-desktop-portal-hyprland
-        xdg-desktop-portal-gtk
-      ];
-    };
     mimeApps = {
       enable = true;
       defaultApplications = {
@@ -219,12 +157,6 @@
     };
   };
 
-  imports =
-    lib.map (p: ./. + "/${p}") (lib.remove "default.nix" (lib.attrNames (builtins.readDir ./.)))
-    ++ [
-      inputs.self.homeModules.cli
-      inputs.self.homeModules.apps
-      inputs.self.homeModules.desktop
-    ];
+  imports = [ inputs.self.homeModules.full-desktop ];
 
 }

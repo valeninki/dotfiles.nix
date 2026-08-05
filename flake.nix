@@ -39,7 +39,7 @@
     };
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.0.0";
+      url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -65,7 +65,6 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
-        "aarch64-linux"
       ];
 
       imports = [
@@ -74,7 +73,9 @@
         inputs.pre-commit-hooks.flakeModule
       ];
 
-      perSystem = {
+      perSystem = { pkgs, ... }: {
+        checks.quickshell-qml = pkgs.callPackage ./modules/home-manager/desktop/qshell/check.nix { };
+
         pre-commit.settings.hooks = {
           nixfmt.enable = true;
           nil.enable = true;

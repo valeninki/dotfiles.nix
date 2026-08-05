@@ -35,9 +35,9 @@
     };
     icons = {
       enable = true;
-      package = lib.mkDefault pkgs.flat-remix-icon-theme;
-      light = lib.mkDefault "Flat-Remix-Red-Light";
-      dark = lib.mkDefault "Flat-Remix-Red-Dark";
+      package = pkgs.papirus-icon-theme;
+      light = "Papirus-Light";
+      dark = "Papirus-Dark";
     };
     cursor = {
       package = lib.mkDefault pkgs.catppuccin-cursors.mochaRed;
@@ -51,7 +51,7 @@
 
     targets = {
       chromium.enable = false;
-      gnome.enable = true;
+      gnome.enable = false;
       qt.enable = false;
     };
   };

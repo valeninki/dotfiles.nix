@@ -34,25 +34,6 @@
       ];
     };
 
-    kernel.sysctl = {
-      "vm.swappiness" = 10;
-      "net.ipv4.tcp_fin_timeout" = 30;
-      "net.ipv4.tcp_max_syn_backlog" = 5000;
-      "net.ipv4.tcp_rmem" = "4096 131072 12582912";
-      "net.ipv4.tcp_wmem" = "4096 87380 4194304";
-      "net.ipv4.tcp_congestion_control" = "bbr";
-      "net.core.netdev_max_backlog" = 2000;
-      "net.core.default_qdisc" = "fq";
-      "net.core.rmem_max" = 2097152;
-      "net.core.wmem_max" = 2097152;
-      "net.ipv4.tcp_syncookies" = 1;
-      "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
-      "fs.protected_hardlinks" = 1;
-      "fs.protected_symlinks" = 1;
-      "fs.protected_fifos" = 2;
-      "fs.protected_regular" = 2;
-    };
-
     kernelModules = [
       "r8169"
       "kvm-amd"
@@ -61,12 +42,10 @@
     extraModprobeConfig = ''
       options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
     '';
-    extraModulePackages = [ ];
     kernelParams = [
       "zswap.enabled=1"
       "zswap.compressor=lz4"
-      "zswap.max_pool_percent=20"
-      "ipv6.disable=1"
+      "zswap.max_pool_percent=50"
       "r8169.disable_aspm=1"
       "r8169.disable_autosuspend=1"
     ];
@@ -84,11 +63,6 @@
     cpuFreqGovernor = "performance";
   };
 
-  networking = {
-    useDHCP = lib.mkDefault true;
-    #interfaces.enp34s0.useDHCP = lib.mkDefault true;
-  };
-
   services = {
     udev = {
       extraRules = ''
@@ -97,8 +71,6 @@
         	    ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="enp34s0", RUN+="${pkgs.bash}/bin/bash -c 'echo 1 > /sys/class/net/$name/device/power/wakeup'"
         	  '';
     };
-    gvfs.enable = true;
-    udisks2.enable = true;
   };
 
   nixpkgs = {

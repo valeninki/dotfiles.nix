@@ -6,7 +6,6 @@
 }:
 
 {
-  imports = [ inputs.home-manager.nixosModules.default ];
   users = {
     mutableUsers = true;
     users.valentinus = {
@@ -15,7 +14,6 @@
         "wheel"
         "video"
         "network"
-        "networkmanager"
         "libvirtd"
         "kvm"
         "wireshark"

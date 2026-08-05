@@ -1,34 +1,21 @@
-{ ... }:
+_:
 
 {
 
-  wayland = {
-    windowManager = {
-      hyprland = {
-        settings = {
-          monitor = [
-            "HDMI-A-1, 1920x1080@74.97,auto,1"
-          ];
-        };
-      };
+  valentinus.desktop.quickshell = {
+    enable = true;
+    capabilities = {
+      iwd.enable = false;
+      backlight.enable = false;
+      battery.enable = false;
     };
   };
 
-  programs = {
-    waybar = {
-      settings = {
-        mainBar = {
-          output = [ "HDMI-A-1" ];
-          modules-right = [
-            "network"
-            "memory"
-            "pulseaudio"
-            "clock"
-            "tray"
-            "custom/power"
-          ];
-        };
-      };
+  wayland.windowManager.sway.config.output = {
+    "HDMI-A-1" = {
+      mode = "1920x1080@74.97Hz";
+      position = "0 0";
+      scale = "1";
     };
   };
 

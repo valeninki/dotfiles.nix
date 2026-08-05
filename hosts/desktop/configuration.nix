@@ -3,15 +3,12 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
 
 {
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_18;
     loader = {
       systemd-boot = {
         enable = true;
@@ -21,17 +18,11 @@
         efiSysMountPoint = "/boot";
       };
     };
-    tmp = {
-      cleanOnBoot = true;
-    };
   };
 
   networking = {
     hostName = "desktop";
     hostId = "8460159f";
-    networkmanager = {
-      enable = true;
-    };
     interfaces = {
       enp34s0 = {
         wakeOnLan = {
@@ -44,93 +35,10 @@
     };
   };
 
-  time = {
-    timeZone = "Europe/Istanbul";
-  };
-
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-  };
-
-  console = {
-    packages = [ pkgs.terminus_font ];
-    font = "ter-v16b";
-    keyMap = lib.mkForce "trq";
-    useXkbConfig = true;
-    earlySetup = true;
-  };
-
-  hardware = {
-    acpilight = {
-      enable = true;
-    };
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-  };
-
-  programs = {
-    hyprland = {
-      enable = true;
-      xwayland = {
-        enable = true;
-      };
-    };
-    nix-ld = {
-      enable = true;
-    };
-    fish = {
-      enable = true;
-    };
-    wireshark = {
-      enable = true;
-    };
-  };
-
-  security = {
-    polkit = {
-      enable = true;
-    };
-  };
-
-  services = {
-    openssh = {
-      enable = true;
-    };
-    scx = {
-      enable = true;
-      scheduler = "scx_bpfland";
-    };
-
-    greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          command =
-            let
-              c = config.lib.stylix.colors;
-            in
-            ''
-              ${pkgs.tuigreet}/bin/tuigreet \
-                --time \
-                --asterisks \
-                --user-menu \
-                --greeting "Welcome back, Kerem" \
-                --theme "container=#${c.base00};text=#${c.base05};border=#${c.base02};prompt=#${c.base0E};time=#${c.base03};action=#${c.base08};button=#${c.base05};input=#${c.base05}"
-            '';
-          user = "greeter";
-        };
-      };
-    };
-  };
+  services.scx.scheduler = "scx_bpfland";
 
   stylix = {
     image = ../../assets/Wallpapers/flowers.jpg;
-    icons = {
-      light = "Flat-Remix-Orange-Light";
-      dark = "Flat-Remix-Orange-Dark";
-    };
     cursor = {
       package = pkgs.catppuccin-cursors.frappeYellow;
       name = "catppuccin-frappe-yellow-cursors";
@@ -141,9 +49,6 @@
     users = {
       valentinus = {
         imports = [
-          ../../modules/home-manager/cli
-          ../../modules/home-manager/apps
-          ../../modules/home-manager/desktop
           ./home.nix
         ];
       };
@@ -181,19 +86,6 @@
         };
       };
     };
-  };
-
-  nix = {
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-    };
-  };
-
-  system = {
-    stateVersion = "25.11";
   };
 
 }

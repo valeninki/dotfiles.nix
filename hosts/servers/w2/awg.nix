@@ -4,7 +4,42 @@
   ...
 }:
 
+let
+  awgParams = [
+    "junkPacketCount"
+    "junkPacketMinSize"
+    "junkPacketMaxSize"
+    "initPacketJunkSize"
+    "responsePacketJunkSize"
+    "initPacketMagicHeader"
+    "responsePacketMagicHeader"
+    "underloadPacketMagicHeader"
+    "transportPacketMagicHeader"
+  ];
+in
 {
+  imports = [
+    ../../../secrets
+  ];
+
+  boot.kernelModules = [ "amneziawg" ];
+
+  sops.secrets =
+    {
+      "amneziawg/w2_private_key" = {
+        mode = "0400";
+      };
+    }
+    // builtins.listToAttrs (
+      map (name: {
+        name = "amneziawg/${name}";
+        value = {
+          sopsFile = ../../../secrets/host-secrets.yaml;
+          mode = "0400";
+        };
+      }) awgParams
+    );
+
   systemd = {
     network = {
       enable = true;
@@ -17,19 +52,10 @@
           };
 
           amneziaWGConfig = {
-            JunkPacketCount = 9;
-            JunkPacketMinSize = 90;
-            JunkPacketMaxSize = 685;
-            InitPacketJunkSize = 109;
-            ResponsePacketJunkSize = 123;
-            InitPacketMagicHeader = 930942820;
-            ResponsePacketMagicHeader = 932360443;
-            UnderloadPacketMagicHeader = 1845528299;
-            TransportPacketMagicHeader = 1220663050;
-
             ListenPort = 51820;
             PrivateKeyFile = config.sops.secrets."amneziawg/w2_private_key".path;
           };
+
           wireguardPeers = [
             {
               wireguardPeerConfig = {
@@ -59,6 +85,29 @@
         };
       };
     };
-  };
 
+    services.awg-server-params = {
+      description = "Apply AmneziaWG obfuscation parameters from SOPS";
+      after = [ "sys-subsystem-net-devices-awg0.device" ];
+      wants = [ "sys-subsystem-net-devices-awg0.device" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      path = [ pkgs.amneziawg-tools ];
+      script = ''
+        awg set awg0 \
+          Jc "$(cat ${config.sops.secrets."amneziawg/junkPacketCount".path})" \
+          Jmin "$(cat ${config.sops.secrets."amneziawg/junkPacketMinSize".path})" \
+          Jmax "$(cat ${config.sops.secrets."amneziawg/junkPacketMaxSize".path})" \
+          S1 "$(cat ${config.sops.secrets."amneziawg/initPacketJunkSize".path})" \
+          S2 "$(cat ${config.sops.secrets."amneziawg/responsePacketJunkSize".path})" \
+          H1 "$(cat ${config.sops.secrets."amneziawg/initPacketMagicHeader".path})" \
+          H2 "$(cat ${config.sops.secrets."amneziawg/responsePacketMagicHeader".path})" \
+          H3 "$(cat ${config.sops.secrets."amneziawg/underloadPacketMagicHeader".path})" \
+          H4 "$(cat ${config.sops.secrets."amneziawg/transportPacketMagicHeader".path})"
+      '';
+    };
+  };
 }
