@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  pkgs,
+  unixpkgs,
   ...
 }:
 
@@ -17,8 +17,7 @@ in
     programs = {
       steam = {
         enable = true;
-        package = pkgs.steam.override {
-          extraPkgs = pkgs: [ pkgs.libpulseaudio ];
+        package = unixpkgs.steam.override {
           extraBwrapArgs = [ "--bind /data/Games /data/Games" ];
         };
         dedicatedServer = {
