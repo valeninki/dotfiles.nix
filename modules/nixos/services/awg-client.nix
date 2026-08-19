@@ -78,15 +78,15 @@ in
 
             postUp = ''
               awg set awg0 \
-                Jc "$(cat ${config.sops.secrets."amneziawg/junkPacketCount".path})" \
-                Jmin "$(cat ${config.sops.secrets."amneziawg/junkPacketMinSize".path})" \
-                Jmax "$(cat ${config.sops.secrets."amneziawg/junkPacketMaxSize".path})" \
-                S1 "$(cat ${config.sops.secrets."amneziawg/initPacketJunkSize".path})" \
-                S2 "$(cat ${config.sops.secrets."amneziawg/responsePacketJunkSize".path})" \
-                H1 "$(cat ${config.sops.secrets."amneziawg/initPacketMagicHeader".path})" \
-                H2 "$(cat ${config.sops.secrets."amneziawg/responsePacketMagicHeader".path})" \
-                H3 "$(cat ${config.sops.secrets."amneziawg/underloadPacketMagicHeader".path})" \
-                H4 "$(cat ${config.sops.secrets."amneziawg/transportPacketMagicHeader".path})"
+                jc "$(cat ${config.sops.secrets."amneziawg/junkPacketCount".path})" \
+                jmin "$(cat ${config.sops.secrets."amneziawg/junkPacketMinSize".path})" \
+                jmax "$(cat ${config.sops.secrets."amneziawg/junkPacketMaxSize".path})" \
+                s1 "$(cat ${config.sops.secrets."amneziawg/initPacketJunkSize".path})" \
+                s2 "$(cat ${config.sops.secrets."amneziawg/responsePacketJunkSize".path})" \
+                h1 "$(cat ${config.sops.secrets."amneziawg/initPacketMagicHeader".path})" \
+                h2 "$(cat ${config.sops.secrets."amneziawg/responsePacketMagicHeader".path})" \
+                h3 "$(cat ${config.sops.secrets."amneziawg/underloadPacketMagicHeader".path})" \
+                h4 "$(cat ${config.sops.secrets."amneziawg/transportPacketMagicHeader".path})"
             '';
 
             peers = [

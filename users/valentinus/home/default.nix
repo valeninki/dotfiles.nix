@@ -53,7 +53,7 @@
       alsa-utils
       easyeffects
       unzip
-      picard
+      unixpkgs.picard
       easytag
       ffmpeg
       binutils
@@ -94,7 +94,7 @@
       unixpkgs.equibop
       unixpkgs.telegram-desktop
       gcr
-      protonup-qt
+      unixpkgs.protonup-qt
       moonlight-qt
       gtkhash
       remmina

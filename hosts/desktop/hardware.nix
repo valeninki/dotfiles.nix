@@ -48,6 +48,7 @@
       "zswap.max_pool_percent=50"
       "r8169.disable_aspm=1"
       "r8169.disable_autosuspend=1"
+	  "snd_hda_intel.enable=0,1"
     ];
   };
 
