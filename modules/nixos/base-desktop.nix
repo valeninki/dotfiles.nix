@@ -94,7 +94,13 @@
       e2fsprogs
       libva-utils
       lm_sensors
+      nvme-cli
+      pciutils
+      smartmontools
+      usbutils
       v4l-utils
+      vulkan-tools
+      wayland-utils
       valenpkgs.topmem
       valenpkgs.netui
       valenpkgs.zmem

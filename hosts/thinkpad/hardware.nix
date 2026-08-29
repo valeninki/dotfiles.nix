@@ -50,10 +50,12 @@
       "zswap.enabled=1"
       "zswap.compressor=lz4"
       "zswap.max_pool_percent=20"
+      "zswap.shrinker_enabled=1"
       "rd.luks.options=discard"
       "nvme.max_host_mem_size_mb=0"
       "nvme_core.default_ps_max_latency_us=5500"
     ];
+    kernel.sysctl."vm.swappiness" = lib.mkForce 100;
   };
 
   hardware = {

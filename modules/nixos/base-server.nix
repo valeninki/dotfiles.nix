@@ -10,7 +10,6 @@
 
   environment = {
     systemPackages = with pkgs; [
-      curl
       iperf3
     ];
   };

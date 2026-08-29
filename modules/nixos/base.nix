@@ -46,7 +46,10 @@
     systemPackages = with pkgs; [
       wget
       dmidecode
-      duperemove
+      curl
+      jq
+      lsof
+      rsync
     ];
   };
 

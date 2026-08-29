@@ -22,7 +22,6 @@
       sops
       ssh-to-age
       xdg-user-dirs
-      usbutils
       tmate
       scrcpy
       openssl
