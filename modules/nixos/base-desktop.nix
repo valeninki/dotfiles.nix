@@ -101,9 +101,9 @@
       v4l-utils
       vulkan-tools
       wayland-utils
+      valenpkgs.devilutionx
       valenpkgs.topmem
       valenpkgs.netui
-      valenpkgs.zmem
     ];
   };
 
