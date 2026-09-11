@@ -67,8 +67,8 @@
             "9.9.9.9#dns.quad9.net"
             "149.112.112.112#dns.quad9.net"
           ];
-          DNSOverTLS = "true";
-          DNSSEC = "true";
+          DNSOverTLS = "opportunistic";
+          DNSSEC = "allow-downgrade";
           Domains = [ "~." ];
           FallbackDNS = [
             "9.9.9.9#dns.quad9.net"
