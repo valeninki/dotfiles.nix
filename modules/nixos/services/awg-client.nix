@@ -46,21 +46,20 @@ in
 
   config = lib.mkIf cfg.enable {
 
-    sops.secrets =
-      {
-        ${cfg.privateKeySecret} = {
+    sops.secrets = {
+      ${cfg.privateKeySecret} = {
+        mode = "0400";
+      };
+    }
+    // builtins.listToAttrs (
+      map (name: {
+        name = "amneziawg/${name}";
+        value = {
+          sopsFile = ../../../secrets/host-secrets.yaml;
           mode = "0400";
         };
-      }
-      // builtins.listToAttrs (
-        map (name: {
-          name = "amneziawg/${name}";
-          value = {
-            sopsFile = ../../../secrets/host-secrets.yaml;
-            mode = "0400";
-          };
-        }) awgParams
-      );
+      }) awgParams
+    );
 
     boot = {
       extraModulePackages = [ config.boot.kernelPackages.amneziawg ];

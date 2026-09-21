@@ -12,12 +12,22 @@
       enableMcpIntegration = true;
       settings = {
         plugin = [
-          "opencode-mem"
-          "opencode-antigravity-auth@latest"
-          "opencode-copilot-enhanced@latest"
-          "@tarquinen/opencode-dcp"
-          "@slkiser/opencode-quota"
+          "opencode-mem@latest"
+          "@kdcokenny/opencode-notify@latest"
+          "@tarquinen/opencode-dcp@latest"
+          "@slkiser/opencode-quota@latest"
         ];
+        provider.commandcode = {
+          npm = "@ai-sdk/openai-compatible";
+          name = "CommandCode";
+          options = {
+            baseURL = "https://api.commandcode.ai/provider/v1";
+            apiKey = "{env:CMD_API_KEY}";
+          };
+          models."deepseek/deepseek-v4-flash" = {
+            name = "DeepSeek V4 Flash";
+          };
+        };
         mcp = {
           context7 = {
             type = "remote";

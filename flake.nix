@@ -14,7 +14,7 @@
     };
 
     valenpkgs = {
-      url = "git+https://git.valentinus.dev/valeninki/nixpkgs?ref=unstable";
+      url = "git+https://git.valentinus.dev/valeninki/nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

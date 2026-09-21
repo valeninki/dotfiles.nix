@@ -10,6 +10,7 @@
   imports = [
     ./base.nix
     ./services/stylix.nix
+    ./services/print.nix
   ];
 
   boot = {

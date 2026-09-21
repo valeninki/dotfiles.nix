@@ -7,6 +7,7 @@
     ./configuration.nix
     ./hardware.nix
     ./tailscale.nix
+    ./print.nix
     (import ./disko.nix { disk = "/dev/disk/by-id/mmc-ED2S5_0x0d2567db"; })
   ];
 

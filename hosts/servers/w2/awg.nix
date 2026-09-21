@@ -24,21 +24,20 @@ in
 
   boot.kernelModules = [ "amneziawg" ];
 
-  sops.secrets =
-    {
-      "amneziawg/w2_private_key" = {
+  sops.secrets = {
+    "amneziawg/w2_private_key" = {
+      mode = "0400";
+    };
+  }
+  // builtins.listToAttrs (
+    map (name: {
+      name = "amneziawg/${name}";
+      value = {
+        sopsFile = ../../../secrets/host-secrets.yaml;
         mode = "0400";
       };
-    }
-    // builtins.listToAttrs (
-      map (name: {
-        name = "amneziawg/${name}";
-        value = {
-          sopsFile = ../../../secrets/host-secrets.yaml;
-          mode = "0400";
-        };
-      }) awgParams
-    );
+    }) awgParams
+  );
 
   systemd = {
     network = {
