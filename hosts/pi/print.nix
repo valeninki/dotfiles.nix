@@ -90,11 +90,8 @@
           LimitRequestBody 104857600
 
           <Location />
-            Order deny,allow
-            Deny from all
-            Allow from 127.0.0.1
-            Allow from 10.10.0.0/16
-            Allow from 100.64.0.0/10
+            Order allow,deny
+            Allow all
           </Location>
 
           <Location /admin>
@@ -167,10 +164,8 @@
 
               ip protocol icmp accept
 
-              ip saddr 10.10.0.0/16 tcp dport 631 accept
-              ip saddr 10.10.0.0/16 udp dport 631 accept
-              ip saddr 100.64.0.0/10 tcp dport 631 accept
-              ip saddr 100.64.0.0/10 udp dport 631 accept
+              ip saddr { 10.10.0.0/16, 100.64.0.0/10 } tcp dport 631 accept
+              ip saddr { 10.10.0.0/16, 100.64.0.0/10 } udp dport 631 accept
 
               ip daddr 224.0.0.251 udp dport 5353 accept
             }
