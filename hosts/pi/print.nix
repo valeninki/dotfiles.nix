@@ -7,12 +7,19 @@
 
 {
   services.udev.extraRules = ''
-    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="232b", ATTRS{idProduct}=="a43c", MODE="0660", GROUP="lp", SYMLINK+="pantum-printer"
+    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="232b", ATTRS{idProduct}=="a43c", ACTION=="add", MODE="0660", GROUP="lp", SYMLINK+="pantum-printer", TAG+="systemd", ENV{SYSTEMD_WANTS}="pantum-hotplug.service"
   '';
 
   systemd.services."container@pantum-cups".serviceConfig = {
     DevicePolicy = lib.mkForce "closed";
     DeviceAllow = [ "char-usb_device rw" ];
+  };
+
+  systemd.services.pantum-hotplug = {
+    serviceConfig.Type = "oneshot";
+    script = ''
+      ${pkgs.nixos-container}/bin/nixos-container run pantum-cups -- bash -c 'systemctl restart ipp-usb.service && sleep 2 && cupsenable Pantum_P2500W'
+    '';
   };
 
   containers.pantum-cups = {
@@ -71,7 +78,7 @@
       services.printing = {
         enable = true;
         drivers = [ ];
-        listenAddresses = [ "127.0.0.1:631" "10.10.20.6:631" ];
+        listenAddresses = [ "*:631" ];
         defaultShared = true;
         extraConf = ''
           ServerAlias pantum-cups pantum-cups.local 10.10.20.6 localhost 127.0.0.1
@@ -86,7 +93,7 @@
             Order deny,allow
             Deny from all
             Allow from 127.0.0.1
-            Allow from 10.10.20.0/24
+            Allow from 10.10.0.0/16
             Allow from 100.64.0.0/10
           </Location>
 
@@ -96,7 +103,7 @@
             Order deny,allow
             Deny from all
             Allow from 127.0.0.1
-            Allow from 10.10.20.0/24
+            Allow from 10.10.0.0/16
             Allow from 100.64.0.0/10
             Satisfy all
           </Location>
@@ -107,7 +114,7 @@
             Order deny,allow
             Deny from all
             Allow from 127.0.0.1
-            Allow from 10.10.20.0/24
+            Allow from 10.10.0.0/16
             Allow from 100.64.0.0/10
             Satisfy all
           </Location>
@@ -144,6 +151,8 @@
         '';
       };
 
+      systemd.sockets.cups.socketConfig.FreeBind = true;
+
       networking.firewall.enable = false;
 
       networking.nftables = {
@@ -158,8 +167,8 @@
 
               ip protocol icmp accept
 
-              ip saddr 10.10.20.0/24 tcp dport 631 accept
-              ip saddr 10.10.20.0/24 udp dport 631 accept
+              ip saddr 10.10.0.0/16 tcp dport 631 accept
+              ip saddr 10.10.0.0/16 udp dport 631 accept
               ip saddr 100.64.0.0/10 tcp dport 631 accept
               ip saddr 100.64.0.0/10 udp dport 631 accept
 

@@ -60,6 +60,8 @@
     systemPackages = with pkgs; [
       git
       wget
+      usbutils
+      neovim
       ethtool
       doas-sudo-shim
     ];
