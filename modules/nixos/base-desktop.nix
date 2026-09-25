@@ -89,6 +89,7 @@
   };
 
   environment = {
+    pathsToLink = [ "/share/icons" ];
     systemPackages = with pkgs; [
       git
       gparted
@@ -103,6 +104,7 @@
       vulkan-tools
       wayland-utils
       valenpkgs.devilutionx
+	  valenpkgs.prime-agent
       valenpkgs.topmem
       valenpkgs.netui
     ];

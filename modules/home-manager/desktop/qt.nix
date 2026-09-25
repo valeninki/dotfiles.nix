@@ -13,9 +13,19 @@
     };
   };
 
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = lib.mkForce "Papirus-Dark";
+      package = lib.mkForce (pkgs.papirus-icon-theme.override {
+        color = "carmine";
+      });
+    };
+  };
+
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
     style.name = "adwaita-dark";
   };
 

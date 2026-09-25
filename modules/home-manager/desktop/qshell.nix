@@ -10,7 +10,7 @@ let
   c = config.lib.stylix.colors;
 
   iconDataDirs = lib.concatStringsSep ":" [
-    "${pkgs.papirus-icon-theme}/share"
+    "${config.gtk.iconTheme.package}/share"
     "${pkgs.hicolor-icon-theme}/share"
     "${pkgs.kdePackages.breeze-icons}/share"
   ];
