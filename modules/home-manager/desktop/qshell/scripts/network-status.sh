@@ -3,7 +3,19 @@ set -euo pipefail
 iwctl_bin="${IWCTL_BIN:-iwctl}"
 
 devices="$("$iwctl_bin" device list 2>/dev/null | sed 's/\x1B\[[0-9;]*m//g' || true)"
-device="$(awk '$3 == "on" || $3 == "off" { print $1; exit }' <<<"$devices")"
+device="$(
+  awk '
+    ($3 == "on" || $3 == "off") && $NF == "station" {
+      if ($3 == "on") {
+        selected = $1
+        exit
+      }
+      if (fallback == "")
+        fallback = $1
+    }
+    END { print selected != "" ? selected : fallback }
+  ' <<<"$devices"
+)"
 powered="$(awk -v device="$device" '$1 == device { print $3; exit }' <<<"$devices")"
 
 if [[ "$powered" == "on" ]]; then

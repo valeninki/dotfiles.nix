@@ -12,5 +12,7 @@ case "${1:-}" in
     ;;
 esac
 
-"$systemctl_bin" --user stop graphical-session.target graphical-session-pre.target
+if ! "$systemctl_bin" --user stop graphical-session.target graphical-session-pre.target; then
+  echo "warning: could not stop the graphical session; continuing with $action" >&2
+fi
 exec "$systemctl_bin" "$action"

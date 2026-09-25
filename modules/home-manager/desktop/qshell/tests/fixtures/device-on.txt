@@ -1,1 +1,2 @@
-wlan0 station on
+Name Address Powered Adapter Mode
+wlan0 00:11:22:33:44:55 on phy0 station

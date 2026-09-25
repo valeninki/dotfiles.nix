@@ -9,7 +9,15 @@ PanelWindow {
 
   required property var runtimeConfig
   required property var backend
-  required property var popupCoordinator
+  readonly property alias popupCoordinator: popupCoordinatorInstance
+  required property var outputScreen
+
+  screen: outputScreen
+
+  PopupCoordinator {
+    id: popupCoordinatorInstance
+    owner: root
+  }
 
   anchors {
     top: true
@@ -467,15 +475,15 @@ PanelWindow {
         spacing: 6
 
         Text {
-          text: "󰁹"
+          text: root.backend.isCharging ? "󰂄" : "󰁹"
           font.pixelSize: 12
-          color: root.runtimeConfig.base05
+          color: root.backend.isLow ? root.runtimeConfig.base08 : root.runtimeConfig.base05
         }
 
         Text {
-          text: root.backend.batteryLevel + "%"
+          text: root.backend.batteryLevel === "--" ? "--" : root.backend.batteryLevel + "%"
           font.pixelSize: 12
-          color: root.runtimeConfig.base05
+          color: root.backend.isLow ? root.runtimeConfig.base08 : root.runtimeConfig.base05
         }
       }
 

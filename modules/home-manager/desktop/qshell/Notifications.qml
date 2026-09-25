@@ -69,15 +69,15 @@ Scope {
 
   PopupWindow {
     id: notificationPopup
-    visible: root.currentNotification !== null
+    visible: root.currentNotification !== null && root.anchorWindow !== null
     color: "transparent"
     grabFocus: false
     implicitWidth: 360
     implicitHeight: notificationCard.implicitHeight
 
     anchor.window: root.anchorWindow
-    anchor.rect.x: root.anchorWindow.width - implicitWidth - 10
-    anchor.rect.y: root.anchorWindow.height + 10
+    anchor.rect.x: root.anchorWindow ? root.anchorWindow.width - implicitWidth - 10 : 0
+    anchor.rect.y: root.anchorWindow ? root.anchorWindow.height + 10 : 0
     anchor.adjustment: PopupAdjustment.Slide
 
     Rectangle {

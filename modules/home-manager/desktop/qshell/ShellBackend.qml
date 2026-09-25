@@ -13,12 +13,18 @@ Scope {
   property bool networkEnabled: false
   property string volumeLevel: "--"
   property bool volumeMuted: false
+  property bool volumeRefreshPending: false
   property string volumeTooltipString: "--"
   property string brightnessLevel: "--"
   property string brightnessTooltipString: "--"
   property string ramUsage: "--"
   property string ramTooltipString: "--"
   property string batteryLevel: "--"
+  property string batteryStatus: "Discharging"
+  property bool acOnline: false
+  property bool isCharging: batteryStatus === "Charging"
+  property bool isLow: batteryStatus === "Discharging"
+    && Number(batteryLevel) >= 0 && Number(batteryLevel) <= 15
   property string calendarTooltipString: ""
   property bool calendarYearly: false
   property string focusedWindowTitle: ""
@@ -74,11 +80,22 @@ Scope {
       volumeUpProcess.startDetached()
     else
       volumeDownProcess.startDetached()
+    refreshVolume()
+    volumeSettleTimer.restart()
   }
 
   function toggleVolumeMute() {
     volumeMuted = !volumeMuted
     volumeMuteProcess.startDetached()
+    refreshVolume()
+    volumeSettleTimer.restart()
+  }
+
+  function refreshVolume() {
+    if (volumeProcess.running)
+      volumeRefreshPending = true
+    else
+      volumeProcess.running = true
   }
 
   function adjustBrightness(step) {
@@ -174,10 +191,18 @@ Scope {
 
     stdout: StdioCollector {
       onStreamFinished: {
-        const output = text.trim()
-        const value = Number(output.split(/\s+/)[1])
-        root.volumeLevel = isNaN(value) ? "--" : String(Math.round(value * 100))
-        root.volumeMuted = output.includes("[MUTED]")
+        const match = /^Volume:\s*(\d+(?:\.\d+)?)\s*(\[MUTED\])?\s*$/.exec(text.trim())
+        if (!match)
+          return
+        root.volumeLevel = String(Math.round(Number(match[1]) * 100))
+        root.volumeMuted = !!match[2]
+      }
+    }
+
+    onRunningChanged: {
+      if (!running && root.volumeRefreshPending) {
+        root.volumeRefreshPending = false
+        volumePendingTimer.start()
       }
     }
   }
@@ -282,12 +307,32 @@ Scope {
   Process {
     id: batteryProcess
     command: [
-      root.runtimeConfig.cat,
-      "/sys/class/power_supply/" + root.runtimeConfig.batteryDevice + "/capacity"
+      root.runtimeConfig.shell, "-c",
+      'battery_dir="/sys/class/power_supply/$1"; '
+        + 'if [ ! -r "$battery_dir/capacity" ] || [ ! -r "$battery_dir/status" ]; then '
+        + 'printf "%s\n" -- Unknown 0; exit 0; fi; '
+        + 'IFS= read -r capacity < "$battery_dir/capacity" || capacity=--; '
+        + 'IFS= read -r status < "$battery_dir/status" || status=Unknown; '
+        + 'ac_found=0; ac_online=0; '
+        + 'for ac in /sys/class/power_supply/AC*/online; do '
+        + '[ -r "$ac" ] || continue; ac_found=1; '
+        + 'IFS= read -r value < "$ac" || value=0; '
+        + 'if [ "$value" = 1 ]; then ac_online=1; break; fi; done; '
+        + 'if [ "$ac_found" = 0 ] && [ "$status" = Charging ]; then ac_online=1; fi; '
+        + 'printf "%s\n" "$capacity" "$status" "$ac_online"',
+      "battery-poll", root.runtimeConfig.batteryDevice
     ]
 
     stdout: StdioCollector {
-      onStreamFinished: root.batteryLevel = text.trim() || "--"
+      onStreamFinished: {
+        const lines = text.trim().split("\n")
+        const level = Number(lines[0])
+        root.batteryLevel = Number.isInteger(level) && level >= 0 && level <= 100
+          ? String(level) : "--"
+        root.batteryStatus = ["Charging", "Discharging", "Full", "Not charging"].includes(lines[1])
+          ? lines[1] : "Unknown"
+        root.acOnline = lines[2] === "1"
+      }
     }
   }
 
@@ -394,12 +439,32 @@ Scope {
     triggeredOnStart: true
     onTriggered: {
       root.refreshNetwork()
-      if (!volumeProcess.running)
-        volumeProcess.running = true
       root.refreshBrightness()
       if (!ramProcess.running)
         ramProcess.running = true
     }
+  }
+
+  // Frequent asynchronous queries also catch wpctl changes made by Sway media keys.
+  Timer {
+    interval: 750
+    running: true
+    repeat: true
+    triggeredOnStart: true
+    onTriggered: root.refreshVolume()
+  }
+
+  // The detached set command may still be running when the immediate query finishes.
+  Timer {
+    id: volumeSettleTimer
+    interval: 200
+    onTriggered: root.refreshVolume()
+  }
+
+  Timer {
+    id: volumePendingTimer
+    interval: 0
+    onTriggered: root.refreshVolume()
   }
 
   Timer {

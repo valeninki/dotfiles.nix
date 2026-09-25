@@ -10,24 +10,26 @@ ShellRoot {
     id: runtimeConfig
   }
 
-  PopupCoordinator {
-    id: popupCoordinator
-  }
-
   ShellBackend {
     id: backend
     runtimeConfig: runtimeConfig
   }
 
-  Bar {
-    id: bar
-    runtimeConfig: runtimeConfig
-    backend: backend
-    popupCoordinator: popupCoordinator
+  Variants {
+    id: bars
+    model: Quickshell.screens
+
+    delegate: Bar {
+      required property var modelData
+      outputScreen: modelData
+      runtimeConfig: runtimeConfig
+      backend: backend
+    }
   }
 
+  // One notification server, attached to the first available output.
   Notifications {
     runtimeConfig: runtimeConfig
-    anchorWindow: bar
+    anchorWindow: bars.instances.length > 0 ? bars.instances[0] : null
   }
 }

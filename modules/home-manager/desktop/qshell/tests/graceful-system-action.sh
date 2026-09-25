@@ -9,6 +9,9 @@ cat >>"$stub_dir/systemctl" <<'EOF'
 set -euo pipefail
 
 printf '%s\n' "$*" >>"$SYSTEMCTL_LOG"
+if [[ "${FAIL_USER_STOP:-0}" == 1 && "${1:-}" == --user ]]; then
+  exit 1
+fi
 EOF
 chmod +x "$stub_dir/systemctl"
 
@@ -22,6 +25,21 @@ for action in poweroff reboot; do
   if [[ "$actual" != "$expected" ]]; then
     printf 'graceful action %s used the wrong command order\nexpected:\n%s\nactual:\n%s\n' \
       "$action" "$expected" "$actual" >&2
+    exit 1
+  fi
+  failure_log="$stub_dir/$action-stop-fails.log"
+  warning_log="$stub_dir/$action-warning.log"
+  FAIL_USER_STOP=1 SYSTEMCTL_BIN="$stub_dir/systemctl" SYSTEMCTL_LOG="$failure_log" \
+    bash "$root_dir/scripts/graceful-system-action.sh" "$action" 2>"$warning_log"
+
+  actual="$(<"$failure_log")"
+  if [[ "$actual" != "$expected" ]]; then
+    printf 'graceful action %s did not run after the user stop failed\nexpected:\n%s\nactual:\n%s\n' \
+      "$action" "$expected" "$actual" >&2
+    exit 1
+  fi
+  if ! grep -q "warning: could not stop the graphical session; continuing with $action" "$warning_log"; then
+    printf 'graceful action %s did not warn after the user stop failed\n' "$action" >&2
     exit 1
   fi
 done
