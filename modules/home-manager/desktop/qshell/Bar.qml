@@ -91,9 +91,13 @@ PanelWindow {
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.margins: 10
-    width: root.backend.hasActiveMedia
-      ? mediaRow.implicitWidth + 32
-      : Math.min(titleRow.implicitWidth + 32, 300)
+    width: Math.max(0, Math.min(
+      root.backend.hasActiveMedia
+        ? mediaRow.implicitWidth + 32
+        : Math.min(titleRow.implicitWidth + 32, 300),
+      2 * Math.min(parent.width / 2 - leftPill.x - leftPill.width - 8,
+                   rightIslands.x - parent.width / 2 - 8)))
+    clip: true
     radius: 12
     color: root.runtimeConfig.base00
     visible: root.backend.hasActiveMedia || windowTitle.text !== ""
@@ -181,20 +185,27 @@ PanelWindow {
     }
   }
 
-  Rectangle {
-    id: rightPill
+  Row {
+    id: rightIslands
     anchors.right: parent.right
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
+    anchors.verticalCenter: parent.verticalCenter
     anchors.margins: 10
-    width: controlsRow.implicitWidth + 32
-    radius: 12
-    color: root.runtimeConfig.base00
+    spacing: 8
+    height: parent.height - 20
 
-    Row {
-      id: controlsRow
-      anchors.centerIn: parent
-      spacing: 16
+    Rectangle {
+      id: statusPill
+      width: statusRow.implicitWidth + statusRow.leftPadding + statusRow.rightPadding
+      height: parent.height
+      radius: 12
+      color: root.runtimeConfig.base00
+
+      Row {
+        id: statusRow
+        anchors.centerIn: parent
+        property int leftPadding: 12
+        property int rightPadding: 12
+        spacing: 10
 
       Tray {
         id: tray
@@ -394,27 +405,16 @@ PanelWindow {
       Item {
         id: microphoneItem
         anchors.verticalCenter: parent.verticalCenter
-        width: microphoneRow.implicitWidth
-        height: microphoneRow.implicitHeight
+        width: microphoneIcon.implicitWidth
+        height: microphoneIcon.implicitHeight
 
-        Row {
-          id: microphoneRow
+        Text {
+          id: microphoneIcon
           anchors.centerIn: parent
-          spacing: 6
-
-          Text {
-            text: root.backend.microphoneMuted ? "󰍭" : "󰍬"
-            color: root.backend.microphoneMuted
-              ? root.runtimeConfig.base08 : root.runtimeConfig.base05
-            font.pixelSize: 12
-          }
-
-          Text {
-            text: root.backend.microphoneLevel === "--"
-              ? "--" : root.backend.microphoneLevel + "%"
-            color: root.runtimeConfig.base05
-            font.pixelSize: 12
-          }
+          text: root.backend.microphoneMuted ? "󰍭" : "󰍬"
+          color: root.backend.microphoneMuted
+            ? root.runtimeConfig.base08 : root.runtimeConfig.base05
+          font.pixelSize: 12
         }
 
         MouseArea {
@@ -575,28 +575,15 @@ PanelWindow {
         id: brightnessItem
         visible: root.runtimeConfig.backlightEnabled
         anchors.verticalCenter: parent.verticalCenter
-        width: brightnessRow.implicitWidth
-        height: brightnessRow.implicitHeight
+        width: brightnessIcon.implicitWidth
+        height: brightnessIcon.implicitHeight
 
-        Row {
-          id: brightnessRow
+        Text {
+          id: brightnessIcon
           anchors.centerIn: parent
-          spacing: 6
-
-          Text {
-            id: brightnessIcon
-            text: "󰃠"
-            color: root.runtimeConfig.base05
-            font.pixelSize: 12
-            anchors.verticalCenter: parent.verticalCenter
-          }
-
-          Text {
-            text: root.backend.brightnessLevel + "%"
-            color: root.runtimeConfig.base05
-            font.pixelSize: 12
-            anchors.verticalCenter: parent.verticalCenter
-          }
+          text: "󰃠"
+          color: root.runtimeConfig.base05
+          font.pixelSize: 12
         }
 
         MouseArea {
@@ -728,6 +715,22 @@ PanelWindow {
           color: root.backend.isLow ? root.runtimeConfig.base08 : root.runtimeConfig.base05
         }
       }
+      }
+    }
+
+    Rectangle {
+      id: clockPill
+      width: clockRow.implicitWidth + clockRow.leftPadding + clockRow.rightPadding
+      height: parent.height
+      radius: 12
+      color: root.runtimeConfig.base00
+
+      Row {
+        id: clockRow
+        anchors.centerIn: parent
+        property int leftPadding: 12
+        property int rightPadding: 12
+        spacing: 6
 
       Item {
         id: calendarItem
@@ -755,25 +758,18 @@ PanelWindow {
               interval: 60000
               running: true
               repeat: true
-              onTriggered: dateText.text = Qt.formatDate(new Date(), "dd MMM yyyy")
+              onTriggered: dateText.text = Qt.formatDate(new Date(), "dd MMM")
             }
 
-            Component.onCompleted: dateText.text = Qt.formatDate(new Date(), "dd MMM yyyy")
+            Component.onCompleted: dateText.text = Qt.formatDate(new Date(), "dd MMM")
           }
         }
 
-        MouseArea {
-          id: calendarMouse
-          anchors.fill: parent
-          hoverEnabled: true
-          onClicked: root.backend.toggleCalendarView()
-          onEntered: root.backend.refreshCalendar()
-        }
-
         PopupWindow {
-          visible: calendarMouse.containsMouse
+          id: calendarPopup
+          visible: false
           color: "transparent"
-          grabFocus: false
+          grabFocus: true
           implicitWidth: calendarPopupBody.implicitWidth
           implicitHeight: calendarPopupBody.implicitHeight
 
@@ -783,6 +779,18 @@ PanelWindow {
           anchor.edges: Edges.Top | Edges.Left
           anchor.gravity: Edges.Bottom | Edges.Right
           anchor.adjustment: PopupAdjustment.SlideX
+
+          onVisibleChanged: {
+            if (!visible && root.popupCoordinator.activePopup === "calendar")
+              root.popupCoordinator.closePopup("calendar")
+          }
+
+          Connections {
+            target: root.popupCoordinator
+            function onActivePopupChanged() {
+              calendarPopup.visible = root.popupCoordinator.activePopup === "calendar"
+            }
+          }
 
           Rectangle {
             id: calendarPopupBody
@@ -831,16 +839,41 @@ PanelWindow {
         }
       }
 
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: mouse => {
+          if (mouse.button === Qt.RightButton) {
+            root.backend.toggleCalendarView()
+          } else {
+            root.popupCoordinator.togglePopup("calendar")
+            if (root.popupCoordinator.activePopup === "calendar")
+              root.backend.refreshCalendar()
+          }
+        }
+      }
+    }
+
+    Rectangle {
+      id: powerPill
+      width: 36
+      height: parent.height
+      radius: 12
+      color: root.runtimeConfig.base00
+
       Item {
         id: powerItem
+        anchors.centerIn: parent
         width: powerIcon.implicitWidth
         height: powerIcon.implicitHeight
 
         Text {
           id: powerIcon
           anchors.verticalCenter: parent.verticalCenter
-          text: "󰐥"
-          font.pixelSize: 12
+          text: "⏻"
+          font.pixelSize: 16
           color: root.runtimeConfig.base05
         }
 
