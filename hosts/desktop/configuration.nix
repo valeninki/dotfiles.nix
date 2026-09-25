@@ -67,7 +67,6 @@
     services = {
       s5-wol-trap = {
         description = "S5 WoL Trap After AC Power Loss";
-        wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" ];
         wants = [ "network-online.target" ];
 
