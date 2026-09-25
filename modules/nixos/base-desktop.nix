@@ -13,6 +13,14 @@
     ./services/print.nix
   ];
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      papirus-icon-theme = prev.papirus-icon-theme.override {
+        color = "carmine";
+      };
+    })
+  ];
+
   boot = {
     kernelPackages = lib.mkDefault pkgs.linuxPackages_6_18;
     tmp.cleanOnBoot = true;

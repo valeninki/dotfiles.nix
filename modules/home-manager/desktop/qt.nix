@@ -13,15 +13,7 @@
     };
   };
 
-  gtk = {
-    enable = true;
-    iconTheme = {
-      name = lib.mkForce "Papirus-Dark";
-      package = lib.mkForce (pkgs.papirus-icon-theme.override {
-        color = "carmine";
-      });
-    };
-  };
+  gtk.enable = true;
 
   qt = {
     enable = true;
