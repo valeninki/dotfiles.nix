@@ -83,7 +83,6 @@
         extraConf = ''
           ServerAlias pantum-cups pantum-cups.local 10.10.20.6 localhost 127.0.0.1
           Browsing On
-          DefaultEncryption Never
           PreserveJobFiles No
           MaxJobs 100
           MaxJobsPerUser 20
@@ -95,6 +94,7 @@
           </Location>
 
           <Location /admin>
+            Encryption Required
             AuthType Default
             Require user cupsadmin
             Order deny,allow
@@ -106,6 +106,7 @@
           </Location>
 
           <Location /admin/conf>
+            Encryption Required
             AuthType Default
             Require user cupsadmin
             Order deny,allow
