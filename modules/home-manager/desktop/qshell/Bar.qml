@@ -91,13 +91,75 @@ PanelWindow {
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.margins: 10
-    width: Math.min(titleRow.implicitWidth + 32, 300)
+    width: root.backend.hasActiveMedia
+      ? mediaRow.implicitWidth + 32
+      : Math.min(titleRow.implicitWidth + 32, 300)
     radius: 12
     color: root.runtimeConfig.base00
-    visible: windowTitle.text !== ""
+    visible: root.backend.hasActiveMedia || windowTitle.text !== ""
+
+    Row {
+      id: mediaRow
+      visible: root.backend.hasActiveMedia
+      anchors.centerIn: parent
+      spacing: 8
+
+      Text {
+        text: root.backend.playbackStatus
+        color: root.runtimeConfig.base0D
+        font: volumeText.font
+      }
+
+      Text {
+        width: Math.min(implicitWidth, 125)
+        elide: Text.ElideRight
+        text: root.backend.trackArtist && root.backend.trackTitle
+          ? root.backend.trackArtist + " — " + root.backend.trackTitle
+          : root.backend.trackTitle || root.backend.trackArtist || "Unknown track"
+        color: root.runtimeConfig.base05
+        font: volumeText.font
+      }
+
+      Text {
+        text: "󰒮"
+        color: root.backend.canGoPrevious ? root.runtimeConfig.base05 : root.runtimeConfig.base02
+        font: volumeIcon.font
+
+        MouseArea {
+          anchors.fill: parent
+          enabled: root.backend.canGoPrevious
+          onClicked: root.backend.previousMedia()
+        }
+      }
+
+      Text {
+        text: root.backend.playbackStatus === "Playing" ? "󰏤" : "󰐊"
+        color: root.backend.canToggleMedia ? root.runtimeConfig.base05 : root.runtimeConfig.base02
+        font: volumeIcon.font
+
+        MouseArea {
+          anchors.fill: parent
+          enabled: root.backend.canToggleMedia
+          onClicked: root.backend.toggleMedia()
+        }
+      }
+
+      Text {
+        text: "󰒭"
+        color: root.backend.canGoNext ? root.runtimeConfig.base05 : root.runtimeConfig.base02
+        font: volumeIcon.font
+
+        MouseArea {
+          anchors.fill: parent
+          enabled: root.backend.canGoNext
+          onClicked: root.backend.nextMedia()
+        }
+      }
+    }
 
     Row {
       id: titleRow
+      visible: !root.backend.hasActiveMedia
       anchors.centerIn: parent
       spacing: 12
 
@@ -324,6 +386,186 @@ PanelWindow {
               text: root.backend.volumeTooltipString
               color: root.runtimeConfig.base05
               font.pixelSize: 13
+            }
+          }
+        }
+      }
+
+      Item {
+        id: microphoneItem
+        anchors.verticalCenter: parent.verticalCenter
+        width: microphoneRow.implicitWidth
+        height: microphoneRow.implicitHeight
+
+        Row {
+          id: microphoneRow
+          anchors.centerIn: parent
+          spacing: 6
+
+          Text {
+            text: root.backend.microphoneMuted ? "󰍭" : "󰍬"
+            color: root.backend.microphoneMuted
+              ? root.runtimeConfig.base08 : root.runtimeConfig.base05
+            font.pixelSize: 12
+          }
+
+          Text {
+            text: root.backend.microphoneLevel === "--"
+              ? "--" : root.backend.microphoneLevel + "%"
+            color: root.runtimeConfig.base05
+            font.pixelSize: 12
+          }
+        }
+
+        MouseArea {
+          anchors.fill: parent
+          onClicked: root.backend.toggleMicrophoneMute()
+        }
+      }
+
+      Item {
+        id: audioMenuItem
+        anchors.verticalCenter: parent.verticalCenter
+        width: audioMenuIcon.implicitWidth
+        height: audioMenuIcon.implicitHeight
+
+        Text {
+          id: audioMenuIcon
+          text: "󰒓"
+          color: root.runtimeConfig.base05
+          font.pixelSize: 14
+        }
+
+        MouseArea {
+          anchors.fill: parent
+          onClicked: {
+            root.popupCoordinator.togglePopup("audio")
+            if (root.popupCoordinator.activePopup === "audio") {
+              root.backend.refreshVolume()
+              root.backend.refreshSinks()
+            }
+          }
+        }
+
+        PopupWindow {
+          id: audioPopup
+          visible: false
+          color: "transparent"
+          grabFocus: true
+          implicitWidth: 270
+          implicitHeight: audioPopupBody.implicitHeight
+
+          anchor.item: audioMenuIcon
+          anchor.rect.x: -(implicitWidth - audioMenuIcon.width) / 2
+          anchor.rect.y: audioMenuIcon.height + 8
+          anchor.edges: Edges.Top | Edges.Left
+          anchor.gravity: Edges.Bottom | Edges.Right
+          anchor.adjustment: PopupAdjustment.SlideX
+
+          onVisibleChanged: {
+            if (!visible && root.popupCoordinator.activePopup === "audio")
+              root.popupCoordinator.closePopup("audio")
+          }
+
+          Connections {
+            target: root.popupCoordinator
+            function onActivePopupChanged() {
+              audioPopup.visible = root.popupCoordinator.activePopup === "audio"
+            }
+          }
+
+          Rectangle {
+            id: audioPopupBody
+            anchors.fill: parent
+            implicitHeight: audioPopupContent.implicitHeight + 24
+            color: root.runtimeConfig.base00
+            radius: 8
+
+            Column {
+              id: audioPopupContent
+              anchors.left: parent.left
+              anchors.right: parent.right
+              anchors.top: parent.top
+              anchors.margins: 12
+              spacing: 10
+
+              Text {
+                text: "Output volume: " + (root.backend.volumeLevel === "--" ? "--" : root.backend.volumeLevel + "%")
+                color: root.runtimeConfig.base05
+                font.pixelSize: 13
+              }
+
+              Rectangle {
+                id: volumeSlider
+                width: parent.width
+                height: 20
+                radius: 6
+                color: root.runtimeConfig.base02
+
+                Rectangle {
+                  width: parent.width * Math.max(0, Math.min(100, Number(root.backend.volumeLevel) || 0)) / 100
+                  height: parent.height
+                  radius: parent.radius
+                  color: root.runtimeConfig.base0D
+                }
+
+                MouseArea {
+                  anchors.fill: parent
+                  onPressed: mouse => root.backend.setVolume(mouse.x / width * 100)
+                  onPositionChanged: mouse => {
+                    if (pressed)
+                      root.backend.setVolume(mouse.x / width * 100)
+                  }
+                }
+              }
+
+              Text {
+                text: "Output device"
+                color: root.runtimeConfig.base05
+                font.pixelSize: 13
+              }
+
+              Text {
+                visible: root.backend.audioSinks.length === 0
+                text: "No output devices found"
+                color: root.runtimeConfig.base05
+                font.pixelSize: 12
+              }
+
+              Repeater {
+                model: root.backend.audioSinks
+                delegate: Rectangle {
+                  id: sinkOption
+                  required property var modelData
+                  width: audioPopupContent.width
+                  height: 30
+                  radius: 6
+                  color: sinkMouse.containsMouse ? root.runtimeConfig.base02 : "transparent"
+
+                  Text {
+                    anchors.fill: parent
+                    anchors.leftMargin: 8
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    text: (sinkOption.modelData.isDefault ? "● " : "  ") + sinkOption.modelData.name
+                    color: root.runtimeConfig.base05
+                    font.pixelSize: 12
+                  }
+
+                  MouseArea {
+                    id: sinkMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: root.backend.selectSink(sinkOption.modelData.id)
+                  }
+                }
+              }
+
+              Text {
+                text: "Right-click speaker for pavucontrol"
+                color: root.runtimeConfig.base05
+                font.pixelSize: 11
+              }
             }
           }
         }

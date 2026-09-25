@@ -11,9 +11,16 @@ Scope {
   required property var runtimeConfig
   required property var anchorWindow
 
-  readonly property var currentNotification: notificationServer.trackedNotifications.values.length > 0
-    ? notificationServer.trackedNotifications.values[0]
-    : null
+  readonly property var currentNotification: {
+    const notifications = notificationServer.trackedNotifications.values
+    // Keep arrival order within each urgency level, but show critical alerts first.
+    for (let i = 0; i < notifications.length; i++) {
+      if (notifications[i].urgency === 2)
+        return notifications[i]
+    }
+    return notifications.length > 0 ? notifications[0] : null
+  }
+  readonly property bool currentIsCritical: currentNotification !== null && currentNotification.urgency === 2
 
   function notificationIconSource(notification) {
     if (!notification)
@@ -42,10 +49,8 @@ Scope {
   }
 
   onCurrentNotificationChanged: {
-    if (currentNotification)
+    if (currentNotification && !currentIsCritical)
       notificationTimer.restart()
-    else
-      notificationTimer.stop()
   }
 
   NotificationServer {
@@ -60,9 +65,10 @@ Scope {
   Timer {
     id: notificationTimer
     interval: root.runtimeConfig.notificationTimeoutMs
+    running: root.currentNotification !== null && !root.currentIsCritical
     repeat: false
     onTriggered: {
-      if (root.currentNotification)
+      if (root.currentNotification && !root.currentIsCritical)
         root.currentNotification.expire()
     }
   }
@@ -89,8 +95,8 @@ Scope {
       ) + 32
       color: root.runtimeConfig.base00
       radius: 12
-      border.color: root.runtimeConfig.base02
-      border.width: 1
+      border.color: root.currentIsCritical ? root.runtimeConfig.base08 : root.runtimeConfig.base02
+      border.width: root.currentIsCritical ? 2 : 1
 
       MouseArea {
         anchors.fill: parent
@@ -116,7 +122,7 @@ Scope {
         anchors.verticalCenter: parent.verticalCenter
         width: 3
         height: parent.height - 16
-        color: root.runtimeConfig.base0D
+        color: root.currentIsCritical ? root.runtimeConfig.base08 : root.runtimeConfig.base0D
         radius: 2
       }
 
@@ -148,15 +154,47 @@ Scope {
             - (notificationIconSlot.visible ? notificationIconSlot.width + notificationContent.spacing : 0)
           spacing: 6
 
-          Text {
+          Row {
             width: parent.width
-            text: root.currentNotification
-              ? (root.currentNotification.summary || root.currentNotification.appName || "Notification")
-              : ""
-            color: root.runtimeConfig.base05
-            font.pixelSize: 14
-            textFormat: Text.PlainText
-            wrapMode: Text.Wrap
+            spacing: 8
+
+            Text {
+              width: parent.width - dismissButton.width - parent.spacing
+              text: root.currentNotification
+                ? (root.currentNotification.summary || root.currentNotification.appName || "Notification")
+                : ""
+              color: root.currentIsCritical ? root.runtimeConfig.base08 : root.runtimeConfig.base05
+              font.pixelSize: 14
+              textFormat: Text.PlainText
+              wrapMode: Text.Wrap
+            }
+
+            Rectangle {
+              id: dismissButton
+              width: 24
+              height: 24
+              radius: 6
+              color: dismissMouse.containsMouse ? root.runtimeConfig.base02 : "transparent"
+
+              Text {
+                anchors.centerIn: parent
+                text: "×"
+                color: root.currentIsCritical ? root.runtimeConfig.base08 : root.runtimeConfig.base05
+                font.pixelSize: 20
+                textFormat: Text.PlainText
+              }
+
+              MouseArea {
+                id: dismissMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: {
+                  if (root.currentNotification)
+                    root.currentNotification.dismiss()
+                }
+              }
+            }
           }
 
           Text {

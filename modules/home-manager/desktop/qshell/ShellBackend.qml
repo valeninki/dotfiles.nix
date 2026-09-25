@@ -1,6 +1,7 @@
 import Quickshell
 import Quickshell.I3
 import Quickshell.Io
+import Quickshell.Services.Mpris
 import QtQuick
 
 Scope {
@@ -15,6 +16,11 @@ Scope {
   property bool volumeMuted: false
   property bool volumeRefreshPending: false
   property string volumeTooltipString: "--"
+  property string microphoneLevel: "--"
+  property bool microphoneMuted: false
+  property bool microphoneRefreshPending: false
+  property var audioSinks: []
+  property bool sinksRefreshPending: false
   property string brightnessLevel: "--"
   property string brightnessTooltipString: "--"
   property string ramUsage: "--"
@@ -27,9 +33,46 @@ Scope {
     && Number(batteryLevel) >= 0 && Number(batteryLevel) <= 15
   property string calendarTooltipString: ""
   property bool calendarYearly: false
+  // Prefer a playing player, then a paused one. Stopped players have no active session.
+  readonly property var activeMediaPlayer: {
+    const players = Mpris.players.values
+    let paused = null
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i]
+      if (player.playbackState === MprisPlaybackState.Playing)
+        return player
+      if (!paused && player.playbackState === MprisPlaybackState.Paused)
+        paused = player
+    }
+    return paused
+  }
+  readonly property bool hasActiveMedia: activeMediaPlayer !== null
+  readonly property string playbackStatus: !activeMediaPlayer ? ""
+    : activeMediaPlayer.playbackState === MprisPlaybackState.Playing ? "Playing" : "Paused"
+  readonly property string trackTitle: activeMediaPlayer ? activeMediaPlayer.trackTitle : ""
+  readonly property string trackArtist: activeMediaPlayer ? activeMediaPlayer.trackArtist : ""
+  readonly property bool canControl: activeMediaPlayer ? activeMediaPlayer.canControl : false
+  readonly property bool canToggleMedia: canControl && activeMediaPlayer.canTogglePlaying
+  readonly property bool canGoNext: canControl && activeMediaPlayer.canGoNext
+  readonly property bool canGoPrevious: canControl && activeMediaPlayer.canGoPrevious
   property string focusedWindowTitle: ""
   property string focusedWindowAppId: ""
   property bool focusedWindowRefreshPending: false
+
+  function toggleMedia() {
+    if (canToggleMedia)
+      activeMediaPlayer.togglePlaying()
+  }
+
+  function nextMedia() {
+    if (canGoNext)
+      activeMediaPlayer.next()
+  }
+
+  function previousMedia() {
+    if (canGoPrevious)
+      activeMediaPlayer.previous()
+  }
 
   function formatCalendar(text, highlightToday) {
     const escaped = text.replace(/\s+$/, "")
@@ -96,6 +139,65 @@ Scope {
       volumeRefreshPending = true
     else
       volumeProcess.running = true
+  }
+
+  function setVolume(percent) {
+    const level = Math.max(0, Math.min(100, Math.round(percent)))
+    volumeLevel = String(level)
+    volumeSetProcess.command = [runtimeConfig.wpctl, "set-volume", "@DEFAULT_AUDIO_SINK@", level + "%"]
+    volumeSetProcess.startDetached()
+    volumeSettleTimer.restart()
+  }
+
+  function refreshMicrophone() {
+    if (microphoneProcess.running)
+      microphoneRefreshPending = true
+    else
+      microphoneProcess.running = true
+  }
+
+  function toggleMicrophoneMute() {
+    microphoneMuted = !microphoneMuted
+    microphoneMuteProcess.startDetached()
+    microphoneSettleTimer.restart()
+  }
+
+  function refreshSinks() {
+    if (sinksProcess.running)
+      sinksRefreshPending = true
+    else
+      sinksProcess.running = true
+  }
+
+  function selectSink(id) {
+    if (!audioSinks.some(sink => sink.id === id))
+      return
+    sinkSelectProcess.command = [runtimeConfig.wpctl, "set-default", String(id)]
+    sinkSelectProcess.startDetached()
+    sinkSettleTimer.restart()
+  }
+
+  function parseSinks(status) {
+    const sinks = []
+    let inSinks = false
+    const lines = status.split("\n")
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      if (/\bSinks:\s*$/.test(line)) {
+        inSinks = true
+        continue
+      }
+      if (!inSinks)
+        continue
+      if (/\bSources:\s*$/.test(line) || /^Video\s*$/.test(line))
+        break
+      const match = /^\s*[│| ]*([*]?)\s*(\d+)\.\s+(.+?)\s*$/.exec(line)
+      if (match) {
+        const name = match[3].replace(/\s+\[vol:[^\]]*\]\s*$/, "")
+        sinks.push({ id: Number(match[2]), name: name, isDefault: match[1] === "*" })
+      }
+    }
+    return sinks
   }
 
   function adjustBrightness(step) {
@@ -208,6 +310,44 @@ Scope {
   }
 
   Process {
+    id: microphoneProcess
+    command: [ root.runtimeConfig.wpctl, "get-volume", "@DEFAULT_AUDIO_SOURCE@" ]
+
+    stdout: StdioCollector {
+      onStreamFinished: {
+        const match = /^Volume:\s*(\d+(?:\.\d+)?)\s*(\[MUTED\])?\s*$/.exec(text.trim())
+        if (!match)
+          return
+        root.microphoneLevel = String(Math.round(Number(match[1]) * 100))
+        root.microphoneMuted = !!match[2]
+      }
+    }
+
+    onRunningChanged: {
+      if (!running && root.microphoneRefreshPending) {
+        root.microphoneRefreshPending = false
+        microphonePendingTimer.start()
+      }
+    }
+  }
+
+  Process {
+    id: sinksProcess
+    command: [ root.runtimeConfig.wpctl, "status" ]
+
+    stdout: StdioCollector {
+      onStreamFinished: root.audioSinks = root.parseSinks(text)
+    }
+
+    onRunningChanged: {
+      if (!running && root.sinksRefreshPending) {
+        root.sinksRefreshPending = false
+        sinksPendingTimer.start()
+      }
+    }
+  }
+
+  Process {
     id: volumeTooltipProcess
     command: [ root.runtimeConfig.wpctl, "inspect", "@DEFAULT_AUDIO_SINK@" ]
 
@@ -245,6 +385,19 @@ Scope {
   Process {
     id: volumeMuteProcess
     command: [ root.runtimeConfig.wpctl, "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle" ]
+  }
+
+  Process {
+    id: volumeSetProcess
+  }
+
+  Process {
+    id: microphoneMuteProcess
+    command: [ root.runtimeConfig.wpctl, "set-mute", "@DEFAULT_AUDIO_SOURCE@", "toggle" ]
+  }
+
+  Process {
+    id: sinkSelectProcess
   }
 
   Process {
@@ -451,7 +604,10 @@ Scope {
     running: true
     repeat: true
     triggeredOnStart: true
-    onTriggered: root.refreshVolume()
+    onTriggered: {
+      root.refreshVolume()
+      root.refreshMicrophone()
+    }
   }
 
   // The detached set command may still be running when the immediate query finishes.
@@ -465,6 +621,34 @@ Scope {
     id: volumePendingTimer
     interval: 0
     onTriggered: root.refreshVolume()
+  }
+
+  Timer {
+    id: microphoneSettleTimer
+    interval: 200
+    onTriggered: root.refreshMicrophone()
+  }
+
+  Timer {
+    id: microphonePendingTimer
+    interval: 0
+    onTriggered: root.refreshMicrophone()
+  }
+
+  Timer {
+    id: sinkSettleTimer
+    interval: 400
+    onTriggered: {
+      root.refreshSinks()
+      root.refreshVolumeTooltip()
+      root.refreshVolume()
+    }
+  }
+
+  Timer {
+    id: sinksPendingTimer
+    interval: 0
+    onTriggered: root.refreshSinks()
   }
 
   Timer {
