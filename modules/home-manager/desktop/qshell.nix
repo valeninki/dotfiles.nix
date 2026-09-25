@@ -78,6 +78,7 @@ let
   qmlFiles = [
     "Bar.qml"
     "Notifications.qml"
+    "Osd.qml"
     "PopupCoordinator.qml"
     "ShellBackend.qml"
     "Tray.qml"

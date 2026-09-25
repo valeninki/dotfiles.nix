@@ -15,10 +15,12 @@ Scope {
   property string volumeLevel: "--"
   property bool volumeMuted: false
   property bool volumeRefreshPending: false
+  property bool volumeInitialized: false
   property string volumeTooltipString: "--"
   property string microphoneLevel: "--"
   property bool microphoneMuted: false
   property bool microphoneRefreshPending: false
+  property bool microphoneInitialized: false
   property var audioSinks: []
   property bool sinksRefreshPending: false
   property string brightnessLevel: "--"
@@ -58,6 +60,23 @@ Scope {
   property string focusedWindowTitle: ""
   property string focusedWindowAppId: ""
   property bool focusedWindowRefreshPending: false
+
+  signal osdRequested(string type, var value)
+
+  onVolumeLevelChanged: {
+    if (volumeInitialized)
+      osdRequested("volume", volumeLevel)
+  }
+
+  onVolumeMutedChanged: {
+    if (volumeInitialized)
+      osdRequested("volume", volumeLevel)
+  }
+
+  onMicrophoneMutedChanged: {
+    if (microphoneInitialized)
+      osdRequested("microphone", microphoneMuted)
+  }
 
   function toggleMedia() {
     if (canToggleMedia)
@@ -115,6 +134,7 @@ Scope {
   }
 
   function adjustVolume(step) {
+    volumeInitialized = true
     const current = Number(volumeLevel)
     if (!isNaN(current))
       volumeLevel = String(Math.max(0, Math.min(100, current + step)))
@@ -128,6 +148,7 @@ Scope {
   }
 
   function toggleVolumeMute() {
+    volumeInitialized = true
     volumeMuted = !volumeMuted
     volumeMuteProcess.startDetached()
     refreshVolume()
@@ -142,6 +163,7 @@ Scope {
   }
 
   function setVolume(percent) {
+    volumeInitialized = true
     const level = Math.max(0, Math.min(100, Math.round(percent)))
     volumeLevel = String(level)
     volumeSetProcess.command = [runtimeConfig.wpctl, "set-volume", "@DEFAULT_AUDIO_SINK@", level + "%"]
@@ -157,6 +179,7 @@ Scope {
   }
 
   function toggleMicrophoneMute() {
+    microphoneInitialized = true
     microphoneMuted = !microphoneMuted
     microphoneMuteProcess.startDetached()
     microphoneSettleTimer.restart()
@@ -298,6 +321,7 @@ Scope {
           return
         root.volumeLevel = String(Math.round(Number(match[1]) * 100))
         root.volumeMuted = !!match[2]
+        root.volumeInitialized = true
       }
     }
 
@@ -320,6 +344,7 @@ Scope {
           return
         root.microphoneLevel = String(Math.round(Number(match[1]) * 100))
         root.microphoneMuted = !!match[2]
+        root.microphoneInitialized = true
       }
     }
 

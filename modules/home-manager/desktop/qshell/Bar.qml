@@ -73,7 +73,7 @@ PanelWindow {
             anchors.centerIn: parent
             text: modelData.name
             color: root.runtimeConfig.base00
-            font: volumeText.font
+            font.pixelSize: 12
           }
 
           MouseArea {
@@ -111,7 +111,7 @@ PanelWindow {
       Text {
         text: root.backend.playbackStatus
         color: root.runtimeConfig.base0D
-        font: volumeText.font
+        font.pixelSize: 12
       }
 
       Text {
@@ -121,13 +121,13 @@ PanelWindow {
           ? root.backend.trackArtist + " — " + root.backend.trackTitle
           : root.backend.trackTitle || root.backend.trackArtist || "Unknown track"
         color: root.runtimeConfig.base05
-        font: volumeText.font
+        font.pixelSize: 12
       }
 
       Text {
         text: "󰒮"
         color: root.backend.canGoPrevious ? root.runtimeConfig.base05 : root.runtimeConfig.base02
-        font: volumeIcon.font
+        font.pixelSize: 12
 
         MouseArea {
           anchors.fill: parent
@@ -139,7 +139,7 @@ PanelWindow {
       Text {
         text: root.backend.playbackStatus === "Playing" ? "󰏤" : "󰐊"
         color: root.backend.canToggleMedia ? root.runtimeConfig.base05 : root.runtimeConfig.base02
-        font: volumeIcon.font
+        font.pixelSize: 12
 
         MouseArea {
           anchors.fill: parent
@@ -151,7 +151,7 @@ PanelWindow {
       Text {
         text: "󰒭"
         color: root.backend.canGoNext ? root.runtimeConfig.base05 : root.runtimeConfig.base02
-        font: volumeIcon.font
+        font.pixelSize: 12
 
         MouseArea {
           anchors.fill: parent
@@ -171,7 +171,7 @@ PanelWindow {
         id: windowIcon
         text: root.iconFor(root.backend.focusedWindowAppId)
         color: root.runtimeConfig.base05
-        font: volumeIcon.font
+        font.pixelSize: 12
       }
 
       Text {
@@ -180,7 +180,7 @@ PanelWindow {
         elide: Text.ElideRight
         text: root.backend.focusedWindowTitle
         color: root.runtimeConfig.base05
-        font: volumeText.font
+        font.pixelSize: 12
       }
     }
   }
@@ -310,261 +310,6 @@ PanelWindow {
                   anchors.fill: parent
                   onClicked: root.backend.toggleNetwork()
                 }
-              }
-            }
-          }
-        }
-      }
-
-      Item {
-        id: volumeItem
-        anchors.verticalCenter: parent.verticalCenter
-        width: volumeRow.implicitWidth
-        height: volumeRow.implicitHeight
-
-        Row {
-          id: volumeRow
-          anchors.centerIn: parent
-          spacing: 6
-
-          Text {
-            id: volumeIcon
-            text: root.backend.volumeMuted || Number(root.backend.volumeLevel) <= 0
-              ? "󰝟"
-              : Number(root.backend.volumeLevel) <= 50
-                ? "󰖀"
-                : "󰕾"
-            color: root.runtimeConfig.base05
-            font.pixelSize: 12
-            anchors.verticalCenter: parent.verticalCenter
-          }
-
-          Text {
-            id: volumeText
-            text: root.backend.volumeLevel + "%"
-            color: root.runtimeConfig.base05
-            font.pixelSize: 12
-            anchors.verticalCenter: parent.verticalCenter
-          }
-        }
-
-        MouseArea {
-          id: volumeMouse
-          anchors.fill: parent
-          hoverEnabled: true
-          acceptedButtons: Qt.LeftButton | Qt.RightButton
-          onClicked: mouse => {
-            if (mouse.button === Qt.LeftButton)
-              root.backend.toggleVolumeMute()
-            else if (mouse.button === Qt.RightButton)
-              root.backend.openVolumeControl()
-          }
-          onEntered: root.backend.refreshVolumeTooltip()
-          onWheel: wheel => {
-            if (wheel.angleDelta.y > 0)
-              root.backend.adjustVolume(5)
-            else if (wheel.angleDelta.y < 0)
-              root.backend.adjustVolume(-5)
-            wheel.accepted = true
-          }
-        }
-
-        PopupWindow {
-          visible: volumeMouse.containsMouse
-          color: "transparent"
-          grabFocus: false
-          implicitWidth: volumePopupBody.implicitWidth
-          implicitHeight: volumePopupBody.implicitHeight
-
-          anchor.item: volumeIcon
-          anchor.rect.x: -(implicitWidth - volumeIcon.width) / 2
-          anchor.rect.y: volumeIcon.height + 8
-          anchor.edges: Edges.Top | Edges.Left
-          anchor.gravity: Edges.Bottom | Edges.Right
-          anchor.adjustment: PopupAdjustment.SlideX
-
-          Rectangle {
-            id: volumePopupBody
-            anchors.fill: parent
-            implicitWidth: volumePopupText.implicitWidth + 28
-            implicitHeight: volumePopupText.implicitHeight + 20
-            color: root.runtimeConfig.base00
-            radius: 8
-
-            Text {
-              id: volumePopupText
-              anchors.centerIn: parent
-              text: root.backend.volumeTooltipString
-              color: root.runtimeConfig.base05
-              font.pixelSize: 13
-            }
-          }
-        }
-      }
-
-      Item {
-        id: microphoneItem
-        anchors.verticalCenter: parent.verticalCenter
-        width: microphoneIcon.implicitWidth
-        height: microphoneIcon.implicitHeight
-
-        Text {
-          id: microphoneIcon
-          anchors.centerIn: parent
-          text: root.backend.microphoneMuted ? "󰍭" : "󰍬"
-          color: root.backend.microphoneMuted
-            ? root.runtimeConfig.base08 : root.runtimeConfig.base05
-          font.pixelSize: 12
-        }
-
-        MouseArea {
-          anchors.fill: parent
-          onClicked: root.backend.toggleMicrophoneMute()
-        }
-      }
-
-      Item {
-        id: audioMenuItem
-        anchors.verticalCenter: parent.verticalCenter
-        width: audioMenuIcon.implicitWidth
-        height: audioMenuIcon.implicitHeight
-
-        Text {
-          id: audioMenuIcon
-          text: "󰒓"
-          color: root.runtimeConfig.base05
-          font.pixelSize: 14
-        }
-
-        MouseArea {
-          anchors.fill: parent
-          onClicked: {
-            root.popupCoordinator.togglePopup("audio")
-            if (root.popupCoordinator.activePopup === "audio") {
-              root.backend.refreshVolume()
-              root.backend.refreshSinks()
-            }
-          }
-        }
-
-        PopupWindow {
-          id: audioPopup
-          visible: false
-          color: "transparent"
-          grabFocus: true
-          implicitWidth: 270
-          implicitHeight: audioPopupBody.implicitHeight
-
-          anchor.item: audioMenuIcon
-          anchor.rect.x: -(implicitWidth - audioMenuIcon.width) / 2
-          anchor.rect.y: audioMenuIcon.height + 8
-          anchor.edges: Edges.Top | Edges.Left
-          anchor.gravity: Edges.Bottom | Edges.Right
-          anchor.adjustment: PopupAdjustment.SlideX
-
-          onVisibleChanged: {
-            if (!visible && root.popupCoordinator.activePopup === "audio")
-              root.popupCoordinator.closePopup("audio")
-          }
-
-          Connections {
-            target: root.popupCoordinator
-            function onActivePopupChanged() {
-              audioPopup.visible = root.popupCoordinator.activePopup === "audio"
-            }
-          }
-
-          Rectangle {
-            id: audioPopupBody
-            anchors.fill: parent
-            implicitHeight: audioPopupContent.implicitHeight + 24
-            color: root.runtimeConfig.base00
-            radius: 8
-
-            Column {
-              id: audioPopupContent
-              anchors.left: parent.left
-              anchors.right: parent.right
-              anchors.top: parent.top
-              anchors.margins: 12
-              spacing: 10
-
-              Text {
-                text: "Output volume: " + (root.backend.volumeLevel === "--" ? "--" : root.backend.volumeLevel + "%")
-                color: root.runtimeConfig.base05
-                font.pixelSize: 13
-              }
-
-              Rectangle {
-                id: volumeSlider
-                width: parent.width
-                height: 20
-                radius: 6
-                color: root.runtimeConfig.base02
-
-                Rectangle {
-                  width: parent.width * Math.max(0, Math.min(100, Number(root.backend.volumeLevel) || 0)) / 100
-                  height: parent.height
-                  radius: parent.radius
-                  color: root.runtimeConfig.base0D
-                }
-
-                MouseArea {
-                  anchors.fill: parent
-                  onPressed: mouse => root.backend.setVolume(mouse.x / width * 100)
-                  onPositionChanged: mouse => {
-                    if (pressed)
-                      root.backend.setVolume(mouse.x / width * 100)
-                  }
-                }
-              }
-
-              Text {
-                text: "Output device"
-                color: root.runtimeConfig.base05
-                font.pixelSize: 13
-              }
-
-              Text {
-                visible: root.backend.audioSinks.length === 0
-                text: "No output devices found"
-                color: root.runtimeConfig.base05
-                font.pixelSize: 12
-              }
-
-              Repeater {
-                model: root.backend.audioSinks
-                delegate: Rectangle {
-                  id: sinkOption
-                  required property var modelData
-                  width: audioPopupContent.width
-                  height: 30
-                  radius: 6
-                  color: sinkMouse.containsMouse ? root.runtimeConfig.base02 : "transparent"
-
-                  Text {
-                    anchors.fill: parent
-                    anchors.leftMargin: 8
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                    text: (sinkOption.modelData.isDefault ? "● " : "  ") + sinkOption.modelData.name
-                    color: root.runtimeConfig.base05
-                    font.pixelSize: 12
-                  }
-
-                  MouseArea {
-                    id: sinkMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: root.backend.selectSink(sinkOption.modelData.id)
-                  }
-                }
-              }
-
-              Text {
-                text: "Right-click speaker for pavucontrol"
-                color: root.runtimeConfig.base05
-                font.pixelSize: 11
               }
             }
           }

@@ -27,6 +27,12 @@ ShellRoot {
     }
   }
 
+  Osd {
+    runtimeConfig: runtimeConfig
+    backend: backend
+    outputScreen: bars.instances.length > 0 ? bars.instances[0].screen : null
+  }
+
   // One notification server, attached to the first available output.
   Notifications {
     runtimeConfig: runtimeConfig
