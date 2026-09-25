@@ -71,6 +71,7 @@ _:
               size = "100%";
               content = {
                 type = "swap";
+                randomEncryption = true;
               };
             };
           };
