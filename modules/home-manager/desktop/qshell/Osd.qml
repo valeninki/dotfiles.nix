@@ -24,7 +24,7 @@ PanelWindow {
 
     function onOsdRequested(type, value) {
       root.osdType = type
-      if (type === "volume")
+      if (type === "volume" || type === "brightness")
         root.displayedLevel = Math.max(0, Math.min(100, Number(value) || 0))
       root.visible = true
       hideTimer.restart()
@@ -53,14 +53,16 @@ PanelWindow {
         anchors.verticalCenter: parent.verticalCenter
         text: root.osdType === "microphone"
           ? (root.backend.microphoneMuted ? "󰍭" : "󰍬")
-          : (root.backend.volumeMuted ? "󰝟" : "󰕾")
+          : root.osdType === "brightness"
+            ? (root.displayedLevel < 34 ? "󰃞" : root.displayedLevel < 67 ? "󰃟" : "󰃠")
+            : (root.backend.volumeMuted ? "󰝟" : "󰕾")
         color: root.osdType === "microphone" && root.backend.microphoneMuted
           ? root.runtimeConfig.base08 : root.runtimeConfig.base05
         font.pixelSize: 22
       }
 
       Row {
-        visible: root.osdType === "volume"
+        visible: root.osdType === "volume" || root.osdType === "brightness"
         anchors.verticalCenter: parent.verticalCenter
         spacing: 10
 

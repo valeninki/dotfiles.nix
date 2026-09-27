@@ -24,6 +24,8 @@ Scope {
   property var audioSinks: []
   property bool sinksRefreshPending: false
   property string brightnessLevel: "--"
+  property bool brightnessInitialized: false
+  property bool brightnessRefreshPending: false
   property string brightnessTooltipString: "--"
   property string ramUsage: "--"
   property string ramTooltipString: "--"
@@ -71,6 +73,11 @@ Scope {
   onVolumeMutedChanged: {
     if (volumeInitialized)
       osdRequested("volume", volumeLevel)
+  }
+
+  onBrightnessLevelChanged: {
+    if (brightnessInitialized)
+      osdRequested("brightness", brightnessLevel)
   }
 
   onMicrophoneMutedChanged: {
@@ -224,17 +231,36 @@ Scope {
   }
 
   function adjustBrightness(step) {
-    if (!runtimeConfig.backlightEnabled)
+    if (!runtimeConfig.backlightEnabled || !Number.isFinite(step) || step === 0)
       return
 
     const current = Number(brightnessLevel)
-    if (!isNaN(current))
-      brightnessLevel = String(Math.max(1, Math.min(100, current + step)))
+    if (!brightnessInitialized || !Number.isFinite(current)) {
+      refreshBrightness()
+      return
+    }
+    const level = Math.max(1, Math.min(100, Math.round(current + step)))
+    const delta = level - current
+    if (delta === 0)
+      return
 
-    if (step > 0)
-      brightnessUpProcess.startDetached()
-    else
-      brightnessDownProcess.startDetached()
+    brightnessLevel = String(level)
+    brightnessAdjustProcess.command = [runtimeConfig.brightnessctl, "set",
+      Math.abs(delta) + (delta > 0 ? "%+" : "%-")]
+    brightnessAdjustProcess.startDetached()
+    brightnessSettleTimer.restart()
+  }
+
+  function setBrightness(percent) {
+    if (!runtimeConfig.backlightEnabled || !Number.isFinite(percent))
+      return
+
+    const level = Math.max(1, Math.min(100, Math.round(percent)))
+    brightnessInitialized = true
+    brightnessLevel = String(level)
+    brightnessSetProcess.command = [runtimeConfig.brightnessctl, "set", level + "%"]
+    brightnessSetProcess.startDetached()
+    brightnessSettleTimer.restart()
   }
 
   function toggleNetwork() {
@@ -266,7 +292,11 @@ Scope {
   }
 
   function refreshBrightness() {
-    if (runtimeConfig.backlightEnabled && !brightnessProcess.running)
+    if (!runtimeConfig.backlightEnabled)
+      return
+    if (brightnessProcess.running)
+      brightnessRefreshPending = true
+    else
       brightnessProcess.running = true
   }
 
@@ -432,22 +462,31 @@ Scope {
     stdout: StdioCollector {
       onStreamFinished: {
         const fields = text.trim().split(",")
-        root.brightnessLevel = fields.length > 3 ? fields[3].replace("%", "") : "--"
+        const level = fields.length > 3 ? Number(fields[3].replace("%", "")) : NaN
+        if (Number.isFinite(level)) {
+          root.brightnessLevel = String(Math.max(1, Math.min(100, Math.round(level))))
+          root.brightnessInitialized = true
+        }
         root.brightnessTooltipString = fields.length > 4
           ? fields[0] + ": " + fields[2] + " / " + fields[4] + " (" + fields[3] + ")"
           : "--"
       }
     }
+
+    onRunningChanged: {
+      if (!running && root.brightnessRefreshPending) {
+        root.brightnessRefreshPending = false
+        brightnessPendingTimer.start()
+      }
+    }
   }
 
   Process {
-    id: brightnessUpProcess
-    command: [ root.runtimeConfig.brightnessctl, "set", "+5%" ]
+    id: brightnessAdjustProcess
   }
 
   Process {
-    id: brightnessDownProcess
-    command: [ root.runtimeConfig.brightnessctl, "set", "5%-" ]
+    id: brightnessSetProcess
   }
 
   Process {
@@ -617,7 +656,6 @@ Scope {
     triggeredOnStart: true
     onTriggered: {
       root.refreshNetwork()
-      root.refreshBrightness()
       if (!ramProcess.running)
         ramProcess.running = true
     }
@@ -632,6 +670,7 @@ Scope {
     onTriggered: {
       root.refreshVolume()
       root.refreshMicrophone()
+      root.refreshBrightness()
     }
   }
 
@@ -646,6 +685,18 @@ Scope {
     id: volumePendingTimer
     interval: 0
     onTriggered: root.refreshVolume()
+  }
+
+  Timer {
+    id: brightnessSettleTimer
+    interval: 200
+    onTriggered: root.refreshBrightness()
+  }
+
+  Timer {
+    id: brightnessPendingTimer
+    interval: 0
+    onTriggered: root.refreshBrightness()
   }
 
   Timer {

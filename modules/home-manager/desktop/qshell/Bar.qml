@@ -317,68 +317,6 @@ PanelWindow {
       }
 
       Item {
-        id: brightnessItem
-        visible: root.runtimeConfig.backlightEnabled
-        anchors.verticalCenter: parent.verticalCenter
-        width: brightnessIcon.implicitWidth
-        height: brightnessIcon.implicitHeight
-
-        Text {
-          id: brightnessIcon
-          anchors.centerIn: parent
-          text: "󰃠"
-          color: root.runtimeConfig.base05
-          font.pixelSize: 12
-        }
-
-        MouseArea {
-          id: brightnessMouse
-          anchors.fill: parent
-          hoverEnabled: true
-          onEntered: root.backend.refreshBrightness()
-          onWheel: wheel => {
-            if (wheel.angleDelta.y > 0)
-              root.backend.adjustBrightness(5)
-            else if (wheel.angleDelta.y < 0)
-              root.backend.adjustBrightness(-5)
-            wheel.accepted = true
-          }
-        }
-
-        PopupWindow {
-          visible: brightnessMouse.containsMouse
-          color: "transparent"
-          grabFocus: false
-          implicitWidth: brightnessPopupBody.implicitWidth
-          implicitHeight: brightnessPopupBody.implicitHeight
-
-          anchor.item: brightnessIcon
-          anchor.rect.x: -(implicitWidth - brightnessIcon.width) / 2
-          anchor.rect.y: brightnessIcon.height + 8
-          anchor.edges: Edges.Top | Edges.Left
-          anchor.gravity: Edges.Bottom | Edges.Right
-          anchor.adjustment: PopupAdjustment.SlideX
-
-          Rectangle {
-            id: brightnessPopupBody
-            anchors.fill: parent
-            implicitWidth: brightnessPopupText.implicitWidth + 28
-            implicitHeight: brightnessPopupText.implicitHeight + 20
-            color: root.runtimeConfig.base00
-            radius: 8
-
-            Text {
-              id: brightnessPopupText
-              anchors.centerIn: parent
-              text: root.backend.brightnessTooltipString
-              color: root.runtimeConfig.base05
-              font.pixelSize: 13
-            }
-          }
-        }
-      }
-
-      Item {
         id: ramItem
         anchors.verticalCenter: parent.verticalCenter
         width: ramRow.implicitWidth
