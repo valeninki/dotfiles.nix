@@ -1,11 +1,14 @@
-_:
+{ pkgs, ... }:
 
 let
   laptop = "eDP-1";
   external = "HDMI-A-1";
+  brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
 in
 
 {
+
+  home.packages = [ pkgs.brightnessctl ];
 
   valentinus.desktop.quickshell = {
     enable = true;
@@ -23,6 +26,7 @@ in
     output = {
       "${laptop}" = {
         mode = "1920x1200@60Hz";
+        render_bit_depth = "8";
         position = "0 0";
         scale = "1";
       };
@@ -32,6 +36,8 @@ in
         scale = "1";
       };
     };
+
+    startup = [ { command = "${brightnessctl} -d amdgpu_bl1 set 28%"; } ];
 
     workspaceOutputAssign = [
       {
@@ -73,8 +79,8 @@ in
     ];
 
     keybindings = {
-      "XF86MonBrightnessDown" = "exec brightnessctl set 10%-";
-      "XF86MonBrightnessUp" = "exec brightnessctl set +10%";
+      "XF86MonBrightnessDown" = "exec ${brightnessctl} -d amdgpu_bl1 set 5%-";
+      "XF86MonBrightnessUp" = "exec ${brightnessctl} -d amdgpu_bl1 set +5%";
       "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
     };
   };

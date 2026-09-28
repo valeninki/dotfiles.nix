@@ -31,6 +31,8 @@
     };
   };
 
+  boot.kernelParams = [ "amdgpu.abmlevel=0" ];
+
   environment.systemPackages = with pkgs; [ duperemove ];
 
   services.scx.scheduler = "scx_lavd";
