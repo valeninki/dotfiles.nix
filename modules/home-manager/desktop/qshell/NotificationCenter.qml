@@ -103,6 +103,7 @@ PanelWindow {
           anchors.centerIn: parent
           text: "Clear All"
           color: root.runtimeConfig.base05
+          textFormat: Text.PlainText
           font.pixelSize: 12
         }
         MouseArea {
@@ -205,6 +206,7 @@ PanelWindow {
               anchors.verticalCenter: parent.verticalCenter
               text: root.relativeTime(card.receivedAtMs)
               color: root.runtimeConfig.base03
+              textFormat: Text.PlainText
               font.pixelSize: 11
             }
             Rectangle {
@@ -217,6 +219,7 @@ PanelWindow {
                 anchors.centerIn: parent
                 text: "×"
                 color: root.runtimeConfig.base05
+                textFormat: Text.PlainText
                 font.pixelSize: 19
               }
               MouseArea {
@@ -287,6 +290,7 @@ PanelWindow {
       visible: root.notifications.historyModel.count === 0
       text: "No notifications"
       color: root.runtimeConfig.base03
+      textFormat: Text.PlainText
       font.pixelSize: 14
     }
   }

@@ -53,6 +53,7 @@ let
     notificationTimeoutMs = toString cfg.notificationTimeoutMs;
 
     base00 = c.base00;
+    base01 = c.base01;
     base02 = c.base02;
     base03 = c.base03;
     base05 = c.base05;
