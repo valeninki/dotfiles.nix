@@ -16,6 +16,10 @@ QtObject {
       activePopup = ""
   }
 
+  function closeAll() {
+    activePopup = ""
+  }
+
   function togglePopup(name) {
     activePopup = activePopup === name ? "" : name
   }

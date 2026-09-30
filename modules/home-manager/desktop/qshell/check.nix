@@ -34,6 +34,7 @@ let
     notificationTimeoutMs = "5000";
 
     base00 = "1d1f21";
+    base01 = "282a2e";
     base02 = "373b41";
     base03 = "969896";
     base05 = "c5c8c6";

@@ -32,6 +32,10 @@ Scope {
   property string batteryLevel: "--"
   property string batteryStatus: "Discharging"
   property bool acOnline: false
+  property bool powerProfileAvailable: false
+  property string activePowerProfile: "balanced"
+  readonly property string activePowerProfileIcon: activePowerProfile === "performance"
+    ? "󰓅" : activePowerProfile === "power-saver" ? "󰌪" : "󰾆"
   property bool isCharging: batteryStatus === "Charging"
   property bool isLow: batteryStatus === "Discharging"
     && Number(batteryLevel) >= 0 && Number(batteryLevel) <= 15
@@ -314,6 +318,25 @@ Scope {
     volumeControlProcess.startDetached()
   }
 
+  function refreshPowerProfile() {
+    if (!powerProfileReadProcess.running && !powerProfileWriteProcess.running)
+      powerProfileReadProcess.running = true
+  }
+
+  function setPowerProfile(target) {
+    if (!powerProfileAvailable || powerProfileWriteProcess.running)
+      return
+    const kernelValue = target === "performance" ? "performance"
+      : target === "balanced" ? "balanced"
+      : target === "power-saver" ? "low-power" : ""
+    if (!kernelValue)
+      return
+    powerProfileWriteProcess.command = [runtimeConfig.shell, "-c",
+      'printf "%s\n" "$1" > /sys/firmware/acpi/platform_profile',
+      "power-profile-write", kernelValue]
+    powerProfileWriteProcess.running = true
+  }
+
   function poweroff() {
     shutdownProcess.startDetached()
   }
@@ -522,6 +545,31 @@ Scope {
   }
 
   Process {
+    id: powerProfileReadProcess
+    command: [root.runtimeConfig.shell, "-c",
+      'if [ -r /sys/firmware/acpi/platform_profile ]; then '
+        + 'IFS= read -r profile < /sys/firmware/acpi/platform_profile; '
+        + 'printf "%s\n" "$profile"; fi']
+
+    stdout: StdioCollector {
+      onStreamFinished: {
+        const profile = text.trim()
+        root.powerProfileAvailable = ["performance", "balanced", "low-power"].includes(profile)
+        if (root.powerProfileAvailable)
+          root.activePowerProfile = profile === "low-power" ? "power-saver" : profile
+      }
+    }
+  }
+
+  Process {
+    id: powerProfileWriteProcess
+    onRunningChanged: {
+      if (!running)
+        powerProfileSettleTimer.restart()
+    }
+  }
+
+  Process {
     id: batteryProcess
     command: [
       root.runtimeConfig.shell, "-c",
@@ -650,12 +698,19 @@ Scope {
   }
 
   Timer {
+    id: powerProfileSettleTimer
+    interval: 250
+    onTriggered: root.refreshPowerProfile()
+  }
+
+  Timer {
     interval: 5000
     running: true
     repeat: true
     triggeredOnStart: true
     onTriggered: {
       root.refreshNetwork()
+      root.refreshPowerProfile()
       if (!ramProcess.running)
         ramProcess.running = true
     }

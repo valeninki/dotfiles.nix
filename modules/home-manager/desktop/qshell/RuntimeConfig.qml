@@ -8,6 +8,7 @@ QtObject {
   readonly property int notificationTimeoutMs: Number("@notificationTimeoutMs@")
 
   readonly property string base00: "#@base00@"
+  readonly property string base01: "#@base01@"
   readonly property string base02: "#@base02@"
   readonly property string base03: "#@base03@"
   readonly property string base05: "#@base05@"

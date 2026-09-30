@@ -540,6 +540,130 @@ PanelWindow {
     }
 
     Rectangle {
+      id: powerProfileItem
+      visible: root.backend.powerProfileAvailable
+      width: 36
+      height: parent.height
+      radius: 6
+      color: powerProfileMouse.containsMouse ? root.runtimeConfig.base02 : root.runtimeConfig.base00
+
+      Text {
+        id: powerProfileIcon
+        anchors.centerIn: parent
+        text: root.backend.activePowerProfileIcon
+        textFormat: Text.PlainText
+        font.pixelSize: 16
+        color: root.runtimeConfig.base05
+      }
+
+      MouseArea {
+        id: powerProfileMouse
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+          root.popupCoordinator.togglePopup("powerProfiles")
+          root.backend.refreshPowerProfile()
+        }
+      }
+
+      PopupWindow {
+        id: powerProfilesPopup
+        visible: false
+        color: "transparent"
+        grabFocus: true
+        implicitWidth: 180
+        implicitHeight: powerProfilesBody.implicitHeight
+
+        anchor.item: powerProfileItem
+        anchor.rect.x: -(implicitWidth - powerProfileItem.width) / 2
+        anchor.rect.y: powerProfileItem.height + 8
+        anchor.edges: Edges.Top | Edges.Left
+        anchor.gravity: Edges.Bottom | Edges.Right
+        anchor.adjustment: PopupAdjustment.SlideX
+
+        onVisibleChanged: {
+          if (!visible && root.popupCoordinator.activePopup === "powerProfiles")
+            root.popupCoordinator.closePopup("powerProfiles")
+        }
+
+        Connections {
+          target: root.popupCoordinator
+          function onActivePopupChanged() {
+            powerProfilesPopup.visible = root.popupCoordinator.activePopup === "powerProfiles"
+          }
+        }
+
+        Rectangle {
+          id: powerProfilesBody
+          anchors.fill: parent
+          implicitHeight: powerProfilesList.implicitHeight + 20
+          color: root.runtimeConfig.base00
+          border.color: root.runtimeConfig.base02
+          border.width: 1
+          radius: 8
+
+          Column {
+            id: powerProfilesList
+            anchors.fill: parent
+            anchors.margins: 10
+            spacing: 4
+
+            Repeater {
+              model: [
+                { profileId: "performance", label: "Performance", icon: "󰓅" },
+                { profileId: "balanced", label: "Balanced", icon: "󰾆" },
+                { profileId: "power-saver", label: "Power Save", icon: "󰌪" }
+              ]
+
+              delegate: Rectangle {
+                required property var modelData
+                readonly property bool selected: root.backend.activePowerProfile === modelData.profileId
+                width: powerProfilesList.width
+                height: 40
+                radius: 8
+                color: selected ? root.runtimeConfig.base01
+                  : profileMouse.containsMouse ? root.runtimeConfig.base02 : "transparent"
+
+                Row {
+                  anchors.left: parent.left
+                  anchors.leftMargin: 12
+                  anchors.verticalCenter: parent.verticalCenter
+                  spacing: 12
+
+                  Text {
+                    text: modelData.icon
+                    color: selected ? root.runtimeConfig.base0D : root.runtimeConfig.base05
+                    textFormat: Text.PlainText
+                    font.pixelSize: 16
+                  }
+
+                  Text {
+                    text: modelData.label
+                    color: selected ? root.runtimeConfig.base0D : root.runtimeConfig.base05
+                    textFormat: Text.PlainText
+                    font.pixelSize: 13
+                  }
+                }
+
+                MouseArea {
+                  id: profileMouse
+                  anchors.fill: parent
+                  hoverEnabled: true
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: {
+                    root.backend.setPowerProfile(modelData.profileId)
+                    root.popupCoordinator.closeAll()
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    Rectangle {
       id: powerPill
       width: 36
       height: parent.height
