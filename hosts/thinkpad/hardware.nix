@@ -54,9 +54,12 @@
       "rd.luks.options=discard"
       "nvme.max_host_mem_size_mb=0"
       "nvme_core.default_ps_max_latency_us=5500"
+      "amdgpu.abmlevel=0"
     ];
     kernel.sysctl."vm.swappiness" = lib.mkForce 100;
   };
+
+  environment.systemPackages = with pkgs; [ duperemove ];
 
   hardware = {
     cpu = {
@@ -85,6 +88,8 @@
     udev = {
       extraRules = ''
         	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
+        # ALSA's capture switch does not match the default PipeWire digital mic.
+        ACTION=="add", SUBSYSTEM=="leds", KERNEL=="platform::micmute", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/leds/platform::micmute/brightness", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/leds/platform::micmute/brightness"
       '';
     };
   };

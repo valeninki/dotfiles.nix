@@ -4,6 +4,16 @@ let
   laptop = "eDP-1";
   external = "HDMI-A-1";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
+  micmute = pkgs.writeShellScript "thinkpad-micmute" ''
+    if [ "$1" = toggle ]; then
+      ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle || exit
+    fi
+    state=$(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SOURCE@) || exit
+    case "$state" in
+      *'[MUTED]'*) echo 1 > /sys/class/leds/platform::micmute/brightness ;;
+      *) echo 0 > /sys/class/leds/platform::micmute/brightness ;;
+    esac
+  '';
 in
 
 {
@@ -37,7 +47,10 @@ in
       };
     };
 
-    startup = [ { command = "${brightnessctl} -d amdgpu_bl1 set 28%"; } ];
+    startup = [
+      { command = "${brightnessctl} -d amdgpu_bl1 set 28%"; }
+      { command = "${micmute} sync"; }
+    ];
 
     workspaceOutputAssign = [
       {
@@ -81,7 +94,7 @@ in
     keybindings = {
       "XF86MonBrightnessDown" = "exec ${brightnessctl} -d amdgpu_bl1 set 5%-";
       "XF86MonBrightnessUp" = "exec ${brightnessctl} -d amdgpu_bl1 set +5%";
-      "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+      "XF86AudioMicMute" = "exec ${micmute} toggle";
     };
   };
 
