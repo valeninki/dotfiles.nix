@@ -759,11 +759,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790299898,
-        "narHash": "sha256-KPJLaV1EQWr+23NG1YkziIDhR+Y7JfX0Xyh/enpXTMg=",
+        "lastModified": 1790768736,
+        "narHash": "sha256-Q0uZJAGmpdQ17OdhtOCJRSSN1somKJEK6fq20PsYvSg=",
         "ref": "refs/heads/main",
-        "rev": "c9c48e095db4ae35b8b2b2b0b8692773a93a54a8",
-        "revCount": 66,
+        "rev": "b3cd6bc0c952363379152fa5a432b1b3f08dbc58",
+        "revCount": 70,
         "type": "git",
         "url": "https://git.valentinus.dev/valeninki/nixpkgs"
       },
