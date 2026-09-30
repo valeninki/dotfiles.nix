@@ -3,11 +3,19 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
+  lib,
   pkgs,
   ...
 }:
 
 {
+  # Evaluation fallback until this host has a real root filesystem definition.
+  # A deployment must replace this with the actual filesystem configuration.
+  fileSystems."/" = lib.mkDefault {
+    device = "/dev/null";
+    fsType = "ext4";
+  };
+
   boot = {
     kernelPackages = pkgs.linuxPackages_6_18;
   };

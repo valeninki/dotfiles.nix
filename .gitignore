@@ -24,3 +24,8 @@ result-*
 # VM images
 *.qcow2
 *.img
+
+# Local notes (never commit)
+qf.md
+map.md
+quickmap.md
