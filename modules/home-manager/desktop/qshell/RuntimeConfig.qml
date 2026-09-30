@@ -9,6 +9,7 @@ QtObject {
 
   readonly property string base00: "#@base00@"
   readonly property string base02: "#@base02@"
+  readonly property string base03: "#@base03@"
   readonly property string base05: "#@base05@"
   readonly property string base08: "#@base08@"
   readonly property string base0A: "#@base0A@"

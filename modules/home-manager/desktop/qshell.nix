@@ -54,6 +54,7 @@ let
 
     base00 = c.base00;
     base02 = c.base02;
+    base03 = c.base03;
     base05 = c.base05;
     base08 = c.base08;
     base0A = c.base0A;
@@ -78,6 +79,7 @@ let
   qmlFiles = [
     "Bar.qml"
     "Notifications.qml"
+    "NotificationCenter.qml"
     "Osd.qml"
     "PopupCoordinator.qml"
     "ShellBackend.qml"

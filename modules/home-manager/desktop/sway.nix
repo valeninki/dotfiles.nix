@@ -1,7 +1,8 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   modifier = "Mod4";
+  toggleNotifications = "exec ${lib.getExe config.programs.quickshell.package} ipc call notificationCenter toggle";
 in
 {
   home = {
@@ -68,6 +69,8 @@ in
       };
 
       keybindings = {
+        "F9" = toggleNotifications;
+        "XF86NotificationCenter" = toggleNotifications;
         "${modifier}+t" = "exec kitty";
         "${modifier}+d" = "exec wofi --show drun";
         "${modifier}+e" = "exec pcmanfm";

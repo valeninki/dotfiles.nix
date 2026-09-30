@@ -35,6 +35,7 @@ let
 
     base00 = "1d1f21";
     base02 = "373b41";
+    base03 = "969896";
     base05 = "c5c8c6";
     base08 = "cc6666";
     base0A = "f0c674";
