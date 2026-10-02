@@ -12,6 +12,7 @@ Scope {
   required property var anchorWindow
 
   readonly property alias historyModel: history
+  property var appGroups: []
   property var liveByKey: ({})
   property var keyByNotificationId: ({})
   property var closedHandlersByKey: ({})
@@ -31,6 +32,29 @@ Scope {
   }
 
   ListModel { id: history }
+
+  function rebuildGroups() {
+    const groups = []
+    const byApp = Object.create(null)
+    for (let i = 0; i < history.count; i++) {
+      const row = history.get(i)
+      const app = row.appName || ""
+      if (byApp[app] === undefined) {
+        byApp[app] = groups.length
+        groups.push({ appName: app, items: [] })
+      }
+      groups[byApp[app]].items.push({
+        key: row.key,
+        summary: row.summary,
+        body: row.body,
+        receivedAtMs: row.receivedAtMs,
+        urgency: row.urgency,
+        actionLabels: row.actionLabels || [],
+        isLive: row.isLive
+      })
+    }
+    appGroups = groups
+  }
 
   function historyIndex(key) {
     for (let i = 0; i < history.count; i++) {
@@ -153,6 +177,7 @@ Scope {
       }
     }
     history.insert(insertAt, row)
+    rebuildGroups()
 
     const updated = Object.assign({}, liveByKey)
     updated[key] = notification
@@ -177,8 +202,10 @@ Scope {
         root.keyByNotificationId = ids
       }
       const rowIndex = root.historyIndex(key)
-      if (rowIndex !== -1)
+      if (rowIndex !== -1) {
         root.history.setProperty(rowIndex, "isLive", false)
+        root.rebuildGroups()
+      }
       // Closed DBus handles do not invalidate already captured toast snapshots.
     }
     notification.closed.connect(closedHandler)
@@ -202,6 +229,7 @@ Scope {
     if (index === -1)
       return
     history.remove(index)
+    rebuildGroups()
     const notification = liveByKey[key]
     disconnectClosedHandler(key)
     const remaining = Object.assign({}, liveByKey)
@@ -218,6 +246,13 @@ Scope {
       dismissActiveToast()
     if (notification)
       notification.dismiss()
+  }
+
+  function clearApp(targetApp) {
+    for (let i = history.count - 1; i >= 0; i--) {
+      if (history.get(i).appName === targetApp)
+        dismissKey(history.get(i).key)
+    }
   }
 
   function clearAll() {

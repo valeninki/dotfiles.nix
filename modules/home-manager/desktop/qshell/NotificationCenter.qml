@@ -13,6 +13,20 @@ PanelWindow {
   required property var outputScreen
   property bool drawerOpen: false
   property double nowMs: Date.now()
+  property var expandedApps: ({})
+
+  function toggleApp(app) {
+    const updated = Object.assign({}, expandedApps)
+    updated[app] = !updated[app]
+    expandedApps = updated
+  }
+
+  function cleanBody(body) {
+    return body.replace(/<https?:\/\/[^>\s]+>|https?:\/\/[^\s<>"']+/gi, function(url) {
+      return /(?:cdn\.discordapp\.(?:com|net)|media\.discordapp\.net|\.(?:png|jpe?g|gif|webp)(?:[?#]|>?$))/i.test(url)
+        ? "󰋩 Image" : url
+    })
+  }
 
   function toggle() { drawerOpen = !drawerOpen }
   function close() { drawerOpen = false }
@@ -117,167 +131,264 @@ PanelWindow {
       }
     }
 
-    ListView {
+    Flickable {
       id: list
       anchors.top: header.bottom
       anchors.bottom: parent.bottom
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.margins: 12
-      spacing: 10
       clip: true
-      model: root.notifications.historyModel
-      section.property: "appName"
-      section.criteria: ViewSection.FullString
-      section.delegate: Component {
-        Item {
-          width: list.width
-          height: 32
+      contentWidth: width
+      contentHeight: groupsColumn.implicitHeight
 
-          Row {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 8
-            spacing: 8
-
-            Text {
-              anchors.verticalCenter: parent.verticalCenter
-              text: section || "Notification"
-              font.pixelSize: 12
-              font.bold: true
-              color: root.runtimeConfig.base0D
-              textFormat: Text.PlainText
-            }
-          }
-        }
-      }
-
-      delegate: Rectangle {
-        id: card
-        required property int key
-        required property string appName
-        required property string iconSource
-        required property string summary
-        required property string body
-        required property double receivedAtMs
-        required property int urgency
-        required property var actionLabels
-        required property bool isLive
+      Column {
+        id: groupsColumn
         width: list.width
-        height: content.implicitHeight + 24
-        radius: 9
-        color: root.runtimeConfig.base00
-        border.color: urgency === 2 ? root.runtimeConfig.base08 : root.runtimeConfig.base02
-        border.width: 1
+        spacing: 10
 
-        Column {
-          id: content
-          anchors.left: parent.left
-          anchors.right: parent.right
-          anchors.top: parent.top
-          anchors.margins: 12
-          spacing: 8
+        Repeater {
+          model: root.notifications.appGroups
+          delegate: Rectangle {
+            id: groupCard
+            required property var modelData
+            readonly property string appName: modelData.appName
+            readonly property var items: modelData.items
+            readonly property bool expanded: root.expandedApps[appName] === true
+            width: groupsColumn.width
+            height: groupContent.implicitHeight + 12
+            radius: 9
+            color: root.runtimeConfig.base00
+            border.color: root.runtimeConfig.base02
+            border.width: 1
 
-          Row {
-            width: parent.width
-            spacing: 8
-            Item {
-              width: 24
-              height: 24
-              visible: card.iconSource !== ""
-              IconImage {
-                anchors.fill: parent
-                source: card.iconSource
-                implicitSize: 24
-                asynchronous: true
-              }
-            }
-            Text {
-              width: parent.width - (card.iconSource !== "" ? 32 : 0) - timeLabel.width - dismissButton.width - 16
-              anchors.verticalCenter: parent.verticalCenter
-              text: card.appName || "Notification"
-              color: root.runtimeConfig.base05
-              font.pixelSize: 12
-              elide: Text.ElideRight
-              textFormat: Text.PlainText
-            }
-            Text {
-              id: timeLabel
-              anchors.verticalCenter: parent.verticalCenter
-              text: root.relativeTime(card.receivedAtMs)
-              color: root.runtimeConfig.base03
-              textFormat: Text.PlainText
-              font.pixelSize: 11
-            }
-            Rectangle {
-              id: dismissButton
-              width: 24
-              height: 24
-              radius: 5
-              color: dismissMouse.containsMouse ? root.runtimeConfig.base02 : "transparent"
-              Text {
-                anchors.centerIn: parent
-                text: "×"
-                color: root.runtimeConfig.base05
-                textFormat: Text.PlainText
-                font.pixelSize: 19
-              }
-              MouseArea {
-                id: dismissMouse
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: root.notifications.dismissKey(card.key)
-              }
-            }
-          }
-          Text {
-            width: parent.width
-            text: card.summary
-            visible: text !== ""
-            color: card.urgency === 2 ? root.runtimeConfig.base08 : root.runtimeConfig.base05
-            font.bold: true
-            font.pixelSize: 14
-            wrapMode: Text.Wrap
-            textFormat: Text.PlainText
-          }
-          Text {
-            width: parent.width
-            text: card.body
-            visible: text !== ""
-            color: root.runtimeConfig.base05
-            font.pixelSize: 12
-            wrapMode: Text.Wrap
-            textFormat: Text.PlainText
-          }
-          Flow {
-            width: parent.width
-            spacing: 6
-            Repeater {
-              model: card.actionLabels
-              delegate: Rectangle {
-                required property var modelData
-                width: actionLabel.implicitWidth + 20
-                height: 28
-                radius: 6
-                color: actionMouse.containsMouse && card.isLive ? root.runtimeConfig.base02 : "transparent"
-                border.color: root.runtimeConfig.base02
-                opacity: card.isLive ? 1 : 0.45
-                Text {
-                  id: actionLabel
-                  anchors.centerIn: parent
-                  text: modelData.label
-                  color: root.runtimeConfig.base0D
-                  font.pixelSize: 12
-                  textFormat: Text.PlainText
-                }
+            Column {
+              id: groupContent
+              anchors.left: parent.left
+              anchors.right: parent.right
+              anchors.top: parent.top
+              anchors.margins: 6
+              spacing: 4
+
+              Item {
+                width: parent.width
+                height: 36
+
                 MouseArea {
-                  id: actionMouse
                   anchors.fill: parent
-                  enabled: card.isLive
-                  hoverEnabled: true
-                  cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                  onClicked: root.notifications.invokeAction(card.key, modelData.identifier)
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: root.toggleApp(groupCard.appName)
+                }
+
+                Row {
+                  width: Math.max(0, parent.width - rightControls.width - 16)
+                  anchors.left: parent.left
+                  anchors.leftMargin: 8
+                  anchors.verticalCenter: parent.verticalCenter
+                  spacing: 8
+                  Text {
+                    width: Math.max(0, parent.width - countBadge.width - 8)
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: groupCard.appName || "Notification"
+                    color: root.runtimeConfig.base0D
+                    font.pixelSize: 13
+                    font.bold: true
+                    elide: Text.ElideRight
+                    textFormat: Text.PlainText
+                  }
+                  Rectangle {
+                    id: countBadge
+                    width: countLabel.implicitWidth + 14
+                    height: 20
+                    radius: 10
+                    color: root.runtimeConfig.base01
+                    Text {
+                      id: countLabel
+                      anchors.centerIn: parent
+                      text: String(groupCard.items.length)
+                      color: root.runtimeConfig.base05
+                      font.pixelSize: 11
+                      textFormat: Text.PlainText
+                    }
+                  }
+                }
+
+                Row {
+                  id: rightControls
+                  anchors.right: parent.right
+                  anchors.verticalCenter: parent.verticalCenter
+                  spacing: 4
+                  Rectangle {
+                    width: clearAppLabel.implicitWidth + 12
+                    height: 28
+                    radius: 5
+                    color: clearAppMouse.containsMouse ? root.runtimeConfig.base02 : "transparent"
+                    Text {
+                      id: clearAppLabel
+                      anchors.centerIn: parent
+                      text: "Clear"
+                      color: root.runtimeConfig.base05
+                      font.pixelSize: 11
+                      textFormat: Text.PlainText
+                    }
+                    MouseArea {
+                      id: clearAppMouse
+                      anchors.fill: parent
+                      hoverEnabled: true
+                      cursorShape: Qt.PointingHandCursor
+                      onClicked: root.notifications.clearApp(groupCard.appName)
+                    }
+                  }
+                  Text {
+                    width: 28
+                    height: 28
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    text: groupCard.expanded ? "󰅂" : "󰅁"
+                    color: root.runtimeConfig.base05
+                    font.pixelSize: 16
+                    textFormat: Text.PlainText
+                    MouseArea {
+                      anchors.fill: parent
+                      cursorShape: Qt.PointingHandCursor
+                      onClicked: root.toggleApp(groupCard.appName)
+                    }
+                  }
+                }
+              }
+
+              Repeater {
+                model: groupCard.expanded ? groupCard.items : groupCard.items.slice(0, 2)
+                delegate: Rectangle {
+                  id: card
+                  required property var modelData
+                  readonly property int key: modelData.key
+                  readonly property string summary: modelData.summary
+                  readonly property string body: modelData.body
+                  readonly property double receivedAtMs: modelData.receivedAtMs
+                  readonly property int urgency: modelData.urgency
+                  readonly property var actionLabels: modelData.actionLabels
+                  readonly property bool isLive: modelData.isLive
+                  width: groupContent.width
+                  height: content.implicitHeight + 16
+                  radius: 6
+                  color: root.runtimeConfig.base01
+                  border.color: urgency === 2 ? root.runtimeConfig.base08 : root.runtimeConfig.base02
+                  border.width: 1
+
+                  Column {
+                    id: content
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.margins: 8
+                    spacing: 5
+
+                    Row {
+                      width: parent.width
+                      spacing: 6
+                      Text {
+                        width: Math.max(0, parent.width - timeLabel.width - dismissButton.width - 12)
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: card.summary || "Notification"
+                        color: card.urgency === 2 ? root.runtimeConfig.base08 : root.runtimeConfig.base05
+                        font.bold: true
+                        font.pixelSize: 13
+                        elide: Text.ElideRight
+                        textFormat: Text.PlainText
+                      }
+                      Text {
+                        id: timeLabel
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: root.relativeTime(card.receivedAtMs)
+                        color: root.runtimeConfig.base03
+                        font.pixelSize: 11
+                        textFormat: Text.PlainText
+                      }
+                      Rectangle {
+                        id: dismissButton
+                        width: 22
+                        height: 22
+                        radius: 5
+                        color: dismissMouse.containsMouse ? root.runtimeConfig.base02 : "transparent"
+                        Text {
+                          anchors.centerIn: parent
+                          text: "×"
+                          color: root.runtimeConfig.base05
+                          font.pixelSize: 18
+                          textFormat: Text.PlainText
+                        }
+                        MouseArea {
+                          id: dismissMouse
+                          anchors.fill: parent
+                          hoverEnabled: true
+                          cursorShape: Qt.PointingHandCursor
+                          onClicked: root.notifications.dismissKey(card.key)
+                        }
+                      }
+                    }
+                    Text {
+                      width: parent.width
+                      text: root.cleanBody(card.body)
+                      visible: text !== ""
+                      color: root.runtimeConfig.base05
+                      font.pixelSize: 12
+                      wrapMode: Text.Wrap
+                      maximumLineCount: 2
+                      elide: Text.ElideRight
+                      textFormat: Text.PlainText
+                    }
+                    Flow {
+                      width: parent.width
+                      spacing: 6
+                      Repeater {
+                        model: card.actionLabels
+                        delegate: Rectangle {
+                          required property var modelData
+                          width: actionLabel.implicitWidth + 20
+                          height: 26
+                          radius: 6
+                          color: actionMouse.containsMouse && card.isLive ? root.runtimeConfig.base02 : "transparent"
+                          border.color: root.runtimeConfig.base02
+                          border.width: 1
+                          opacity: card.isLive ? 1 : 0.45
+                          Text {
+                            id: actionLabel
+                            anchors.centerIn: parent
+                            text: modelData.label
+                            color: root.runtimeConfig.base0D
+                            font.pixelSize: 12
+                            textFormat: Text.PlainText
+                          }
+                          MouseArea {
+                            id: actionMouse
+                            anchors.fill: parent
+                            enabled: card.isLive
+                            hoverEnabled: true
+                            cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            onClicked: root.notifications.invokeAction(card.key, modelData.identifier)
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                visible: !groupCard.expanded && groupCard.items.length > 2
+                text: "+ " + (groupCard.items.length - 2) + " more..."
+                color: root.runtimeConfig.base0D
+                font.pixelSize: 12
+                textFormat: Text.PlainText
+                height: visible ? 28 : 0
+                verticalAlignment: Text.AlignVCenter
+                MouseArea {
+                  anchors.fill: parent
+                  enabled: parent.visible
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: root.toggleApp(groupCard.appName)
                 }
               }
             }
