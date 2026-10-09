@@ -6,6 +6,10 @@
 {
 
   programs = {
+    claude-code = {
+      enable = true;
+      package = unixpkgs.claude-code;
+    };
     opencode = {
       enable = true;
       package = unixpkgs.opencode;

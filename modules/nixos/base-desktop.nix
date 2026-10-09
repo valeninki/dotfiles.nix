@@ -112,7 +112,7 @@
       vulkan-tools
       wayland-utils
       valenpkgs.devilutionx
-	  valenpkgs.prime-agent
+      valenpkgs.prime-agent
       valenpkgs.topmem
       valenpkgs.netui
     ];
