@@ -28,6 +28,7 @@
       sl
 
       ## ADB
+      unixpkgs.samloader-rs
       android-tools
       heimdall
 

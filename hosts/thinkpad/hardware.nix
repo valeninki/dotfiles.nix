@@ -86,8 +86,13 @@
       enable = true;
     };
     udev = {
+      # Set uaccess before systemd's 71-seat/73-seat-late rules assign USB ACLs.
+      packages = [
+        (pkgs.writeTextDir "lib/udev/rules.d/70-samloader.rules" ''
+          SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
+        '')
+      ];
       extraRules = ''
-        	    SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", TAG+="uaccess", ENV{MTP_NO_PROBE}="1", ENV{ID_MM_DEVICE_IGNORE}="1"
         # ALSA's capture switch does not match the default PipeWire digital mic.
         ACTION=="add", SUBSYSTEM=="leds", KERNEL=="platform::micmute", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/leds/platform::micmute/brightness", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/leds/platform::micmute/brightness"
       '';
