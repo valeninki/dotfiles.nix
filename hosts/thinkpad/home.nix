@@ -45,6 +45,9 @@ in
         position = "1920 0";
         scale = "1";
       };
+      "LG Electronics MP59G 0x01010101" = {
+        adaptive_sync = "on";
+      };
     };
 
     startup = [
