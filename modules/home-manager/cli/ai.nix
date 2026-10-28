@@ -1,5 +1,6 @@
 {
   unixpkgs,
+  pkgs,
   ...
 }:
 
@@ -9,6 +10,9 @@
     claude-code = {
       enable = true;
       package = unixpkgs.claude-code;
+    };
+    yazi-agent = {
+      enable = true;
     };
     opencode = {
       enable = true;

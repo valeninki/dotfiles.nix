@@ -33,6 +33,14 @@
 
   services.scx.scheduler = "scx_lavd";
 
+  # Folder colour of the Papirus icon theme, chosen for this host. Stylix
+  # installs the resulting package (stylix.icons.package).
+  stylix = {
+    icons.package = pkgs.papirus-icon-theme.override {
+      color = "carmine";
+    };
+  };
+
   security = {
     pam = {
       services = {

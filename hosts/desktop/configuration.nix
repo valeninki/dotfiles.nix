@@ -39,6 +39,10 @@
 
   stylix = {
     image = ../../assets/Wallpapers/flowers.jpg;
+    # Folder colour matching the desktop wallpaper's warm orange palette.
+    icons.package = pkgs.papirus-icon-theme.override {
+      color = "orange";
+    };
     cursor = {
       package = pkgs.catppuccin-cursors.frappeYellow;
       name = "catppuccin-frappe-yellow-cursors";

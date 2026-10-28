@@ -122,8 +122,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # The Papirus theme itself comes from stylix.icons.package (the host's
+    # coloured build) through config.gtk.iconTheme.package, which is used for
+    # XDG_DATA_DIRS above; only its inherited themes are listed here.
     home.packages = [
-      pkgs.papirus-icon-theme
       pkgs.hicolor-icon-theme
       pkgs.kdePackages.breeze-icons
     ];

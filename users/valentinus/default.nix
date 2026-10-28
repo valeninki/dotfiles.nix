@@ -28,6 +28,9 @@
     extraSpecialArgs = {
       inherit inputs unixpkgs;
     };
+    sharedModules = [
+      inputs.yazi-agent.homeManagerModules.yazi-agent
+    ];
     users.valentinus = import ./home;
   };
 }

@@ -539,7 +539,8 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "unixpkgs": "unixpkgs",
-        "valenpkgs": "valenpkgs"
+        "valenpkgs": "valenpkgs",
+        "yazi-agent": "yazi-agent"
       }
     },
     "rust-overlay": {
@@ -759,17 +760,40 @@
         ]
       },
       "locked": {
-        "lastModified": 1792719170,
-        "narHash": "sha256-4HIBxzycqWyGnk7mfoWlcn0hJOt2B+ju+fcD5jMqJwI=",
+        "lastModified": 1792897311,
+        "narHash": "sha256-JnI/xdzcbLLbaT+qLRqdNtZtAHCxf1P4ZsxjcQvbnGg=",
         "ref": "refs/heads/main",
-        "rev": "80065c37caeaf1aecd83179e1303b81884d53885",
-        "revCount": 79,
+        "rev": "2aac6174c50b23018f20b4cc35cda38dc3e6c5c7",
+        "revCount": 80,
         "type": "git",
         "url": "https://git.valentinus.dev/valeninki/nixpkgs"
       },
       "original": {
         "type": "git",
         "url": "https://git.valentinus.dev/valeninki/nixpkgs"
+      }
+    },
+    "yazi-agent": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793013572,
+        "narHash": "sha256-B+VYmiwyYmKs8ccd0ZGOkj1BDoAPnx2hCp7ppAQw1Zs=",
+        "ref": "refs/heads/main",
+        "rev": "979fd45a68c09e97f9ddbc7d27eb5e8d6b35bdad",
+        "revCount": 1300,
+        "type": "git",
+        "url": "https://src.krea.to/kreato/yazi"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://src.krea.to/kreato/yazi"
       }
     }
   },

@@ -64,6 +64,8 @@
       distrobox
       unixpkgs.vscode
       bun
+      # Claude Code hooks start as `node …`; ADR-0004 makes Node their runtime.
+      nodejs_24
 
       ## Network Things
       ethtool
